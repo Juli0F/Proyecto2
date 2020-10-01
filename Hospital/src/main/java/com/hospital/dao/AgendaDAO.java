@@ -8,6 +8,6 @@ import com.hospital.entities.Agenda;
  */
 public interface AgendaDAO extends DAO<Agenda,Integer> {
 
-    public Agenda obtenerAgendaMedica(Integer colegiadoMedico) ;
+    public Agenda obtenerAgendaMedica(String codigoUsuarioMedico) ;
 
 }

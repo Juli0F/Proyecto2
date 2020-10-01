@@ -13,13 +13,13 @@ public class Resultado implements Serializable {
     private String descripcion;
     private java.sql.Date fechaHora;
     private boolean estado;
-    private int Laboratoristas_registro;
+    private String Laboratoristas_registro;
     private int Medico_colegiado;
     private String Pacientes_codigo;
     private String Examen_Codigo;
     private java.sql.Time hora;
 
-    public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, int Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora) {
+    public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora) {
 
         this.resultadoCodigo = resultadoCodigo;
         this.descripcion = descripcion;
@@ -30,6 +30,10 @@ public class Resultado implements Serializable {
         this.Pacientes_codigo = Pacientes_codigo;
         this.Examen_Codigo = Examen_Codigo;
         this.hora = hora;
+    }
+
+    public Resultado() {
+        
     }
 
     public Time getHora() {
@@ -73,11 +77,11 @@ public class Resultado implements Serializable {
         this.estado = estado;
     }
 
-    public int getLaboratoristas_registro() {
+    public String getLaboratoristas_registro() {
         return this.Laboratoristas_registro;
     }
 
-    public void setLaboratoristasRegistro(int Laboratoristas_registro) {
+    public void setLaboratoristasRegistro(String Laboratoristas_registro) {
         this.Laboratoristas_registro = Laboratoristas_registro;
     }
 

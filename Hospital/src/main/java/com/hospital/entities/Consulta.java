@@ -21,6 +21,10 @@ public class Consulta implements Serializable {
         this.estado = estado;
     }
 
+    public Consulta() {
+    
+    }
+
     public int getIdConsulta() {
         return this.idConsulta;
     }

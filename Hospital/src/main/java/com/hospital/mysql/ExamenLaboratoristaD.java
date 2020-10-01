@@ -33,7 +33,7 @@ public class ExamenLaboratoristaD implements  ExamenLaboratoristaDAO {
       try {
           stat = connection.prepareStatement(INSERT);
           stat.setString(1,object.getExamen_Codigo());
-          stat.setInt(2,object.getLaboratoristas_registro());
+          stat.setString(2,object.getLaboratoristas_registro());
           stat.setBoolean(3,object.isEstado());
           if (stat.executeUpdate() == 0) {
               System.out.println("crear popover ExamenLaboratorista");
@@ -49,7 +49,7 @@ public class ExamenLaboratoristaD implements  ExamenLaboratoristaDAO {
           try {
               stat = connection.prepareStatement(UPDATE);
               stat.setString(1,object.getExamen_Codigo());
-              stat.setInt(2,object.getLaboratoristas_registro());
+              stat.setString(2,object.getLaboratoristas_registro());
               stat.setBoolean(3,object.isEstado());
               stat.setInt(4, object.getIdExamenLaboratorista());
               if (stat.executeUpdate() == 0) {
@@ -112,7 +112,7 @@ public class ExamenLaboratoristaD implements  ExamenLaboratoristaDAO {
 public ExamenLaboratorista convertir(ResultSet rs){
         
         try {
-            ExamenLaboratorista examenLaboratorista = new ExamenLaboratorista(rs.getInt("idExamenLaboratorista"),rs.getString("Examen_Codigo"),rs.getInt("Laboratoristas_registro"),rs.getBoolean("estado"));
+            ExamenLaboratorista examenLaboratorista = new ExamenLaboratorista(rs.getInt("idExamenLaboratorista"),rs.getString("Examen_Codigo"),rs.getString("Laboratoristas_registro"),rs.getBoolean("estado"));
 
             return examenLaboratorista;
         } catch (SQLException ex) {

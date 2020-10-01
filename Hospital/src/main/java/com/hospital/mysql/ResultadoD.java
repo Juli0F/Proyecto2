@@ -32,7 +32,7 @@ public class ResultadoD implements ResultadoDAO {
             stat.setString(1, object.getDescripcion());
             stat.setDate(2, object.getFechaHora());
             stat.setBoolean(3, object.isEstado());
-            stat.setInt(4, object.getLaboratoristas_registro());
+            stat.setString(4, object.getLaboratoristas_registro());
             stat.setInt(5, object.getMedico_colegiado());
             stat.setString(6, object.getPacientesCodigo());
             stat.setString(7, object.getExamenCodigo());
@@ -55,7 +55,7 @@ public class ResultadoD implements ResultadoDAO {
             stat.setString(1, object.getDescripcion());
             stat.setDate(2, object.getFechaHora());
             stat.setBoolean(3, object.isEstado());
-            stat.setInt(4, object.getLaboratoristas_registro());
+            stat.setString(4, object.getLaboratoristas_registro());
             stat.setInt(5, object.getMedico_colegiado());
             stat.setString(6, object.getPacientesCodigo());
             stat.setString(7, object.getExamenCodigo());
@@ -126,7 +126,7 @@ public class ResultadoD implements ResultadoDAO {
         try {
             Resultado resultado = new Resultado(rs.getString("resultadoCodigo"),
                     rs.getString("descripcion"), rs.getDate("fechaHora"), 
-                    rs.getBoolean("estado"), rs.getInt("Laboratoristas_registro"),
+                    rs.getBoolean("estado"), rs.getString("Laboratoristas_registro"),
                     rs.getInt("Medico_colegiado"), rs.getString("Pacientes_codigo"),
                     rs.getString("Examen_Codigo"),
                     rs.getTime("hora")

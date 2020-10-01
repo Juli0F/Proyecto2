@@ -31,7 +31,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             stat = connection.prepareStatement(INSERT);
             stat.setInt(1, object.getResultado_resultadoCodigo());
             stat.setString(2, object.getExamen_Codigo());
-            stat.setInt(3, object.getLaboratoristas_registro());
+            stat.setString(3, object.getLaboratoristas_registro());
             stat.setInt(4, object.getPacientes_codigo());
             stat.setInt(5, object.getMedico_colegiado());
             stat.setBoolean(6, object.isRealizado());
@@ -53,7 +53,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             stat = connection.prepareStatement(UPDATE);
             stat.setInt(1, object.getResultado_resultadoCodigo());
             stat.setString(2, object.getExamen_Codigo());
-            stat.setInt(3, object.getLaboratoristas_registro());
+            stat.setString(3, object.getLaboratoristas_registro());
             stat.setInt(4, object.getPacientes_codigo());
             stat.setInt(5, object.getMedico_colegiado());
             stat.setBoolean(6, object.isRealizado());
@@ -124,7 +124,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
     public ExamenPaciente convertir(ResultSet rs) {
 
         try {
-            ExamenPaciente examenPaciente = new ExamenPaciente(rs.getInt("idExamenPaciente"), rs.getInt("Resultado_resultadoCodigo"), rs.getString("Examen_Codigo"), rs.getInt("Laboratoristas_registro"), rs.getInt("Pacientes_codigo"), rs.getInt("Medico_colegiado"), rs.getBoolean("realizado"), rs.getBoolean("cancelar"), rs.getBoolean("estado"));
+            ExamenPaciente examenPaciente = new ExamenPaciente(rs.getInt("idExamenPaciente"), rs.getInt("Resultado_resultadoCodigo"), rs.getString("Examen_Codigo"), rs.getString("Laboratoristas_registro"), rs.getInt("Pacientes_codigo"), rs.getInt("Medico_colegiado"), rs.getBoolean("realizado"), rs.getBoolean("cancelar"), rs.getBoolean("estado"));
 
             return examenPaciente;
         } catch (SQLException ex) {

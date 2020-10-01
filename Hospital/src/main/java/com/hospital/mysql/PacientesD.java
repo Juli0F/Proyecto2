@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class PacientesD implements PacientesDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Pacientes (masculino,fecha,peso,estado,tipo_de_sangre,Persona_dpi,) VALUES (?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Pacientes (masculino,fecha,peso,estado,tipo_de_sangre,Persona_dpi,codigo) VALUES (?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Pacientes set masculino = ?, set fecha = ?, set peso = ?, set estado = ?, set tipo_de_sangre = ?, set Persona_dpi = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pacientes WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Pacientes  ";
@@ -29,12 +29,13 @@ public class PacientesD implements PacientesDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.isMasculino());
+            stat.setString(1, object.getGenero());
             stat.setDate(2, object.getFecha());
             stat.setString(3, object.getPeso());
             stat.setBoolean(4, object.isEstado());
             stat.setString(5, object.getTipo_de_sangre());
             stat.setString(6, object.getPersona_dpi());
+            stat.setString(7, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pacientes");
 

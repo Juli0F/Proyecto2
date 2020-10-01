@@ -39,6 +39,14 @@ public class Paciente implements Serializable {
         this.codigo = codigo;
     }
 
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
     public String isMasculino() {
         return this.genero;
     }

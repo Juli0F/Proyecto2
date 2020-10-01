@@ -45,16 +45,16 @@ public class Interprete {
     private int idAgenda;
 
     public static void main(String[] args) {
-        //  Interprete interprete = new Interprete();
-        //interprete.loadFile();
-        //DateTimeFormatter parseFormat = new DateTimeFormatterBuilder().appendPattern("hh[:mm]a").toFormatter();
-        //LocalTime localTime = LocalTime.parse("12:15 am", parseFormat);
-        System.out.println("Print ");
-        System.out.println("Hora: " + java.sql.Time.valueOf("10:30:00"));
-//        DateTimeFormatter parser = DateTimeFormatter.ofPattern("h[:mm]a");
-        //              LocalTime localTime = LocalTime.parse("10AM", parser);
-
-        //   System.out.println("Hora: "+localTime.toString());
+        Interprete interprete = new Interprete();
+        interprete.loadFile();
+//        //DateTimeFormatter parseFormat = new DateTimeFormatterBuilder().appendPattern("hh[:mm]a").toFormatter();
+//        //LocalTime localTime = LocalTime.parse("12:15 am", parseFormat);
+//        System.out.println("Print ");
+//        System.out.println("Hora: " + java.sql.Time.valueOf("10:30:00"));
+////        DateTimeFormatter parser = DateTimeFormatter.ofPattern("h[:mm]a");
+//        //              LocalTime localTime = LocalTime.parse("10AM", parser);
+//
+//        //   System.out.println("Hora: "+localTime.toString());
     }
 
     public Interprete() {
@@ -155,6 +155,8 @@ public class Interprete {
                     }
 
                 }
+                persona.setTelefono("");
+                persona.setCorreo("");
                 manager.getPersonaDAO().insert(persona);
                 manager.getUsuarioDAO().insert(usuario);
                 admin.setCodigo(usuario.getCodigo());
@@ -169,19 +171,17 @@ public class Interprete {
         Persona persona;
         Usuario usuario;
         Medico medico;
-        String[] horario ;
-        List<String> especialidades ;
+        String[] horario;
+        List<String> especialidades;
 
         for (int i = 0; i < listaDoctor.getLength(); i++) {
 
-            
             persona = new Persona();
             medico = new Medico();
             usuario = new Usuario();
             horario = new String[2];
             especialidades = new ArrayList<>();
 
-            
             // Cojo el nodo actual
             Node nodo = listaDoctor.item(i);
             // Compruebo si el nodo es un elemento
@@ -216,17 +216,19 @@ public class Interprete {
 
                 }
                 manager.getPersonaDAO().insert(persona);
-                medico.setEntrada(java.sql.Time.valueOf(horario[0]+":00"));
-                medico.setSalida(java.sql.Time.valueOf(horario[1]+":00"));
+                medico.setEntrada(java.sql.Time.valueOf(horario[0] + ":00"));
+                medico.setSalida(java.sql.Time.valueOf(horario[1] + ":00"));
+                medico.setPersona_dpi(persona.getDpi());
                 manager.getMedicoDAO().insert(medico);
                 manager.getUsuarioDAO().insert(usuario);
                 int colegiado = manager.getMedicoDAO().lastInsertId();
-                
+                System.out.println("==========>. " + colegiado + "===" + medico.getColegiado());
+
                 for (String especialidad : especialidades) {
-                    
-                    Especialidad es = new Especialidad(0, especialidad, true, colegiado);
+
+                    Especialidad es = new Especialidad(0, especialidad, true, medico.getColegiado());
                     manager.getEspecialidadDAO().insert(es);
-                    
+
                 }
                 System.out.println("");
             }
@@ -240,17 +242,17 @@ public class Interprete {
         Persona persona;
         Usuario usuario;
         Laboratorista laboratorista;
-        String[] horario ;
-        List<String> turnos ;
-        
+        String[] horario;
+        List<String> turnos;
+
         for (int i = 0; i < listadoLaboratorista.getLength(); i++) {
-            
+
             persona = new Persona();
             laboratorista = new Laboratorista();
             usuario = new Usuario();
             horario = new String[2];
             turnos = new ArrayList<>();
-            
+
             // Cojo el nodo actual
             Node nodo = listadoLaboratorista.item(i);
             // Compruebo si el nodo es un elemento
@@ -271,6 +273,9 @@ public class Interprete {
 
                             System.out.println("Propiedad: " + hijo.getNodeName()
                                     + ", Valor: " + hijo.getTextContent());
+                            crearPersona(persona, hijo.getNodeName(), hijo.getTextContent());
+                            crearUsuario(usuario, hijo.getNodeName(), hijo.getTextContent());
+                            crearLaboratorista(laboratorista, hijo.getNodeName(), hijo.getTextContent());
 
                         } else {
                             //dias que trabaja
@@ -280,40 +285,41 @@ public class Interprete {
 
                 }
                 manager.getPersonaDAO().insert(persona);
+                laboratorista.setPersonaDpi(persona.getDpi());
                 manager.getLaboratoristasDAO().insert(laboratorista);
-                
+
                 for (String turno : turnos) {
-                    DiaTrabajo diaTrabajo = null ;
+                    DiaTrabajo diaTrabajo = null;
+
                     switch (turno) {
                         case "LUNES":
-                            diaTrabajo = new  DiaTrabajo(0,1,laboratorista.getRegistro(),true);
-                            
+                            diaTrabajo = new DiaTrabajo(0, 1, laboratorista.getRegistro(), true);
+
                             break;
                         case "MARTES":
-                            diaTrabajo = new  DiaTrabajo(0,2,laboratorista.getRegistro(),true);
+                            diaTrabajo = new DiaTrabajo(0, 2, laboratorista.getRegistro(), true);
                             break;
                         case "MIERCOLES":
-                            diaTrabajo = new  DiaTrabajo(0,3,laboratorista.getRegistro(),true);
+                            diaTrabajo = new DiaTrabajo(0, 3, laboratorista.getRegistro(), true);
                             break;
                         case "JUEVES":
-                            diaTrabajo = new  DiaTrabajo(0,4,laboratorista.getRegistro(),true);
+                            diaTrabajo = new DiaTrabajo(0, 4, laboratorista.getRegistro(), true);
                             break;
                         case "VIERNES":
-                            diaTrabajo = new  DiaTrabajo(0,5,laboratorista.getRegistro(),true);
-                                break;
+                            diaTrabajo = new DiaTrabajo(0, 5, laboratorista.getRegistro(), true);
+                            break;
                         case "SABADO":
-                            diaTrabajo = new  DiaTrabajo(0,6,laboratorista.getRegistro(),true);
+                            diaTrabajo = new DiaTrabajo(0, 6, laboratorista.getRegistro(), true);
                             break;
                         case "DOMINGO":
-                            diaTrabajo = new  DiaTrabajo(0,7,laboratorista.getRegistro(),true);
-                                break;        
-                        
-                            
-                            
+                            diaTrabajo = new DiaTrabajo(0, 7, laboratorista.getRegistro(), true);
+                            break;
+
                     }
                     manager.getDiaTrabajoDAO().insert(diaTrabajo);
                 }
-                
+                usuario.setPersonaDpi(persona.getDpi());
+                System.out.println("================>" + usuario.getPersona_dpi() + "== " + persona.getDpi());
                 manager.getUsuarioDAO().insert(usuario);
                 System.out.println("");
             }
@@ -321,19 +327,19 @@ public class Interprete {
         }
     }
 
-    public  void tagPaciente(NodeList listadoPaciente) {
+    public void tagPaciente(NodeList listadoPaciente) {
         // Recorro las etiquetas
         System.out.println(" <========>Paciente");
-        
+
         Persona persona;
         Usuario usuario;
         Paciente paciente;
-        
+
         for (int i = 0; i < listadoPaciente.getLength(); i++) {
             persona = new Persona();
             paciente = new Paciente();
             usuario = new Usuario();
-            
+
             // Cojo el nodo actual
             Node nodo = listadoPaciente.item(i);
             // Compruebo si el nodo es un elemento
@@ -352,30 +358,37 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+
                         crearPersona(persona, hijo.getNodeName(), hijo.getTextContent());
-                        crearPaciente(paciente,  hijo.getNodeName(), hijo.getTextContent());
-                        crearUsuario(usuario,  hijo.getNodeName(), hijo.getTextContent());
-                        
+                        crearPaciente(paciente, hijo.getNodeName(), hijo.getTextContent());
+                        crearUsuario(usuario, hijo.getNodeName(), hijo.getTextContent());
 
                     }
 
                 }
                 manager.getPersonaDAO().insert(persona);
+                usuario.setPersonaDpi(persona.getDpi());
                 manager.getUsuarioDAO().insert(usuario);
+
+                paciente.setPersona_dpi(persona.getDpi());
+
                 manager.getPacientesDAO().insert(paciente);
-                
+
                 System.out.println("");
             }
 
         }
     }
 
-    public static void tagExamen(NodeList listadoExamen) {
+    public  void tagExamen(NodeList listadoExamen) {
         // Recorro las etiquetas
         System.out.println(" <========>Examen");
+        Examen examen;
         for (int i = 0; i < listadoExamen.getLength(); i++) {
             // Cojo el nodo actual
             Node nodo = listadoExamen.item(i);
+            examen = new Examen();
+                    
             // Compruebo si el nodo es un elemento
             if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                 // Lo transformo a Element
@@ -392,6 +405,7 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+                        crearExamen(examen, hijo.getNodeName(), hijo.getTextContent());
 
                     }
 
@@ -402,10 +416,14 @@ public class Interprete {
         }
     }
 
-    public static void tagInforme(NodeList listadoInforme) {
+    public  void tagInforme(NodeList listadoInforme) {
         // Recorro las etiquetas
         System.out.println(" <========>Examen");
+        Informe informe ;
         for (int i = 0; i < listadoInforme.getLength(); i++) {
+            
+            informe = new Informe();
+                    
             // Cojo el nodo actual
             Node nodo = listadoInforme.item(i);
             // Compruebo si el nodo es un elemento
@@ -424,6 +442,7 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+                        crearInforme(informe, hijo.getNodeName(), hijo.getTextContent());
 
                     }
 
@@ -434,11 +453,13 @@ public class Interprete {
         }
     }
 
-    public static void tagResultado(NodeList listadoResultado) {
+    public void tagResultado(NodeList listadoResultado) {
         // Recorro las etiquetas
+        Resultado resultado;
         System.out.println(" <========>Examen");
         for (int i = 0; i < listadoResultado.getLength(); i++) {
             // Cojo el nodo actual
+            resultado = new Resultado();
             Node nodo = listadoResultado.item(i);
             // Compruebo si el nodo es un elemento
             if (nodo.getNodeType() == Node.ELEMENT_NODE) {
@@ -456,7 +477,7 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
-                        
+                        crearResultado(resultado, hijo.getNodeName(), hijo.getTextContent());
 
                     }
 
@@ -473,6 +494,7 @@ public class Interprete {
         for (int i = 0; i < listadoDeCitas.getLength(); i++) {
             // Cojo el nodo actual
             Node nodo = listadoDeCitas.item(i);
+            boolean existeAgenda = false;
             // Compruebo si el nodo es un elemento
             if (nodo.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -481,6 +503,7 @@ public class Interprete {
                 Dia dia = null;
                 java.sql.Time horaCita = null;
                 java.sql.Date fechaCita = null;
+                Integer colegiadoMedico = null;
 
                 // Lo transformo a Element
                 Element e = (Element) nodo;
@@ -519,25 +542,27 @@ public class Interprete {
                                 }
 
                                 //}
+                                
                                 break;
                             case "MEDICO":
                                 if (agendaMedica != null) {
 
                                 } else {
 
-                                    if (manager.getMedicoDAO().obtener(Integer.parseInt(value)) == null) {
-                                        System.out.println("Mostrar error el Medico no existe");
+                                    if (manager.getMedicoDAO().getMedicoByCodigoUsuario(value) == null) {
+
+                                        System.out.println("Mostrar error el Medico no existe Con el Codigo " + value);
                                     } else {
 
-                                        if (manager.getAgendaDAO().obtenerAgendaMedica(Integer.parseInt(value)) == null) {
-                                            Agenda nueva = new Agenda(Integer.parseInt(value));
-
-                                            manager.getAgendaDAO().insert(nueva);
-
-                                            agenda = manager.getAgendaDAO().lastInsertId();
-
+                                        if (manager.getAgendaDAO().obtenerAgendaMedica((value)) == null) {
+                                            
+                                           Medico medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(value);
+                                           colegiadoMedico = medico.getColegiado();
+                                            existeAgenda = false;
+                                            
                                         } else {
-                                            agendaMedica = manager.getAgendaDAO().obtenerAgendaMedica(Integer.parseInt(value));
+                                            agendaMedica = manager.getAgendaDAO().obtenerAgendaMedica((value));
+                                            existeAgenda = true;
 
                                         }
                                         //cita.set(Integer.parseInt(value));
@@ -568,20 +593,32 @@ public class Interprete {
                 }
 
                 if (cita.getPacientes_codigo() != null) {
+                    if (existeAgenda) {
 
-                    //verifico que no exista una cita con esa fecha y hora, en la agenda del doctor
-                    if (manager.getDiaDAO().searchCoincidenceByDateHourAndAgenda(fechaCita, horaCita, agendaMedica.getCodigo()) != null) {
+                        //verifico que no exista una cita con esa fecha y hora, en la agenda del doctor
+                        if (manager.getDiaDAO().searchCoincidenceByDateHourAndAgenda(fechaCita, horaCita, agendaMedica.getCodigo()) != null) {
+
+                            manager.getCitaDAO().insert(cita);
+                            //(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, int Cita_codigo, java.sql.Time hora) {
+                            dia = new Dia(0, fechaCita, "", agendaMedica.getCodigo(), cita.getCodigo(), horaCita);
+                            manager.getDiaDAO().insert(dia);
+
+                        } else {
+                            System.out.println(" Lanzar Error Cita existe en fecha y hora   ");
+                        }
+                    } else {
+                        agendaMedica = new Agenda(0, "1",colegiadoMedico , null);
+                        manager.getAgendaDAO().insert(agendaMedica);
+
+                        agenda = manager.getAgendaDAO().lastInsertId();
+                        agendaMedica = manager.getAgendaDAO().obtener(agenda);
 
                         manager.getCitaDAO().insert(cita);
                         //(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, int Cita_codigo, java.sql.Time hora) {
                         dia = new Dia(0, fechaCita, "", agendaMedica.getCodigo(), cita.getCodigo(), horaCita);
                         manager.getDiaDAO().insert(dia);
-                        
-
-                    } else {
-                        System.out.println(" Lanzar Error Cita existe en fecha y hora   ");
                     }
-                }else{
+                } else {
                     System.out.println("no se puede crear cita, falta paciente");
                 }
                 System.out.println("");
@@ -590,10 +627,13 @@ public class Interprete {
         }
     }
 
-    public static void tagConsulta(NodeList listadoDeConsultas) {
+    public  void tagConsulta(NodeList listadoDeConsultas) {
         // Recorro las etiquetas
         System.out.println(" <========>Consultas");
+        Consulta consulta;
         for (int i = 0; i < listadoDeConsultas.getLength(); i++) {
+            
+            consulta = new Consulta();
             // Cojo el nodo actual
             Node nodo = listadoDeConsultas.item(i);
             // Compruebo si el nodo es un elemento
@@ -612,6 +652,7 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+                        crearConsulta(consulta,hijo.getNodeName(), hijo.getTextContent());
 
                     }
 
@@ -759,7 +800,7 @@ public class Interprete {
             case "DPI":
                 usuario.setPersonaDpi(valor);
                 break;
-          
+
         }
     }
 
@@ -779,7 +820,7 @@ public class Interprete {
 
         switch (tag.toUpperCase()) {
             case "REGISTRO":
-                lab.setRegistro(Integer.parseInt(value));
+                lab.setRegistro(value);
                 break;
             case "TRABAJO":
 
@@ -884,10 +925,11 @@ public class Interprete {
                 break;
             case "MEDICO":
 
-                if (manager.getMedicoDAO().obtener(Integer.parseInt(value)) == null) {
+                if (manager.getMedicoDAO().getMedicoByCodigoUsuario(value) == null) {
                     System.out.println("Mostrar error el paciente no existe");
                 } else {
-                    informe.setMedico_colegiado(Integer.parseInt(value));
+                    int colegiado = manager.getMedicoDAO().getMedicoByCodigoUsuario(value).getColegiado();
+                    informe.setMedico_colegiado(colegiado);
                 }
 
                 break;
@@ -950,10 +992,10 @@ public class Interprete {
 
             case "LABORATORISTA":
 
-                if (manager.getLaboratoristasDAO().obtener(Integer.parseInt(value)) == null) {
+                if (manager.getLaboratoristasDAO().obtener((value)) == null) {
                     System.out.println("Mostrar error el paciente no existe");
                 } else {
-                    informe.setLaboratoristasRegistro(Integer.parseInt(value));
+                    informe.setLaboratoristasRegistro((value));
                 }
 
                 break;
@@ -985,12 +1027,12 @@ public class Interprete {
 
     }
 
-    public void crearConsulta(Consulta consulta ,String tag, String value) {
+    public void crearConsulta(Consulta consulta, String tag, String value) {
 
         switch (tag.toUpperCase()) {
             case "TIPO":
                 consulta.setTipo(value);
-                
+
                 break;
             case "COSTO":
                 consulta.setCosto(Double.parseDouble(value));

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class EspecialidadD implements EspecialidadDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Especialidad (nombre,estado,Medico_colegiado,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO Especialidad (nombre,estado,Medico_colegiado) VALUES (?,?,?)";
     private final String UPDATE = "UPDATE Especialidad set nombre = ?, set estado = ?, set Medico_colegiado = ? WHERE idEspecialidad = ? ";
     private final String DELETE = "DELETE Especialidad WHERE idEspecialidad = ? ";
     private final String GETALL = "SELECT * FROM  Especialidad  ";

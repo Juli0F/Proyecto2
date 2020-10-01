@@ -30,6 +30,10 @@ public class Informe implements Serializable {
         this.hora = hora;
     }
 
+    public Informe() {
+    
+    }
+
     public String getCodigo() {
         return codigo;
     }

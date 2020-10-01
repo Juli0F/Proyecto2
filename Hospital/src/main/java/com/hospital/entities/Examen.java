@@ -25,6 +25,10 @@ public class Examen implements Serializable{
   this.estado = estado;
   }
 
+    public Examen() {
+     
+    }
+
   public String getCodigo(){
       return this.Codigo;
   }

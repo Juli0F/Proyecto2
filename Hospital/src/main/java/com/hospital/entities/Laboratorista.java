@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class Laboratorista implements Serializable {
 
-    private int registro;
+    private String registro;
     private java.sql.Date inicio;
     private String ocupado;
     private String estado;
@@ -16,10 +16,8 @@ public class Laboratorista implements Serializable {
 
     public Laboratorista() {
     }
-    
-    
 
-    public Laboratorista(int registro, java.sql.Date inicio, String ocupado, String estado, String Persona_dpi) {
+    public Laboratorista(String registro, java.sql.Date inicio, String ocupado, String estado, String Persona_dpi) {
 
         this.registro = registro;
         this.inicio = inicio;
@@ -28,11 +26,11 @@ public class Laboratorista implements Serializable {
         this.Persona_dpi = Persona_dpi;
     }
 
-    public int getRegistro() {
+    public String getRegistro() {
         return this.registro;
     }
 
-    public void setRegistro(int registro) {
+    public void setRegistro(String registro) {
         this.registro = registro;
     }
 
@@ -64,7 +62,7 @@ public class Laboratorista implements Serializable {
         return this.Persona_dpi;
     }
 
-    public void setPersona_dpi(String Persona_dpi) {
+    public void setPersonaDpi(String Persona_dpi) {
         this.Persona_dpi = Persona_dpi;
     }
 

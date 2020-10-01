@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class UsuarioD implements UsuarioDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Usuario (clave,estado,Persona_dpi,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO Usuario (clave,estado,Persona_dpi,codigo) VALUES (?,?,?,?)";
     private final String UPDATE = "UPDATE Usuario set clave = ?, set estado = ?, set Persona_dpi = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Usuario WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Usuario  ";
@@ -32,6 +32,8 @@ public class UsuarioD implements UsuarioDAO {
             stat.setString(1, object.getClave());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getPersona_dpi());
+            stat.setString(4, object.getCodigo());
+            
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Usuario");
 

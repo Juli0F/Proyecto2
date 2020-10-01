@@ -14,11 +14,13 @@ import java.util.logging.Logger;
 public class MedicoD implements MedicoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Medico (inicio,estado,Persona_dpi,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO Medico (inicio,estado,Persona_dpi,colegiado,horaEntrada,horaSalida) VALUES (?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Medico set inicio = ?, set estado = ?, set Persona_dpi = ? WHERE colegiado = ? ";
     private final String DELETE = "DELETE Medico WHERE colegiado = ? ";
     private final String GETALL = "SELECT * FROM  Medico  ";
     private final String GETONE = GETALL + "WHERE colegiado = ?";
+    private final String GET_MEDICO_BY_CODIGO_USUARIO = "SELECT * FROM "
+            + "Usuario u INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi WHERE u.codigo = ?";
 
     public MedicoD(Connection connection) {
         this.connection = connection;
@@ -32,6 +34,10 @@ public class MedicoD implements MedicoDAO {
             stat.setString(1, object.getInicio());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getPersona_dpi());
+            stat.setInt(4, object.getColegiado());
+            stat.setTime(5, object.getEntrada());
+            stat.setTime(6, object.getSalida());
+            
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Medico");
 
@@ -114,11 +120,11 @@ public class MedicoD implements MedicoDAO {
     public Medico convertir(ResultSet rs) {
 
         try {
-            
+
             Medico medico = new Medico(rs.getInt("colegiado"),
                     rs.getString("inicio"), rs.getBoolean("estado"),
-                    rs.getString("Persona_dpi"),rs.getTime("entrada"),
-                    rs.getTime("salida"));
+                    rs.getString("Persona_dpi"), rs.getTime("horaEntrada"),
+                    rs.getTime("horaSalida"));
 
             return medico;
         } catch (SQLException ex) {
@@ -145,4 +151,24 @@ public class MedicoD implements MedicoDAO {
         }
         return 0;
     }
+
+    @Override
+    public Medico getMedicoByCodigoUsuario(String codigoUsuario) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_MEDICO_BY_CODIGO_USUARIO);
+            stat.setString(1, codigoUsuario);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

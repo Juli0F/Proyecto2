@@ -8,10 +8,10 @@ import java.io.Serializable;
 public class ExamenLaboratorista implements Serializable{
   private int idExamenLaboratorista;
   private String Examen_Codigo;
-  private int Laboratoristas_registro;
+  private String Laboratoristas_registro;
   private boolean estado;
 
-  public ExamenLaboratorista (int idExamenLaboratorista, String Examen_Codigo, int Laboratoristas_registro, boolean estado ){
+  public ExamenLaboratorista (int idExamenLaboratorista, String Examen_Codigo, String Laboratoristas_registro, boolean estado ){
 
   this.idExamenLaboratorista = idExamenLaboratorista;
   this.Examen_Codigo = Examen_Codigo;
@@ -35,11 +35,11 @@ public class ExamenLaboratorista implements Serializable{
       this.Examen_Codigo = Examen_Codigo;
   }
 
-  public int getLaboratoristas_registro(){
+  public String getLaboratoristas_registro(){
       return this.Laboratoristas_registro;
   }
 
-  public void setLaboratoristas_registro(int Laboratoristas_registro){
+  public void setLaboratoristas_registro(String Laboratoristas_registro){
       this.Laboratoristas_registro = Laboratoristas_registro;
   }
 

@@ -30,7 +30,7 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
         try {
             stat = connection.prepareStatement(INSERT);
             stat.setInt(1, object.getTurno_idTurno());
-            stat.setInt(2, object.getLaboratoristas_registro());
+            stat.setString(2, object.getLaboratoristas_registro());
             stat.setBoolean(3, object.isEstado());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover DiaTrabajo");
@@ -47,7 +47,7 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
         try {
             stat = connection.prepareStatement(UPDATE);
             stat.setInt(1, object.getTurno_idTurno());
-            stat.setInt(2, object.getLaboratoristas_registro());
+            stat.setString(2, object.getLaboratoristas_registro());
             stat.setBoolean(3, object.isEstado());
             stat.setInt(4, object.getIdTrabajoLaboratoristaLaboratorista());
             if (stat.executeUpdate() == 0) {
@@ -114,7 +114,7 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
     public DiaTrabajo convertir(ResultSet rs) {
 
         try {
-            DiaTrabajo diaTrabajo = new DiaTrabajo(rs.getInt("idTrabajoLaboratoristaLaboratorista"), rs.getInt("Turno_idTurno"), rs.getInt("Laboratoristas_registro"), rs.getBoolean("estado"));
+            DiaTrabajo diaTrabajo = new DiaTrabajo(rs.getInt("idTrabajoLaboratoristaLaboratorista"), rs.getInt("Turno_idTurno"), rs.getString("Laboratoristas_registro"), rs.getBoolean("estado"));
 
             return diaTrabajo;
         } catch (SQLException ex) {

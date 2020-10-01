@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class PersonaD implements PersonaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Persona (nombre,telefono,correo,estado,) VALUES (?,?,?,?)";
+    private final String INSERT = "INSERT INTO Persona (nombre,telefono,correo,estado,dpi) VALUES (?,?,?,?,?)";
     private final String UPDATE = "UPDATE Persona set nombre = ?, set telefono = ?, set correo = ?, set estado = ? WHERE dpi = ? ";
     private final String DELETE = "DELETE Persona WHERE dpi = ? ";
     private final String GETALL = "SELECT * FROM  Persona  ";
@@ -33,6 +33,7 @@ public class PersonaD implements PersonaDAO {
             stat.setString(2, object.getTelefono());
             stat.setString(3, object.getCorreo());
             stat.setBoolean(4, object.isEstado());
+            stat.setString(5, object.getDpi());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Persona");
 
