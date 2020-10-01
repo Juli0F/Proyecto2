@@ -19,6 +19,7 @@ public class AgendaD implements AgendaDAO {
     private final String DELETE = "DELETE Agenda WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Agenda  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String GET_AGENDA_MEDICO = GETALL + "WHERE Medico_colegiado = ?";
 
     public AgendaD(Connection connection) {
         this.connection = connection;
@@ -86,6 +87,25 @@ public class AgendaD implements AgendaDAO {
         try {
             stat = connection.prepareStatement(GETONE);
             stat.setInt(1, id);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+     @Override
+    public Agenda obtenerAgendaMedica(Integer colegiadoMedico) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_AGENDA_MEDICO);
+            stat.setInt(1, colegiadoMedico);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));

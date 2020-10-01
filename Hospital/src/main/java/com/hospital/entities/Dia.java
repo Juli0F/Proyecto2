@@ -1,64 +1,77 @@
 package com.hospital.entities;
 
 import java.io.Serializable;
+import java.sql.Time;
+
 /**
  *
  * @author Julio
  */
-public class Dia implements Serializable{
-  private int idDia;
-  private java.sql.Date fecha;
-  private String descripcion;
-  private int Agenda_codigo;
-  private int Cita_codigo;
+public class Dia implements Serializable {
 
-  public Dia (int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, int Cita_codigo ){
+    private int idDia;
+    private java.sql.Date fecha;
+    private String descripcion;
+    private int Agenda_codigo;
+    private String citaCodigo;
+    private java.sql.Time hora;
 
-  this.idDia = idDia;
-  this.fecha = fecha;
-  this.descripcion = descripcion;
-  this.Agenda_codigo = Agenda_codigo;
-  this.Cita_codigo = Cita_codigo;
-  }
+    public Dia(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, String Cita_codigo, java.sql.Time hora) {
 
-  public int getIdDia(){
-      return this.idDia;
-  }
+        this.hora = hora;
+        this.idDia = idDia;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.Agenda_codigo = Agenda_codigo;
+        this.citaCodigo = Cita_codigo;
+    }
 
-  public void setIdDia(int idDia){
-      this.idDia = idDia;
-  }
+    public Time getHora() {
+        return hora;
+    }
 
-  public java.sql.Date getFecha(){
-      return this.fecha;
-  }
+    public void setHora(Time hora) {
+        this.hora = hora;
+    }
 
-  public void setFecha(java.sql.Date fecha){
-      this.fecha = fecha;
-  }
+    public int getIdDia() {
+        return this.idDia;
+    }
 
-  public String getDescripcion(){
-      return this.descripcion;
-  }
+    public void setIdDia(int idDia) {
+        this.idDia = idDia;
+    }
 
-  public void setDescripcion(String descripcion){
-      this.descripcion = descripcion;
-  }
+    public java.sql.Date getFecha() {
+        return this.fecha;
+    }
 
-  public int getAgenda_codigo(){
-      return this.Agenda_codigo;
-  }
+    public void setFecha(java.sql.Date fecha) {
+        this.fecha = fecha;
+    }
 
-  public void setAgenda_codigo(int Agenda_codigo){
-      this.Agenda_codigo = Agenda_codigo;
-  }
+    public String getDescripcion() {
+        return this.descripcion;
+    }
 
-  public int getCita_codigo(){
-      return this.Cita_codigo;
-  }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-  public void setCita_codigo(int Cita_codigo){
-      this.Cita_codigo = Cita_codigo;
-  }
+    public int getAgenda_codigo() {
+        return this.Agenda_codigo;
+    }
+
+    public void setAgenda_codigo(int Agenda_codigo) {
+        this.Agenda_codigo = Agenda_codigo;
+    }
+
+    public String getCita_codigo() {
+        return this.citaCodigo;
+    }
+
+    public void setCitaCodigo(String citaCodigo) {
+        this.citaCodigo = citaCodigo;
+    }
 
 }

@@ -10,10 +10,10 @@ public class Consulta implements Serializable {
 
     private int idConsulta;
     private String tipo;
-    private String costo;
+    private double costo;
     private String estado;
 
-    public Consulta(int idConsulta, String tipo, String costo, String estado) {
+    public Consulta(int idConsulta, String tipo, double costo, String estado) {
 
         this.idConsulta = idConsulta;
         this.tipo = tipo;
@@ -37,11 +37,11 @@ public class Consulta implements Serializable {
         this.tipo = tipo;
     }
 
-    public String getCosto() {
+    public double getCosto() {
         return this.costo;
     }
 
-    public void setCosto(String costo) {
+    public void setCosto(double costo) {
         this.costo = costo;
     }
 

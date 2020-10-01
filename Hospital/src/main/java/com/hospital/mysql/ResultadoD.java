@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class ResultadoD implements ResultadoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,) VALUES (?,?,?)";
-    private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fechaHora = ?, set estado = ? WHERE resultadoCodigo = ? ";
+    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,Laboratoristas_registro,Medico_colegiado,Pacientes_codigo,Examen_Codigo,resultadoCodigo,hora) VALUES (?,?,?,?,?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fechaHora = ?, set estado = ?, set Laboratoristas_registro = ?, set Medico_colegiado = ?, set Pacientes_codigo = ?, set Examen_Codigo = ? WHERE resultadoCodigo = ? ";
     private final String DELETE = "DELETE Resultado WHERE resultadoCodigo = ? ";
     private final String GETALL = "SELECT * FROM  Resultado  ";
     private final String GETONE = GETALL + "WHERE resultadoCodigo = ?";
@@ -32,6 +32,12 @@ public class ResultadoD implements ResultadoDAO {
             stat.setString(1, object.getDescripcion());
             stat.setDate(2, object.getFechaHora());
             stat.setBoolean(3, object.isEstado());
+            stat.setInt(4, object.getLaboratoristas_registro());
+            stat.setInt(5, object.getMedico_colegiado());
+            stat.setString(6, object.getPacientesCodigo());
+            stat.setString(7, object.getExamenCodigo());
+            stat.setString(8, object.getResultadoCodigo());
+            stat.setTime(9, object.getHora());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Resultado");
 
@@ -49,7 +55,11 @@ public class ResultadoD implements ResultadoDAO {
             stat.setString(1, object.getDescripcion());
             stat.setDate(2, object.getFechaHora());
             stat.setBoolean(3, object.isEstado());
-            stat.setInt(4, object.getResultadoCodigo());
+            stat.setInt(4, object.getLaboratoristas_registro());
+            stat.setInt(5, object.getMedico_colegiado());
+            stat.setString(6, object.getPacientesCodigo());
+            stat.setString(7, object.getExamenCodigo());
+            stat.setString(8, object.getResultadoCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Resultado");
 
@@ -79,13 +89,13 @@ public class ResultadoD implements ResultadoDAO {
     }
 
     @Override
-    public Resultado obtener(Integer id) {
+    public Resultado obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -102,7 +112,7 @@ public class ResultadoD implements ResultadoDAO {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
-            stat.setInt(1, object.getResultadoCodigo());
+            stat.setString(1, object.getResultadoCodigo());
             if (stat.executeUpdate() == 0) {
 
             }
@@ -114,7 +124,13 @@ public class ResultadoD implements ResultadoDAO {
     public Resultado convertir(ResultSet rs) {
 
         try {
-            Resultado resultado = new Resultado(rs.getInt("resultadoCodigo"), rs.getString("descripcion"), rs.getDate("fechaHora"), rs.getBoolean("estado"));
+            Resultado resultado = new Resultado(rs.getString("resultadoCodigo"),
+                    rs.getString("descripcion"), rs.getDate("fechaHora"), 
+                    rs.getBoolean("estado"), rs.getInt("Laboratoristas_registro"),
+                    rs.getInt("Medico_colegiado"), rs.getString("Pacientes_codigo"),
+                    rs.getString("Examen_Codigo"),
+                    rs.getTime("hora")
+                    );
 
             return resultado;
         } catch (SQLException ex) {
@@ -124,7 +140,7 @@ public class ResultadoD implements ResultadoDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -133,12 +149,14 @@ public class ResultadoD implements ResultadoDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ResultadoD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
+
+ 
 }

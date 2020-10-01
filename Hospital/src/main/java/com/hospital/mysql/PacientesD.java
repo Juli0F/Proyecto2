@@ -55,7 +55,7 @@ public class PacientesD implements PacientesDAO {
             stat.setBoolean(4, object.isEstado());
             stat.setString(5, object.getTipo_de_sangre());
             stat.setString(6, object.getPersona_dpi());
-            stat.setInt(7, object.getCodigo());
+            stat.setString(7, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Pacientes");
 
@@ -85,13 +85,13 @@ public class PacientesD implements PacientesDAO {
     }
 
     @Override
-    public Paciente obtener(Integer id) {
+    public Paciente obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -108,7 +108,7 @@ public class PacientesD implements PacientesDAO {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
-            stat.setInt(1, object.getCodigo());
+            stat.setString(1, object.getCodigo());
             if (stat.executeUpdate() == 0) {
 
             }
@@ -120,7 +120,7 @@ public class PacientesD implements PacientesDAO {
     public Paciente convertir(ResultSet rs) {
 
         try {
-            Paciente pacientes = new Paciente(rs.getInt("codigo"), rs.getString("masculino"), rs.getDate("fecha"), rs.getString("peso"), rs.getBoolean("estado"), rs.getString("tipo_de_sangre"), rs.getString("Persona_dpi"));
+            Paciente pacientes = new Paciente(rs.getString("codigo"), rs.getString("masculino"), rs.getDate("fecha"), rs.getString("peso"), rs.getBoolean("estado"), rs.getString("tipo_de_sangre"), rs.getString("Persona_dpi"));
 
             return pacientes;
         } catch (SQLException ex) {
@@ -130,7 +130,7 @@ public class PacientesD implements PacientesDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -139,12 +139,12 @@ public class PacientesD implements PacientesDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(PacientesD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

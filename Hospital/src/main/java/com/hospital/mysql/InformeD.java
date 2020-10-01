@@ -6,16 +6,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.sql.Time;
 
 public class InformeD implements InformeDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Informe (descripcion,fechaHora,Medico_colegiado,estado,Consulta_idConsulta,Pacientes_codigo,) VALUES (?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Informe set descripcion = ?, set fechaHora = ?, set Medico_colegiado = ?, set estado = ?, set Consulta_idConsulta = ?, set Pacientes_codigo = ? WHERE idInforme = ? ";
+    private final String INSERT = "INSERT INTO Informe (descripcion,fechaHora,Medico_colegiado,estado,Consulta_idConsulta,Pacientes_codigo,hora) VALUES (?,?,?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Informe set descripcion = ?, set fechaHora = ?, set Medico_colegiado = ?, set estado = ?, set Consulta_idConsulta = ?, set hora = ? set Pacientes_codigo = ? WHERE idInforme = ? ";
     private final String DELETE = "DELETE Informe WHERE idInforme = ? ";
     private final String GETALL = "SELECT * FROM  Informe  ";
     private final String GETONE = GETALL + "WHERE idInforme = ?";
@@ -34,7 +36,10 @@ public class InformeD implements InformeDAO {
             stat.setInt(3, object.getMedico_colegiado());
             stat.setBoolean(4, object.isEstado());
             stat.setInt(5, object.getConsulta_idConsulta());
-            stat.setInt(6, object.getPacientes_codigo());
+            stat.setString(6, object.getPacientes_codigo());
+            stat.setTime(7, (object.getHora()));
+            stat.setString(8, object.getCodigo());
+            
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Informe");
 
@@ -54,8 +59,10 @@ public class InformeD implements InformeDAO {
             stat.setInt(3, object.getMedico_colegiado());
             stat.setBoolean(4, object.isEstado());
             stat.setInt(5, object.getConsulta_idConsulta());
-            stat.setInt(6, object.getPacientes_codigo());
-            stat.setInt(7, object.getIdInforme());
+            stat.setString(6, object.getPacientes_codigo());
+            stat.setTime(7, (object.getHora()));
+            stat.setString(8, object.getIdInforme());
+            
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Informe");
 
@@ -85,13 +92,13 @@ public class InformeD implements InformeDAO {
     }
 
     @Override
-    public Informe obtener(Integer id) {
+    public Informe obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -108,7 +115,7 @@ public class InformeD implements InformeDAO {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
-            stat.setInt(1, object.getIdInforme());
+            stat.setString(1, object.getIdInforme());
             if (stat.executeUpdate() == 0) {
 
             }
@@ -116,11 +123,21 @@ public class InformeD implements InformeDAO {
             Logger.getLogger(InformeD.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public LocalTime convertToLocalTime(java.sql.Time time){
+        return time.toLocalTime();
+    }
 
     public Informe convertir(ResultSet rs) {
 
         try {
-            Informe informe = new Informe(rs.getInt("idInforme"), rs.getString("descripcion"), rs.getDate("fechaHora"), rs.getInt("Medico_colegiado"), rs.getBoolean("estado"), rs.getInt("Consulta_idConsulta"), rs.getInt("Pacientes_codigo"));
+            Informe informe = new Informe(rs.getString("idInforme"), 
+                    rs.getString("descripcion"), rs.getDate("fechaHora"), 
+                    rs.getInt("Medico_colegiado"), rs.getBoolean("estado"),
+                    rs.getInt("Consulta_idConsulta"), rs.getString("Pacientes_codigo"),
+                    (rs.getTime("hora"))
+                    
+                    );
+            
 
             return informe;
         } catch (SQLException ex) {
@@ -130,7 +147,7 @@ public class InformeD implements InformeDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -139,12 +156,12 @@ public class InformeD implements InformeDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(InformeD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

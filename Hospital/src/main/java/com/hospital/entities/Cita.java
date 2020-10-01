@@ -8,12 +8,12 @@ import java.io.Serializable;
  */
 public class Cita implements Serializable {
 
-    private int codigo;
+    private String codigo;
     private String descripcion;
     private String estado;
-    private int Pacientes_codigo;
+    private String Pacientes_codigo;
 
-    public Cita(int codigo, String descripcion, String estado, int Pacientes_codigo) {
+    public Cita(String codigo, String descripcion, String estado, String Pacientes_codigo) {
 
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -21,11 +21,15 @@ public class Cita implements Serializable {
         this.Pacientes_codigo = Pacientes_codigo;
     }
 
-    public int getCodigo() {
+    public Cita() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getCodigo() {
         return this.codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -45,11 +49,11 @@ public class Cita implements Serializable {
         this.estado = estado;
     }
 
-    public int getPacientes_codigo() {
+    public String getPacientes_codigo() {
         return this.Pacientes_codigo;
     }
 
-    public void setPacientes_codigo(int Pacientes_codigo) {
+    public void setPacientes_codigo(String Pacientes_codigo) {
         this.Pacientes_codigo = Pacientes_codigo;
     }
 

@@ -6,7 +6,7 @@ import com.hospital.entities.Cita;
  *
  * @author Julio
  */
-public interface CitaDAO extends DAO<Cita,Integer> {
+public interface CitaDAO extends DAO<Cita,String> {
 
 
 }

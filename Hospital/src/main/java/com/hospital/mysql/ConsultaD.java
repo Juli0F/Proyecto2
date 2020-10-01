@@ -30,7 +30,7 @@ public class ConsultaD implements ConsultaDAO {
         try {
             stat = connection.prepareStatement(INSERT);
             stat.setString(1, object.getTipo());
-            stat.setString(2, object.getCosto());
+            stat.setDouble(2, object.getCosto());
             stat.setString(3, object.getEstado());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Consulta");
@@ -47,7 +47,7 @@ public class ConsultaD implements ConsultaDAO {
         try {
             stat = connection.prepareStatement(UPDATE);
             stat.setString(1, object.getTipo());
-            stat.setString(2, object.getCosto());
+            stat.setDouble(2, object.getCosto());
             stat.setString(3, object.getEstado());
             stat.setInt(4, object.getIdConsulta());
             if (stat.executeUpdate() == 0) {
@@ -114,7 +114,7 @@ public class ConsultaD implements ConsultaDAO {
     public Consulta convertir(ResultSet rs) {
 
         try {
-            Consulta consulta = new Consulta(rs.getInt("idConsulta"), rs.getString("tipo"), rs.getString("costo"), rs.getString("estado"));
+            Consulta consulta = new Consulta(rs.getInt("idConsulta"), rs.getString("tipo"), rs.getDouble("costo"), rs.getString("estado"));
 
             return consulta;
         } catch (SQLException ex) {

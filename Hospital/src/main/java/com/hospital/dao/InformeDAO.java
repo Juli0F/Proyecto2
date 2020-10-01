@@ -6,7 +6,7 @@ import com.hospital.entities.Informe;
  *
  * @author Julio
  */
-public interface InformeDAO extends DAO<Informe,Integer> {
+public interface InformeDAO extends DAO<Informe,String> {
 
 
 }

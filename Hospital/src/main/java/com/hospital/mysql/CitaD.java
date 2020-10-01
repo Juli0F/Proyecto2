@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class CitaD implements CitaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Cita (descripcion,estado,Pacientes_codigo,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO Cita (descripcion,estado,Pacientes_codigo,codigo) VALUES (?,?,?,?)";
     private final String UPDATE = "UPDATE Cita set descripcion = ?, set estado = ?, set Pacientes_codigo = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Cita WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Cita  ";
@@ -31,7 +31,8 @@ public class CitaD implements CitaDAO {
             stat = connection.prepareStatement(INSERT);
             stat.setString(1, object.getDescripcion());
             stat.setString(2, object.getEstado());
-            stat.setInt(3, object.getPacientes_codigo());
+            stat.setString(3, object.getPacientes_codigo());
+            stat.setString(4, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Cita");
 
@@ -48,8 +49,8 @@ public class CitaD implements CitaDAO {
             stat = connection.prepareStatement(UPDATE);
             stat.setString(1, object.getDescripcion());
             stat.setString(2, object.getEstado());
-            stat.setInt(3, object.getPacientes_codigo());
-            stat.setInt(4, object.getCodigo());
+            stat.setString(3, object.getPacientes_codigo());
+            stat.setString(4, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Cita");
 
@@ -79,13 +80,13 @@ public class CitaD implements CitaDAO {
     }
 
     @Override
-    public Cita obtener(Integer id) {
+    public Cita obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -102,7 +103,7 @@ public class CitaD implements CitaDAO {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
-            stat.setInt(1, object.getCodigo());
+            stat.setString(1, object.getCodigo());
             if (stat.executeUpdate() == 0) {
 
             }
@@ -114,7 +115,7 @@ public class CitaD implements CitaDAO {
     public Cita convertir(ResultSet rs) {
 
         try {
-            Cita cita = new Cita(rs.getInt("codigo"), rs.getString("descripcion"), rs.getString("estado"), rs.getInt("Pacientes_codigo"));
+            Cita cita = new Cita(rs.getString("codigo"), rs.getString("descripcion"), rs.getString("estado"), rs.getString("Pacientes_codigo"));
 
             return cita;
         } catch (SQLException ex) {
@@ -124,7 +125,7 @@ public class CitaD implements CitaDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -133,12 +134,12 @@ public class CitaD implements CitaDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(CitaD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

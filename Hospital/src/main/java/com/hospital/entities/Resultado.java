@@ -1,54 +1,108 @@
 package com.hospital.entities;
 
 import java.io.Serializable;
+import java.sql.Time;
+
 /**
  *
  * @author Julio
  */
-public class Resultado implements Serializable{
-  private int resultadoCodigo;
-  private String descripcion;
-  private java.sql.Date fechaHora;
-  private boolean estado;
+public class Resultado implements Serializable {
 
-  public Resultado (int resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado ){
+    private String resultadoCodigo;
+    private String descripcion;
+    private java.sql.Date fechaHora;
+    private boolean estado;
+    private int Laboratoristas_registro;
+    private int Medico_colegiado;
+    private String Pacientes_codigo;
+    private String Examen_Codigo;
+    private java.sql.Time hora;
 
-  this.resultadoCodigo = resultadoCodigo;
-  this.descripcion = descripcion;
-  this.fechaHora = fechaHora;
-  this.estado = estado;
-  }
+    public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, int Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora) {
 
-  public int getResultadoCodigo(){
-      return this.resultadoCodigo;
-  }
+        this.resultadoCodigo = resultadoCodigo;
+        this.descripcion = descripcion;
+        this.fechaHora = fechaHora;
+        this.estado = estado;
+        this.Laboratoristas_registro = Laboratoristas_registro;
+        this.Medico_colegiado = Medico_colegiado;
+        this.Pacientes_codigo = Pacientes_codigo;
+        this.Examen_Codigo = Examen_Codigo;
+        this.hora = hora;
+    }
 
-  public void setResultadoCodigo(int resultadoCodigo){
-      this.resultadoCodigo = resultadoCodigo;
-  }
+    public Time getHora() {
+        return hora;
+    }
 
-  public String getDescripcion(){
-      return this.descripcion;
-  }
+    public void setHora(Time hora) {
+        this.hora = hora;
+    }
+    
 
-  public void setDescripcion(String descripcion){
-      this.descripcion = descripcion;
-  }
+    public String getResultadoCodigo() {
+        return this.resultadoCodigo;
+    }
 
-  public java.sql.Date getFechaHora(){
-      return this.fechaHora;
-  }
+    public void setResultadoCodigo(String resultadoCodigo) {
+        this.resultadoCodigo = resultadoCodigo;
+    }
 
-  public void setFechaHora(java.sql.Date fechaHora){
-      this.fechaHora = fechaHora;
-  }
+    public String getDescripcion() {
+        return this.descripcion;
+    }
 
-  public boolean isEstado(){
-      return this.estado;
-  }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-  public void setEstado(boolean estado){
-      this.estado = estado;
-  }
+    public java.sql.Date getFechaHora() {
+        return this.fechaHora;
+    }
+
+    public void setFechaHora(java.sql.Date fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    public boolean isEstado() {
+        return this.estado;
+    }
+
+    public void setEstado(boolean estado) {
+        this.estado = estado;
+    }
+
+    public int getLaboratoristas_registro() {
+        return this.Laboratoristas_registro;
+    }
+
+    public void setLaboratoristasRegistro(int Laboratoristas_registro) {
+        this.Laboratoristas_registro = Laboratoristas_registro;
+    }
+
+    public int getMedico_colegiado() {
+        return this.Medico_colegiado;
+    }
+
+    public void setMedicoColegiado(int Medico_colegiado) {
+        this.Medico_colegiado = Medico_colegiado;
+    }
+
+    public String getPacientesCodigo() {
+        return this.Pacientes_codigo;
+    }
+
+    public void setPacientes_codigo(String Pacientes_codigo) {
+        this.Pacientes_codigo = Pacientes_codigo;
+    }
+
+    public String getExamenCodigo() {
+        return this.Examen_Codigo;
+    }
+
+    public void setExamen_Codigo(String Examen_Codigo) {
+        this.Examen_Codigo = Examen_Codigo;
+    }
 
 }

@@ -21,6 +21,11 @@ public class Agenda implements Serializable {
         this.Laboratoristas_registro = Laboratoristas_registro;
     }
 
+    public Agenda(int Medico_colegiado) {
+        this.Medico_colegiado = Medico_colegiado;
+    }
+    
+
     public int getCodigo() {
         return this.codigo;
     }

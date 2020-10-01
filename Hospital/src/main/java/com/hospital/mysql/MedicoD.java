@@ -114,7 +114,11 @@ public class MedicoD implements MedicoDAO {
     public Medico convertir(ResultSet rs) {
 
         try {
-            Medico medico = new Medico(rs.getInt("colegiado"), rs.getString("inicio"), rs.getBoolean("estado"), rs.getString("Persona_dpi"));
+            
+            Medico medico = new Medico(rs.getInt("colegiado"),
+                    rs.getString("inicio"), rs.getBoolean("estado"),
+                    rs.getString("Persona_dpi"),rs.getTime("entrada"),
+                    rs.getTime("salida"));
 
             return medico;
         } catch (SQLException ex) {

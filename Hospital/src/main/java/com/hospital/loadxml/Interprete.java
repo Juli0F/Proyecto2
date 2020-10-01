@@ -6,10 +6,19 @@
 package com.hospital.loadxml;
 
 import com.hospital.entities.Administrador;
+import com.hospital.entities.Agenda;
+import com.hospital.entities.Cita;
+import com.hospital.entities.Consulta;
+import com.hospital.entities.Dia;
+import com.hospital.entities.DiaTrabajo;
+import com.hospital.entities.Especialidad;
+import com.hospital.entities.Examen;
+import com.hospital.entities.Informe;
 import com.hospital.entities.Medico;
 import com.hospital.entities.Laboratorista;
 import com.hospital.entities.Paciente;
 import com.hospital.entities.Persona;
+import com.hospital.entities.Resultado;
 import com.hospital.entities.Usuario;
 import com.hospital.mysql.Manager;
 import java.io.File;
@@ -33,10 +42,19 @@ import org.xml.sax.SAXException;
 public class Interprete {
 
     private Manager manager;
+    private int idAgenda;
 
     public static void main(String[] args) {
-        Interprete interprete = new Interprete();
-        interprete.loadFile();
+        //  Interprete interprete = new Interprete();
+        //interprete.loadFile();
+        //DateTimeFormatter parseFormat = new DateTimeFormatterBuilder().appendPattern("hh[:mm]a").toFormatter();
+        //LocalTime localTime = LocalTime.parse("12:15 am", parseFormat);
+        System.out.println("Print ");
+        System.out.println("Hora: " + java.sql.Time.valueOf("10:30:00"));
+//        DateTimeFormatter parser = DateTimeFormatter.ofPattern("h[:mm]a");
+        //              LocalTime localTime = LocalTime.parse("10AM", parser);
+
+        //   System.out.println("Hora: "+localTime.toString());
     }
 
     public Interprete() {
@@ -151,14 +169,19 @@ public class Interprete {
         Persona persona;
         Usuario usuario;
         Medico medico;
-        String[] horario;
+        String[] horario ;
+        List<String> especialidades ;
 
         for (int i = 0; i < listaDoctor.getLength(); i++) {
 
+            
             persona = new Persona();
             medico = new Medico();
             usuario = new Usuario();
+            horario = new String[2];
+            especialidades = new ArrayList<>();
 
+            
             // Cojo el nodo actual
             Node nodo = listaDoctor.item(i);
             // Compruebo si el nodo es un elemento
@@ -180,16 +203,30 @@ public class Interprete {
                             horario = tagHorario(hijo);
 
                         } else if (hijo.getNodeName().equalsIgnoreCase("especialidad")) {
-                            tagEspecialidad(hijo);
+                            especialidades = tagEspecialidad(hijo);
 
                         } else {
 
                             crearPersona(persona, hijo.getNodeName(), hijo.getTextContent());
                             crearMedico(medico, hijo.getNodeName(), hijo.getTextContent());
+                            crearUsuario(usuario, hijo.getNodeName(), hijo.getTextContent());
 
                         }
                     }
 
+                }
+                manager.getPersonaDAO().insert(persona);
+                medico.setEntrada(java.sql.Time.valueOf(horario[0]+":00"));
+                medico.setSalida(java.sql.Time.valueOf(horario[1]+":00"));
+                manager.getMedicoDAO().insert(medico);
+                manager.getUsuarioDAO().insert(usuario);
+                int colegiado = manager.getMedicoDAO().lastInsertId();
+                
+                for (String especialidad : especialidades) {
+                    
+                    Especialidad es = new Especialidad(0, especialidad, true, colegiado);
+                    manager.getEspecialidadDAO().insert(es);
+                    
                 }
                 System.out.println("");
             }
@@ -200,7 +237,20 @@ public class Interprete {
     public void tagLaboratorista(NodeList listadoLaboratorista) {
         // Recorro las etiquetas
         System.out.println(" <========>Laboratorista");
+        Persona persona;
+        Usuario usuario;
+        Laboratorista laboratorista;
+        String[] horario ;
+        List<String> turnos ;
+        
         for (int i = 0; i < listadoLaboratorista.getLength(); i++) {
+            
+            persona = new Persona();
+            laboratorista = new Laboratorista();
+            usuario = new Usuario();
+            horario = new String[2];
+            turnos = new ArrayList<>();
+            
             // Cojo el nodo actual
             Node nodo = listadoLaboratorista.item(i);
             // Compruebo si el nodo es un elemento
@@ -224,21 +274,66 @@ public class Interprete {
 
                         } else {
                             //dias que trabaja
-                            tagTrabajo(hijo);
+                            turnos = tagTrabajo(hijo);
                         }
                     }
 
                 }
+                manager.getPersonaDAO().insert(persona);
+                manager.getLaboratoristasDAO().insert(laboratorista);
+                
+                for (String turno : turnos) {
+                    DiaTrabajo diaTrabajo = null ;
+                    switch (turno) {
+                        case "LUNES":
+                            diaTrabajo = new  DiaTrabajo(0,1,laboratorista.getRegistro(),true);
+                            
+                            break;
+                        case "MARTES":
+                            diaTrabajo = new  DiaTrabajo(0,2,laboratorista.getRegistro(),true);
+                            break;
+                        case "MIERCOLES":
+                            diaTrabajo = new  DiaTrabajo(0,3,laboratorista.getRegistro(),true);
+                            break;
+                        case "JUEVES":
+                            diaTrabajo = new  DiaTrabajo(0,4,laboratorista.getRegistro(),true);
+                            break;
+                        case "VIERNES":
+                            diaTrabajo = new  DiaTrabajo(0,5,laboratorista.getRegistro(),true);
+                                break;
+                        case "SABADO":
+                            diaTrabajo = new  DiaTrabajo(0,6,laboratorista.getRegistro(),true);
+                            break;
+                        case "DOMINGO":
+                            diaTrabajo = new  DiaTrabajo(0,7,laboratorista.getRegistro(),true);
+                                break;        
+                        
+                            
+                            
+                    }
+                    manager.getDiaTrabajoDAO().insert(diaTrabajo);
+                }
+                
+                manager.getUsuarioDAO().insert(usuario);
                 System.out.println("");
             }
 
         }
     }
 
-    public static void tagPaciente(NodeList listadoPaciente) {
+    public  void tagPaciente(NodeList listadoPaciente) {
         // Recorro las etiquetas
         System.out.println(" <========>Paciente");
+        
+        Persona persona;
+        Usuario usuario;
+        Paciente paciente;
+        
         for (int i = 0; i < listadoPaciente.getLength(); i++) {
+            persona = new Persona();
+            paciente = new Paciente();
+            usuario = new Usuario();
+            
             // Cojo el nodo actual
             Node nodo = listadoPaciente.item(i);
             // Compruebo si el nodo es un elemento
@@ -257,10 +352,18 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+                        crearPersona(persona, hijo.getNodeName(), hijo.getTextContent());
+                        crearPaciente(paciente,  hijo.getNodeName(), hijo.getTextContent());
+                        crearUsuario(usuario,  hijo.getNodeName(), hijo.getTextContent());
+                        
 
                     }
 
                 }
+                manager.getPersonaDAO().insert(persona);
+                manager.getUsuarioDAO().insert(usuario);
+                manager.getPacientesDAO().insert(paciente);
+                
                 System.out.println("");
             }
 
@@ -353,6 +456,7 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+                        
 
                     }
 
@@ -363,7 +467,7 @@ public class Interprete {
         }
     }
 
-    public static void tagCita(NodeList listadoDeCitas) {
+    public void tagCita(NodeList listadoDeCitas) {
         // Recorro las etiquetas
         System.out.println(" <========>Examen");
         for (int i = 0; i < listadoDeCitas.getLength(); i++) {
@@ -371,11 +475,19 @@ public class Interprete {
             Node nodo = listadoDeCitas.item(i);
             // Compruebo si el nodo es un elemento
             if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+
+                Integer agenda = 0;
+                Agenda agendaMedica = null;
+                Dia dia = null;
+                java.sql.Time horaCita = null;
+                java.sql.Date fechaCita = null;
+
                 // Lo transformo a Element
                 Element e = (Element) nodo;
                 // Obtengo sus hijos
                 NodeList hijos = e.getChildNodes();
                 // Recorro sus hijos
+                Cita cita = new Cita();
                 for (int j = 0; j < hijos.getLength(); j++) {
                     // Obtengo al hijo actual
                     Node hijo = hijos.item(j);
@@ -385,9 +497,92 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
+                        String value = hijo.getTextContent();
+
+                        switch (hijo.getNodeName().toUpperCase()) {
+                            case "CODIGO":
+                                cita.setCodigo(value);
+
+                                break;
+                            case "PACIENTE":
+                                //CONSULTA,VERIFICA QUE EL PACIENTE EXISTA DENTRO DE LA DB
+
+                                //if (agendaMedica != null) {
+                                if (manager.getPacientesDAO().obtener(value) == null) {
+
+                                    System.out.println("Aun no Existe agenda, crear");
+
+                                } else {
+
+                                    cita.setPacientes_codigo(value);
+
+                                }
+
+                                //}
+                                break;
+                            case "MEDICO":
+                                if (agendaMedica != null) {
+
+                                } else {
+
+                                    if (manager.getMedicoDAO().obtener(Integer.parseInt(value)) == null) {
+                                        System.out.println("Mostrar error el Medico no existe");
+                                    } else {
+
+                                        if (manager.getAgendaDAO().obtenerAgendaMedica(Integer.parseInt(value)) == null) {
+                                            Agenda nueva = new Agenda(Integer.parseInt(value));
+
+                                            manager.getAgendaDAO().insert(nueva);
+
+                                            agenda = manager.getAgendaDAO().lastInsertId();
+
+                                        } else {
+                                            agendaMedica = manager.getAgendaDAO().obtenerAgendaMedica(Integer.parseInt(value));
+
+                                        }
+                                        //cita.set(Integer.parseInt(value));
+
+                                    }
+
+                                }
+
+                                break;
+
+                            case "FECHA":
+
+                                fechaCita = java.sql.Date.valueOf(value);
+
+                                break;
+                            case "HORA":
+
+                                horaCita = java.sql.Time.valueOf(value + ":00");
+                                //dia.setHora(java.sql.Time.valueOf(value+":00"));
+
+                                break;
+                            default:
+
+                        }
 
                     }
 
+                }
+
+                if (cita.getPacientes_codigo() != null) {
+
+                    //verifico que no exista una cita con esa fecha y hora, en la agenda del doctor
+                    if (manager.getDiaDAO().searchCoincidenceByDateHourAndAgenda(fechaCita, horaCita, agendaMedica.getCodigo()) != null) {
+
+                        manager.getCitaDAO().insert(cita);
+                        //(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, int Cita_codigo, java.sql.Time hora) {
+                        dia = new Dia(0, fechaCita, "", agendaMedica.getCodigo(), cita.getCodigo(), horaCita);
+                        manager.getDiaDAO().insert(dia);
+                        
+
+                    } else {
+                        System.out.println(" Lanzar Error Cita existe en fecha y hora   ");
+                    }
+                }else{
+                    System.out.println("no se puede crear cita, falta paciente");
                 }
                 System.out.println("");
             }
@@ -564,8 +759,7 @@ public class Interprete {
             case "DPI":
                 usuario.setPersonaDpi(valor);
                 break;
-            default:
-                throw new AssertionError();
+          
         }
     }
 
@@ -580,57 +774,229 @@ public class Interprete {
 
         }
     }
-    public void crearLaboratorista(Laboratorista lab, String tag, String value){
-        
+
+    public void crearLaboratorista(Laboratorista lab, String tag, String value) {
+
         switch (tag.toUpperCase()) {
             case "REGISTRO":
                 lab.setRegistro(Integer.parseInt(value));
                 break;
             case "TRABAJO":
-                
+
                 lab.setInicio(Date.valueOf(value));
-                
+
                 break;
+            //aun se debe agregar el tipo de examen que realizara
+            //============================================================================================================================leer linea 
             default:
-                
+
         }
-        
-        
+
     }
 
-        public void crearPaciente(Paciente paciente, String tag, String value){
-        
+    public void crearPaciente(Paciente paciente, String tag, String value) {
+
         switch (tag.toUpperCase()) {
             case "CODIGO":
-                
-                paciente.setCodigo(Integer.parseInt(value));
+
+                paciente.setCodigo(value);
                 break;
             case "SEXO":
-                
-                paciente.setMasculino(value);                
+
+                paciente.setMasculino(value);
                 break;
             case "BIRTH":
-                
+
                 paciente.setFecha(java.sql.Date.valueOf(value));
                 break;
             case "PESO":
-                
+
                 paciente.setPeso(value);
                 break;
-             
+
             case "SANGRE":
-                
+
                 paciente.setTipoDeSangre(value);
                 break;
-               
-                  
-            default:
-                
-        }
-        
-        
-    }
-        
-        
 
+            default:
+
+        }
+
+    }
+
+    public void crearExamen(Examen examen, String tag, String value) {
+
+        switch (tag.toUpperCase()) {
+            case "CODIGO":
+
+                examen.setCodigo(value);
+                break;
+            case "NOMBRE":
+
+                examen.setNombre(value);
+                break;
+            case "ORDEN":
+
+                //
+                if (value.equalsIgnoreCase("true")) {
+                    examen.setOrden(true);
+                } else if (value.equalsIgnoreCase("FALSE")) {
+                    examen.setOrden(false);
+                } else {
+                    System.out.println("Lanzar error, no se reconoce token");//==========================================no se reconcoce si es verdadero o falso
+                }
+                break;
+            case "DESCRIPCION":
+                examen.setDescripcion(value);
+                break;
+
+            case "COSTO":
+
+                examen.setCosto(Double.parseDouble(value));
+                break;
+            case "INFORME":
+
+                examen.setFormato(value);
+                break;
+
+            default:
+
+        }
+    }
+
+    public void crearInforme(Informe informe, String tag, String value) {
+
+        switch (tag.toUpperCase()) {
+            case "CODIGO":
+
+                informe.setIdInforme(value);
+                break;
+            case "PACIENTE":
+                //CONSULTA,VERIFICA QUE EL PACIENTE EXISTA DENTRO DE LA DB
+
+                if (manager.getPacientesDAO().obtener(value) == null) {
+                    System.out.println("Mostrar error el paciente no existe");
+                } else {
+                    informe.setPacientes_codigo(value);
+                }
+
+                break;
+            case "MEDICO":
+
+                if (manager.getMedicoDAO().obtener(Integer.parseInt(value)) == null) {
+                    System.out.println("Mostrar error el paciente no existe");
+                } else {
+                    informe.setMedico_colegiado(Integer.parseInt(value));
+                }
+
+                break;
+            case "INFORME":
+
+                informe.setDescripcion(value);
+                break;
+
+            case "FECHA":
+                informe.setFechaHora(java.sql.Date.valueOf(value));
+
+                break;
+            case "HORA":
+
+                informe.setHora(java.sql.Time.valueOf(value + ":00"));
+
+                break;
+
+            default:
+
+        }
+
+    }
+
+    public void crearResultado(Resultado informe, String tag, String value) {
+
+        switch (tag.toUpperCase()) {
+            case "CODIGO":
+
+                informe.setResultadoCodigo(value);
+                break;
+            case "PACIENTE":
+                //CONSULTA,VERIFICA QUE EL PACIENTE EXISTA DENTRO DE LA DB
+
+                if (manager.getPacientesDAO().obtener(value) == null) {
+                    System.out.println("Mostrar error el paciente no existe");
+                } else {
+                    informe.setPacientes_codigo(value);
+                }
+
+                break;
+            case "MEDICO":
+
+                if (manager.getMedicoDAO().obtener(Integer.parseInt(value)) == null) {
+                    System.out.println("Mostrar error el paciente no existe");
+                } else {
+                    informe.setMedicoColegiado(Integer.parseInt(value));
+                }
+
+                break;
+            case "EXAMEN":
+
+                if (manager.getExamenDAO().obtener(Integer.parseInt(value)) == null) {
+                    System.out.println("Mostrar error el Examen no existe");
+                } else {
+
+                    informe.setExamen_Codigo(tag);
+                }
+                break;
+
+            case "LABORATORISTA":
+
+                if (manager.getLaboratoristasDAO().obtener(Integer.parseInt(value)) == null) {
+                    System.out.println("Mostrar error el paciente no existe");
+                } else {
+                    informe.setLaboratoristasRegistro(Integer.parseInt(value));
+                }
+
+                break;
+            case "FECHA":
+                informe.setFechaHora(java.sql.Date.valueOf(value));
+
+                break;
+            case "ORDEN":
+
+                //CARGAR IMAEN O ARCHIVO
+                //====================================================================================================================================REVISAR
+                break;
+
+            case "INFORME":
+
+                //CARGAR IMAEN O ARCHIVO
+                //====================================================================================================================================REVISAR
+                break;
+
+            case "HORA":
+
+                informe.setHora(java.sql.Time.valueOf(value + ":00"));
+
+                break;
+
+            default:
+
+        }
+
+    }
+
+    public void crearConsulta(Consulta consulta ,String tag, String value) {
+
+        switch (tag.toUpperCase()) {
+            case "TIPO":
+                consulta.setTipo(value);
+                
+                break;
+            case "COSTO":
+                consulta.setCosto(Double.parseDouble(value));
+                break;
+            default:
+                System.out.println("Valor no permitido");
+        }
+    }
 }
