@@ -22,10 +22,7 @@
         
         
         <c:if test="${requestScope['usuario'] != null}">
-            <%
-            RequestDispatcher vista = request.getRequestDispatcher("perfil.jsp");
-            vista.forward(request, response);
-                %>
+            
 
         </c:if>
         <c:if test="${requestScope['usuario'] == null}">

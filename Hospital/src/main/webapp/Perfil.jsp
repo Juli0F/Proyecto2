@@ -10,7 +10,8 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <%@include file="css/css-bootstrap.html" %>
+        <title>Hospital-Usuario ${usuario.getCodigo()}</title>
     </head>
     <body>
         <!--  Menu Para el Paciente -->
@@ -102,32 +103,21 @@
             <!--  Menu Para el laboratorista -->
         <c:if test="${requestScope['admin'] != null}">
             <%@include file="css/perfil.html" %>
-            <h2>${admin.getCodigo()}</h2>
-            <p>Click on the buttons inside the tabbed menu:</p>
-
-            <div class="tab">
-                <button class="tablinks" onclick="openCity(event, 'Crear')">London</button>
-                <button class="tablinks" onclick="openCity(event, 'Modificar')">Paris</button>
-                <button class="tablinks" onclick="openCity(event, 'REportes')">Tokyo</button>
-            </div>
-
-            <div id="Crear" class="tabcontent">
-                <h3>London</h3>
-                <p>London is the capital city of England.</p>
-            </div>
-
-            <div id="Modificar" class="tabcontent">
-                <h3>Paris</h3>
-                <p>Paris is the capital of France.</p> 
-            </div>
-
-            <div id="Reportes" class="tabcontent">
-                <h3>Tokyo</h3>
-                <p>Tokyo is the capital of Japan.</p>
-            </div>
+            <%@include file="css/css-examen.html" %>
+            <%@include file="css/css-crear-medico.html" %>
+            <%@include file="css/css-crear-lab.html" %>
+            <%@include file="css/Registrar.html" %>
+            
+            <%@include file="html/navbar-admin.html" %>
+            <%@include file="js/js-crear-paciente.html" %>
+            <%@include file="js/js-crear-examen.html" %>
+            <%@include file="js/js-crear-medico.html" %>
+            <%@include file="js/js-crear-lab.html" %>
             <%@include file="js/js-perfil.html" %>
+            <%@include file="js/Registrar.html" %>
 
         </c:if>
             <!--  Fin laboratorista -->
+            <%@include file="js/js-bootstrap.html" %>
     </body>
 </html>

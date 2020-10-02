@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="Perfil.jsp">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Crear ...
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" onclick="document.getElementById('examen').style.display = 'block'" style="width:auto;">Examen</a>
+                    <a class="dropdown-item" onclick="document.getElementById('registro').style.display = 'block'" style="width:auto;">Consulta</a>
+                    <a class="dropdown-item" onclick="document.getElementById('medico').style.display = 'block'" style="width:auto;">Medico</a>
+                    <a class="dropdown-item" onclick="document.getElementById('lab').style.display = 'block'" style="width:auto;">Laboratorista</a>
+                    <a class="dropdown-item" onclick="document.getElementById('paciente').style.display = 'block'" style="width:auto;">Paciente</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Modificar ...
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">Examen</a>
+                    <a class="dropdown-item" href="#">Consulta</a>
+                    <a class="dropdown-item" href="#">Medico</a>
+                    <a class="dropdown-item" href="#">Especialidad</a>
+                    <a class="dropdown-item" href="#">Laboratorista</a>
+                    <a class="dropdown-item" href="#">Paciente</a>
+                </div>
+            </li>
+
+
+
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Reportes
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+
+<div id="registro" class="modal">
+    <span onclick="document.getElementById('registro').style.display = 'none'" class="close" title="Close Modal">&times;</span>
+    <form class="modal-content" action="/action_page.php">
+        <div class="container">
+            <h1>Crear Cuenta Tipo Paciente</h1>
+            <p>Por favor llene el Siguiente Formulario para crear una Cuenta </p>
+            <hr>
+            <label for="email"><b>Email</b></label>
+            <input type="text" placeholder="Enter Email" name="email" required>
+
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+
+            <label for="psw-repeat"><b>Repeat Password</b></label>
+            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+            <label>
+                <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+            </label>
+
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('registro').style.display = 'none'" class="cancelbtn">Cancel</button>
+                <button type="submit" class="signupbtn">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+<!-- crear Examen-->
+
+<div id="examen" class="modal-examen">
+
+    <form class="modal-content-examen animate-examen " action="LoginController" method="post">
+
+
+        <div class="container-examen">
+
+            <div class="form-row " >
+                <div class="form-group col-md-4">
+                    <label for="codigo">Codigo</label>
+                    <input type="text" class="form-control" id="codigo" placeholder="Codigo" name="codigo">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="examen">Examen</label>
+                    <input type="text" class="form-control" id="examen" placeholder="Nombre del Examen" name="nombre">
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+
+                <div class="form-group col-md-4">
+                    <label for="costo">Costo</label>
+                    <input type="number" step="0.001" class="form-control" id="costo" placeholder="100.50" name="costo">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="descripcion">Descripcion</label>
+                    <input type="text"  class="form-control" id="descripcion" maxlength="45" name="descripcion">
+                </div>
+
+                <div class="form-group col-md-4">
+
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label class="container">Requiere Orden
+                        <input type="checkbox" checked="checked">
+                        <span class="checkmark-check"></span>
+                    </label>
+
+                    <label for="inputState">Tipo De archivo</label>
+                    <select id="inputState" class="form-control">
+                        <option value="pdf" selected>pdf</option>
+                        <option value="png">Imagen 'png'</option>
+                    </select>
+                </div>
+
+
+            </div>
+            <button type="submit" class="btn btn-primary">Crear</button>
+
+        </div>
+
+        <div
+            class="container-examen" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('examen').style.display = 'none'" class="cancelbtn-examen">Cancel</button>
+            <span class="psw-examen">Forgot <a href="#">password?</a></span>
+        </div>
+    </form>
+</div>
+
+
+
+<!--Medico-->
+<div id="medico" class="modal">
+    <span onclick="document.getElementById('medico').style.display = 'none'" class="close" title="Close Modal">&times;</span>
+    <form class="modal-content" action="/action_page.php">
+        <div class="container">
+            <h1>Crear Cuenta Para Medico</h1>
+            <p>El siguiente formulario es para registrar un nuevo
+                medico en el hospital</p>
+            <hr>
+            <label for="codigoMedico"><b>Codigo</b></label>
+            <input type="text" placeholder="Med-123X" id="codigoMedico" name="codigoMedico" required>
+
+            <label for="nombreMedico"><b>Nombre</b></label>
+            <input type="text" placeholder="Dr Malito" id="nombreMedico" name="nombreMedico" required>
+
+            <label for="especialidad"><b>Especialidad</b></label>
+            <input type="text" placeholder="Obstetra" id="especialidad" name="especialidad" required>
+            <p>Si desea agregar otra especialidad, dirigase a modificacione</p>
+
+            <label for="email">Enter your email:</label>
+            <input type="email" id="email" name="email"> 
+
+            <label for="telefono"><b>Telefono</b></label>
+            <input type="number" placeholder="43412120" name="telefono" required>
+
+            <label for="dpiMedico"><b>DPI</b></label>
+            <input type="number" placeholder="12341234121201" name="dpiMedico" required>
+            <br>
+            <label for="colegiadoMedico"><b>Colegiado</b></label>
+            <input type="text" placeholder="12227" id="colegiadoMedico" name="colegiadoMedico" required>
+            <br>
+
+            <label for="horaEntrada"><b>Hora de Entrada</b></label>
+            <input type="TIME"  id="horaEntrada" name="horaEntrada" >
+
+            <label for="horaSalida"><b>Hora de Salida</b></label>
+            <input type="TIME"  id="horaSalida" name="horaSalida" >
+            <br>
+
+            <input type="hidden"  value="d">
+            <br>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+
+            <br>
+            <label for="psw-repeat"><b>Repeat Password</b></label>
+            <input type="password" placeholder="Repeat Password" id="psw-repeat" name="psw-repeat" required>
+
+            <br>
+            <label>
+                <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+            </label>
+
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('medico').style.display = 'none'" class="cancelbtn">Cancel</button>
+                <button type="submit" class="signupbtn">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<!--crear Laboratorista -->
+
+<div id="lab" class="modal">
+    <span onclick="document.getElementById('lab').style.display = 'none'" class="close" title="Close Modal">&times;</span>
+    <form class="modal-content" action="/action_page.php">
+        <div class="container">
+            <h1>Crear Cuenta Para lab</h1>
+            <p>El siguiente formulario es para registrar un nuevo
+                lab en el hospital</p>
+            <hr>
+            <label for="codigolab"><b>Codigo</b></label>
+            <input type="text" placeholder="Med-123X" id="codigolab" name="codigolab" required>
+
+            <label for="nombrelab"><b>Nombre</b></label>
+            <input type="text" placeholder="Dr Malito" id="nombrelab" name="nombrelab" required>
+
+            <label for="telefono"><b>Telefono</b></label>
+            <input type="number" placeholder="43412120" name="telefono" required>
+
+            <label for="telefono"><b>Telefono</b></label>
+            <input type="number" placeholder="43412120" name="telefono" required>
+
+            <label for="especialidad"><b>Especialidad</b></label>
+            <input type="text" placeholder="Obstetra" id="especialidad" name="especialidad" required>
+            <p>Si desea agregar otra especialidad, dirigase a modificacione</p>
+
+            <label for="email">Enter your email:</label>
+            <input type="email" id="email" name="email"> 
+
+            <label for="dpilab"><b>DPI</b></label>
+            <input type="number" placeholder="12341234121201" name="dpilab" required>
+            <br>
+            <label for="colegiadolab"><b>Colegiado</b></label>
+            <input type="text" placeholder="12227" id="colegiadolab" name="colegiadolab" required>
+            <br>
+
+
+            <input type="hidden"  value="d">
+            <br>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+
+            <br>
+            <label for="validarPwd"><b>Validar Password</b></label>
+            <input type="password" placeholder="validar Password" id="psw-repeat" name="validarPwd" required>
+
+
+            <label class="container-check">Lunes 
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check"></span>
+            </label>
+            <label class="container-check" >Martes
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check"></span>
+            </label>
+            <label class="container-check" >Miercoles
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check"></span>
+            </label>
+            <label class="container-check">Jueves
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check"></span>
+            </label>
+            <label class="container-check">Viernes
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check"></span>
+            </label>
+            <label class="container-check">Sabado
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check"></span>
+            </label>
+            <label class="container-check">Domingo
+                <input type="checkbox" name="dia">
+                <span class="checkmark-check" ></span>
+            </label>
+
+
+
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('lab').style.display = 'none'" class="cancelbtn">Cancel</button>
+                <button type="submit" class="signupbtn">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- paciente -->
+
+<div id="paciente" class="modal">
+    <span onclick="document.getElementById('paciente').style.display = 'none'" class="close" title="Close Modal">&times;</span>
+    <form class="modal-content" action="/action_page.php">
+        <div class="container">
+            <h1>Crear Cuenta Para paciente</h1>
+            <p>El siguiente formulario es para registrar un nuevo
+                paciente en el hospital</p>
+            <hr>
+            <label for="codigoPaciente"><b>Codigo</b></label>
+            <input type="text" placeholder="Med-123X" id="codigoPaciente" name="codigoPaciente" required>
+
+            <label for="nombrePaciente"><b>Nombre</b></label>
+            <input type="text" placeholder="Dr Malito" id="nombrePaciente" name="nombrePaciente" required>
+
+            <label for="telefono"><b>Telefono</b></label>
+            <input type="number" placeholder="43412120" name="telefono" required>
+
+            <label for="email"> email:</label>
+            <input type="email" id="email" name="email"> 
+
+            <label for="dpilab"><b>DPI</b></label>
+            <input type="number" placeholder="12341234121201" name="dpilab" required>
+            <br>
+
+            <label for="fecha"><b>Fecha</b></label>
+            <input type="Date" placeholder="12341234121201" name="fecha" id="fecha" required>
+            <br>
+
+            <label for="peso"><b>Peso En Kg</b></label>
+            <input type="text" placeholder="66 " id="peso" name="tipoSangre" required>
+
+            <label for="tipoSangre"><b>Tipo De Sangre</b></label>
+            <input type="text" placeholder="O+" id="tipoSangre" name="tipoSangre" required>
+
+
+            <label for="genero">Genero</label>
+            <select id="inputState" class="form-control">
+                <option value="Masculino" selected>Masculino</option>
+                <option value="Femenino">Femenino</option>
+
+            </select>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+
+            <br>
+            <label for="validarPwd"><b>Validar Password</b></label>
+            <input type="password" placeholder="validar Password" id="psw-repeat" name="validarPwd" required>
+
+
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+            <div class="clearfix">
+                <button type="button" onclick="document.getElementById('paciente').style.display = 'none'" class="cancelbtn">Cancel</button>
+                <button type="submit" class="signupbtn">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+

@@ -5,15 +5,8 @@
  */
 package com.hospital.controllers;
 
-import com.hospital.entities.Administrador;
-import com.hospital.entities.Laboratorista;
-import com.hospital.entities.Medico;
-import com.hospital.entities.Paciente;
-import com.hospital.entities.Usuario;
-import com.hospital.mysql.Manager;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author julio
  */
-public class LoginController extends HttpServlet {
+public class AdminController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +35,10 @@ public class LoginController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoginController</title>");
+            out.println("<title>Servlet AdminController</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet LoginController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AdminController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -77,47 +70,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        manager = new Manager();
-
-        String pagJsp = "index.jsp";
-        System.out.println("Request: " + request.getParameter("uname"));
-
-        String name = request.getParameter("uname");
-        String clave = request.getParameter("psw");
-
-        //verificar si la persona que entro es: Medico, Laboratorista, paciente o adminsitrador
-        Usuario usuario = manager.getUsuarioDAO().getUsrByCodigoAndClave(name, clave);
-        Paciente paciente = null;
-        Medico medico = null;
-        Laboratorista laboratorista = null;
-        Administrador admin = manager.getAdministradorDAO().getAdminByCodeAndPsw(name, clave);
-
-        if (usuario != null) {
-            pagJsp = "Perfil.jsp";
-            System.out.println("pagJsp = " + pagJsp);
-            if (paciente != null) {
-                
-                request.setAttribute("paciente", paciente);
-            } else if (medico != null) {
-                request.setAttribute("medico", medico);
-            } else if (laboratorista != null) {
-                request.setAttribute("laboratorista", laboratorista);
-
-            } else if (admin != null) {
-                request.setAttribute("admin", admin);
-                System.out.println("Admin" + admin.getCodigo());
-            }
-            
-            request.setAttribute("usuario", usuario);
-
-        } else {
-
-            System.out.println("Mostrar PopOver");
-        }
-
-        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
-        vista.forward(request, response);
-
+        processRequest(request, response);
     }
 
     /**
@@ -129,5 +82,5 @@ public class LoginController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    private Manager manager;
+
 }
