@@ -8,5 +8,6 @@ import com.hospital.entities.Administrador;
  */
 public interface AdministradorDAO extends DAO<Administrador,Integer> {
 
-
+//GET_ADMIN_BY_CODE_AND_PSW
+    public Administrador getAdminByCodeAndPsw(String codigo, String pwd);
 }

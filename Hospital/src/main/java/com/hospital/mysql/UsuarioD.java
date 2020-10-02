@@ -17,8 +17,9 @@ public class UsuarioD implements UsuarioDAO {
     private final String INSERT = "INSERT INTO Usuario (clave,estado,Persona_dpi,codigo) VALUES (?,?,?,?)";
     private final String UPDATE = "UPDATE Usuario set clave = ?, set estado = ?, set Persona_dpi = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Usuario WHERE codigo = ? ";
-    private final String GETALL = "SELECT * FROM  Usuario  ";
-    private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String GET_ALL = "SELECT * FROM  Usuario  ";
+    private final String GETONE = GET_ALL + "WHERE codigo = ?";
+    private final String GET_USR_BY_CODIGO_AND_CLAVE = GET_ALL + "WHERE codigo = ? and clave = ?";
 
     public UsuarioD(Connection connection) {
         this.connection = connection;
@@ -33,7 +34,7 @@ public class UsuarioD implements UsuarioDAO {
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getPersona_dpi());
             stat.setString(4, object.getCodigo());
-            
+
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Usuario");
 
@@ -67,7 +68,7 @@ public class UsuarioD implements UsuarioDAO {
         ResultSet rs = null;
         List<Usuario> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -142,5 +143,25 @@ public class UsuarioD implements UsuarioDAO {
             Logger.getLogger(UsuarioD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
+    }
+
+    @Override
+    public Usuario getUsrByCodigoAndClave(String codigo, String clave) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_USR_BY_CODIGO_AND_CLAVE);
+            stat.setString(1, codigo);
+            stat.setString(2,clave);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -158,6 +158,9 @@ public class Interprete {
                 persona.setTelefono("");
                 persona.setCorreo("");
                 manager.getPersonaDAO().insert(persona);
+                admin.setCodigo(usuario.getCodigo());
+                admin.setPersona_dpi(persona.getDpi());
+                manager.getAdministradorDAO().insert(admin);
                 manager.getUsuarioDAO().insert(usuario);
                 admin.setCodigo(usuario.getCodigo());
                 System.out.println("");
@@ -221,9 +224,7 @@ public class Interprete {
                 medico.setPersona_dpi(persona.getDpi());
                 manager.getMedicoDAO().insert(medico);
                 manager.getUsuarioDAO().insert(usuario);
-                int colegiado = manager.getMedicoDAO().lastInsertId();
-                System.out.println("==========>. " + colegiado + "===" + medico.getColegiado());
-
+                
                 for (String especialidad : especialidades) {
 
                     Especialidad es = new Especialidad(0, especialidad, true, medico.getColegiado());
@@ -359,15 +360,17 @@ public class Interprete {
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
 
+                        crearUsuario(usuario, hijo.getNodeName(), hijo.getTextContent());
                         crearPersona(persona, hijo.getNodeName(), hijo.getTextContent());
                         crearPaciente(paciente, hijo.getNodeName(), hijo.getTextContent());
-                        crearUsuario(usuario, hijo.getNodeName(), hijo.getTextContent());
+                        
 
                     }
 
                 }
                 manager.getPersonaDAO().insert(persona);
                 usuario.setPersonaDpi(persona.getDpi());
+                
                 manager.getUsuarioDAO().insert(usuario);
 
                 paciente.setPersona_dpi(persona.getDpi());
@@ -824,8 +827,9 @@ public class Interprete {
                 break;
             case "TRABAJO":
 
-                lab.setInicio(Date.valueOf(value));
+                lab.setInicio(java.sql.Date.valueOf(value));
 
+                System.out.println("inicio ===========++++++++++++++++++++========================> "+ lab.getInicio().toString());
                 break;
             //aun se debe agregar el tipo de examen que realizara
             //============================================================================================================================leer linea 

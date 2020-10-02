@@ -21,8 +21,15 @@
         
         
         
+        <c:if test="${requestScope['usuario'] != null}">
+            <%
+            RequestDispatcher vista = request.getRequestDispatcher("perfil.jsp");
+            vista.forward(request, response);
+                %>
 
-
+        </c:if>
+        <c:if test="${requestScope['usuario'] == null}">
+            
         
         <%@include file="html/navbar-anti-login.html" %>
         <%@include file="html/Home-anti-login.html" %>
@@ -31,5 +38,7 @@
         <%@include file="js/js-login.html" %>
         <%@include file="js/Registrar.html" %>
         <%@include file="js/home-anti-login.html" %>
+        
+        </c:if>
     </body>
 </html>

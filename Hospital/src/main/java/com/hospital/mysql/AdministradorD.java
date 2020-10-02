@@ -19,6 +19,7 @@ public class AdministradorD implements AdministradorDAO {
     private final String DELETE = "DELETE Administrador WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Administrador  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Administrador a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
 
     public AdministradorD(Connection connection) {
         this.connection = connection;
@@ -29,7 +30,8 @@ public class AdministradorD implements AdministradorDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getPersona_dpi());
+            stat.setString(1, object.getCodigo());
+            stat.setString(2, object.getPersona_dpi());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Administrador");
 
@@ -136,5 +138,25 @@ public class AdministradorD implements AdministradorDAO {
             Logger.getLogger(AdministradorD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
+    }
+
+    @Override
+    public Administrador getAdminByCodeAndPsw(String codigo, String pwd) {
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_ADMIN_BY_CODE_AND_PWD);
+            stat.setString(1, codigo);
+            stat.setString(2, pwd);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

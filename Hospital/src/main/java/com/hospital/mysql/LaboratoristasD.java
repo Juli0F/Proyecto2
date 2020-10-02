@@ -31,8 +31,8 @@ public class LaboratoristasD implements LaboratoristasDAO {
             stat = connection.prepareStatement(INSERT);
             
             stat.setDate(1, object.getInicio());
-            stat.setString(2, object.getOcupado());
-            stat.setString(3, object.getEstado());
+            stat.setString(2, "0");
+            stat.setString(3, "1");
             stat.setString(4, object.getPersona_dpi());
             stat.setString(5, object.getRegistro());
             if (stat.executeUpdate() == 0) {
