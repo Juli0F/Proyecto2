@@ -26,9 +26,10 @@ public class UsuarioD implements UsuarioDAO {
     }
 
     @Override
-    public void insert(Usuario object) {
+    public boolean insert(Usuario object) {
         PreparedStatement stat = null;;
         try {
+            System.out.println("clave : "+ object.getClave());
             stat = connection.prepareStatement(INSERT);
             stat.setString(1, object.getClave());
             stat.setBoolean(2, object.isEstado());
@@ -41,11 +42,14 @@ public class UsuarioD implements UsuarioDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
-    public void modify(Usuario object) {
+    public boolean modify(Usuario object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -59,7 +63,10 @@ public class UsuarioD implements UsuarioDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
@@ -101,7 +108,7 @@ public class UsuarioD implements UsuarioDAO {
     }
 
     @Override
-    public void delete(Usuario object) {
+    public boolean delete(Usuario object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -111,7 +118,10 @@ public class UsuarioD implements UsuarioDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+        
     }
 
     public Usuario convertir(ResultSet rs) {

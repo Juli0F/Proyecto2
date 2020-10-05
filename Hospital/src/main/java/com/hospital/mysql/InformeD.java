@@ -27,7 +27,7 @@ public class InformeD implements InformeDAO {
     }
 
     @Override
-    public void insert(Informe object) {
+    public boolean insert(Informe object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -46,11 +46,13 @@ public class InformeD implements InformeDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Informe object) {
+    public boolean modify(Informe object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -69,7 +71,9 @@ public class InformeD implements InformeDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -111,7 +115,7 @@ public class InformeD implements InformeDAO {
     }
 
     @Override
-    public void delete(Informe object) {
+    public boolean delete(Informe object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -121,7 +125,9 @@ public class InformeD implements InformeDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(InformeD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
     public LocalTime convertToLocalTime(java.sql.Time time){
         return time.toLocalTime();

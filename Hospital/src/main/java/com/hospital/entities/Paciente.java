@@ -91,7 +91,7 @@ public class Paciente implements Serializable {
         return this.Persona_dpi;
     }
 
-    public void setPersona_dpi(String Persona_dpi) {
+    public void setPersonaDpi(String Persona_dpi) {
         this.Persona_dpi = Persona_dpi;
     }
 

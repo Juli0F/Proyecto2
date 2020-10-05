@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface DAO<T,K> {
     
-    public void insert(T object) ;
-    public void modify(T object);
-    public void delete(T object);
+    public boolean insert(T object) ;
+    public boolean modify(T object);
+    public boolean delete(T object);
     public T obtener(K id);
     public List<T> obtenerTodo();
     public K lastInsertId();

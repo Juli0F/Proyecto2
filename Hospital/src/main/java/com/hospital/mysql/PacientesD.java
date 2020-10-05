@@ -17,15 +17,16 @@ public class PacientesD implements PacientesDAO {
     private final String INSERT = "INSERT INTO Pacientes (masculino,fecha,peso,estado,tipo_de_sangre,Persona_dpi,codigo) VALUES (?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Pacientes set masculino = ?, set fecha = ?, set peso = ?, set estado = ?, set tipo_de_sangre = ?, set Persona_dpi = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pacientes WHERE codigo = ? ";
-    private final String GETALL = "SELECT * FROM  Pacientes  ";
-    private final String GETONE = GETALL + "WHERE codigo = ?";
+    private final String GET_ALL = "SELECT * FROM  Pacientes  ";
+    private final String GETONE = GET_ALL + "WHERE codigo = ?";
+    private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Pacientes a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
 
     public PacientesD(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insert(Paciente object) {
+    public boolean insert(Paciente object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -42,11 +43,14 @@ public class PacientesD implements PacientesDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
-    public void modify(Paciente object) {
+    public boolean modify(Paciente object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -63,7 +67,10 @@ public class PacientesD implements PacientesDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
@@ -72,7 +79,7 @@ public class PacientesD implements PacientesDAO {
         ResultSet rs = null;
         List<Paciente> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -105,7 +112,7 @@ public class PacientesD implements PacientesDAO {
     }
 
     @Override
-    public void delete(Paciente object) {
+    public boolean delete(Paciente object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -115,7 +122,10 @@ public class PacientesD implements PacientesDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(PacientesD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+        
     }
 
     public Paciente convertir(ResultSet rs) {
@@ -147,5 +157,25 @@ public class PacientesD implements PacientesDAO {
             Logger.getLogger(PacientesD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "";
+    }
+
+    @Override
+    public Paciente getPacienteByCodeAndPwd(String code, String pwd) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_ADMIN_BY_CODE_AND_PWD);
+            stat.setString(1, code);
+            stat.setString(2, pwd);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

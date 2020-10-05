@@ -63,25 +63,19 @@ and open the template in the editor.
 
 <div id="registro" class="modal">
     <span onclick="document.getElementById('registro').style.display = 'none'" class="close" title="Close Modal">&times;</span>
-    <form class="modal-content" action="/action_page.php">
+    <form class="modal-content" action="AdminController?accion=crearConsulta" method="post">
         <div class="container">
-            <h1>Crear Cuenta Tipo Paciente</h1>
-            <p>Por favor llene el Siguiente Formulario para crear una Cuenta </p>
+            <h1>Crear Consultas</h1>
+            <p>Formulario para crear Consultas</p>
             <hr>
-            <label for="email"><b>Email</b></label>
-            <input type="text" placeholder="Enter Email" name="email" required>
+            <label for="tipo"><b>Tipo</b></label>
+            <input type="text" placeholder="Rayos X" name="tipo" required>
 
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" required>
+            <label for="costo">Costo</label>
+            <input type="number" step="0.001" class="form-control" id="costo" placeholder="100.50" name="costo">
 
-            <label for="psw-repeat"><b>Repeat Password</b></label>
-            <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
 
-            <label>
-                <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-            </label>
 
-            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
 
             <div class="clearfix">
                 <button type="button" onclick="document.getElementById('registro').style.display = 'none'" class="cancelbtn">Cancel</button>
@@ -100,7 +94,7 @@ and open the template in the editor.
 
 <div id="examen" class="modal-examen">
 
-    <form class="modal-content-examen animate-examen " action="LoginController" method="post">
+    <form class="modal-content-examen animate-examen " action="AdminController?accion=crearExamen" method="post">
 
 
         <div class="container-examen">
@@ -135,12 +129,12 @@ and open the template in the editor.
 
                 <div class="form-group col-md-4">
                     <label class="container">Requiere Orden
-                        <input type="checkbox" checked="checked">
+                        <input type="checkbox" checked="checked" value="1" name="reqOrden">
                         <span class="checkmark-check"></span>
                     </label>
 
                     <label for="inputState">Tipo De archivo</label>
-                    <select id="inputState" class="form-control">
+                    <select id="inputState" class="form-control"  name="formato">
                         <option value="pdf" selected>pdf</option>
                         <option value="png">Imagen 'png'</option>
                     </select>
@@ -155,7 +149,7 @@ and open the template in the editor.
         <div
             class="container-examen" style="background-color:#f1f1f1">
             <button type="button" onclick="document.getElementById('examen').style.display = 'none'" class="cancelbtn-examen">Cancel</button>
-            <span class="psw-examen">Forgot <a href="#">password?</a></span>
+            <span class="pwd-examen">Forgot <a href="#">password?</a></span>
         </div>
     </form>
 </div>
@@ -165,17 +159,17 @@ and open the template in the editor.
 <!--Medico-->
 <div id="medico" class="modal">
     <span onclick="document.getElementById('medico').style.display = 'none'" class="close" title="Close Modal">&times;</span>
-    <form class="modal-content" action="/action_page.php">
+    <form class="modal-content" action="AdminController?accion=crearMedico" method="post">
         <div class="container">
             <h1>Crear Cuenta Para Medico</h1>
             <p>El siguiente formulario es para registrar un nuevo
                 medico en el hospital</p>
             <hr>
             <label for="codigoMedico"><b>Codigo</b></label>
-            <input type="text" placeholder="Med-123X" id="codigoMedico" name="codigoMedico" required>
+            <input type="text" placeholder="Med-123X" id="codigoMedico" name="codigo" required>
 
             <label for="nombreMedico"><b>Nombre</b></label>
-            <input type="text" placeholder="Dr Malito" id="nombreMedico" name="nombreMedico" required>
+            <input type="text" placeholder="Dr Malito" id="nombreMedico" name="nombre" required>
 
             <label for="especialidad"><b>Especialidad</b></label>
             <input type="text" placeholder="Obstetra" id="especialidad" name="especialidad" required>
@@ -188,7 +182,7 @@ and open the template in the editor.
             <input type="number" placeholder="43412120" name="telefono" required>
 
             <label for="dpiMedico"><b>DPI</b></label>
-            <input type="number" placeholder="12341234121201" name="dpiMedico" required>
+            <input type="number" placeholder="12341234121201" name="dpi" required>
             <br>
             <label for="colegiadoMedico"><b>Colegiado</b></label>
             <input type="text" placeholder="12227" id="colegiadoMedico" name="colegiadoMedico" required>
@@ -201,14 +195,18 @@ and open the template in the editor.
             <input type="TIME"  id="horaSalida" name="horaSalida" >
             <br>
 
+            <label for="inicio"><b>Inicio De Labores</b></label>
+            <input type="Date" placeholder="12341234121201" name="inicio" id="inicio" required>
+            <br>
+
             <input type="hidden"  value="d">
             <br>
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+            <label for="pwd"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="pwd" name="pwd" required>
 
             <br>
-            <label for="psw-repeat"><b>Repeat Password</b></label>
-            <input type="password" placeholder="Repeat Password" id="psw-repeat" name="psw-repeat" required>
+            <label for="pwd-repeat"><b>Repeat Password</b></label>
+            <input type="password" placeholder="Repeat Password" id="pwd-repeat" name="pwd-repeat" required>
 
             <br>
             <label>
@@ -232,75 +230,77 @@ and open the template in the editor.
 
 <div id="lab" class="modal">
     <span onclick="document.getElementById('lab').style.display = 'none'" class="close" title="Close Modal">&times;</span>
-    <form class="modal-content" action="/action_page.php">
+    <form class="modal-content" action="AdminController?accion=crearLab" method="post" >
         <div class="container">
             <h1>Crear Cuenta Para lab</h1>
             <p>El siguiente formulario es para registrar un nuevo
                 lab en el hospital</p>
             <hr>
             <label for="codigolab"><b>Codigo</b></label>
-            <input type="text" placeholder="Med-123X" id="codigolab" name="codigolab" required>
+            <input type="text" placeholder="Med-123X" id="codigolab" name="codigo" required>
 
             <label for="nombrelab"><b>Nombre</b></label>
-            <input type="text" placeholder="Dr Malito" id="nombrelab" name="nombrelab" required>
+            <input type="text" placeholder="Dr Malito" id="nombrelab" name="nombre" required>
 
             <label for="telefono"><b>Telefono</b></label>
             <input type="number" placeholder="43412120" name="telefono" required>
 
-            <label for="telefono"><b>Telefono</b></label>
-            <input type="number" placeholder="43412120" name="telefono" required>
 
-            <label for="especialidad"><b>Especialidad</b></label>
-            <input type="text" placeholder="Obstetra" id="especialidad" name="especialidad" required>
+
+            <label for="TipoExamen"><b>Especialidad</b></label>
+            <input type="text" placeholder="Obstetra" id="TipoExamen" name="examen" required>
             <p>Si desea agregar otra especialidad, dirigase a modificacione</p>
 
             <label for="email">Enter your email:</label>
             <input type="email" id="email" name="email"> 
 
             <label for="dpilab"><b>DPI</b></label>
-            <input type="number" placeholder="12341234121201" name="dpilab" required>
+            <input type="number" placeholder="12341234121201" name="dpi" required>
             <br>
-            <label for="colegiadolab"><b>Colegiado</b></label>
-            <input type="text" placeholder="12227" id="colegiadolab" name="colegiadolab" required>
+            <label for="registro"><b>Registro</b></label>
+            <input type="text" placeholder="12227" id="colegiadolab" name="registro" required>
             <br>
+
+            <label for="inicio"><b>Inicio De Labores</b></label>
+            <input type="Date" placeholder="12341234121201" name="fecha" id="inicio" required>
 
 
             <input type="hidden"  value="d">
             <br>
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+            <label for="pwd"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="pwd" name="pwd" required>
 
             <br>
             <label for="validarPwd"><b>Validar Password</b></label>
-            <input type="password" placeholder="validar Password" id="psw-repeat" name="validarPwd" required>
+            <input type="password" placeholder="validar Password" id="pwd-repeat" name="validarPwd" required>
 
 
             <label class="container-check">Lunes 
-                <input type="checkbox" name="dia">
+                <input type="checkbox" name="dia" value="1">
                 <span class="checkmark-check"></span>
             </label>
             <label class="container-check" >Martes
-                <input type="checkbox" name="dia">
+                <input type="checkbox" name="dia" value="2">
                 <span class="checkmark-check"></span>
             </label>
             <label class="container-check" >Miercoles
-                <input type="checkbox" name="dia">
+                <input type="checkbox" name="dia" value="3">
                 <span class="checkmark-check"></span>
             </label>
             <label class="container-check">Jueves
-                <input type="checkbox" name="dia">
+                <input type="checkbox" name="dia" value="4">
                 <span class="checkmark-check"></span>
             </label>
             <label class="container-check">Viernes
-                <input type="checkbox" name="dia">
+                <input type="checkbox" name="dia" value="5">
                 <span class="checkmark-check"></span>
             </label>
-            <label class="container-check">Sabado
-                <input type="checkbox" name="dia">
+            <label class="container-check" >Sabado
+                <input type="checkbox" name="dia" value="6">
                 <span class="checkmark-check"></span>
             </label>
             <label class="container-check">Domingo
-                <input type="checkbox" name="dia">
+                <input type="checkbox" name="dia" value="7">
                 <span class="checkmark-check" ></span>
             </label>
 
@@ -320,17 +320,17 @@ and open the template in the editor.
 
 <div id="paciente" class="modal">
     <span onclick="document.getElementById('paciente').style.display = 'none'" class="close" title="Close Modal">&times;</span>
-    <form class="modal-content" action="/action_page.php">
+    <form class="modal-content" action="AdminController?accion=crearPaciente" method="POST">
         <div class="container">
             <h1>Crear Cuenta Para paciente</h1>
             <p>El siguiente formulario es para registrar un nuevo
                 paciente en el hospital</p>
             <hr>
             <label for="codigoPaciente"><b>Codigo</b></label>
-            <input type="text" placeholder="Med-123X" id="codigoPaciente" name="codigoPaciente" required>
+            <input type="text" placeholder="Med-123X" id="codigoPaciente" name="codigo" required>
 
             <label for="nombrePaciente"><b>Nombre</b></label>
-            <input type="text" placeholder="Dr Malito" id="nombrePaciente" name="nombrePaciente" required>
+            <input type="text" placeholder="Dr Malito" id="nombrePaciente" name="nombre" required>
 
             <label for="telefono"><b>Telefono</b></label>
             <input type="number" placeholder="43412120" name="telefono" required>
@@ -339,7 +339,7 @@ and open the template in the editor.
             <input type="email" id="email" name="email"> 
 
             <label for="dpilab"><b>DPI</b></label>
-            <input type="number" placeholder="12341234121201" name="dpilab" required>
+            <input type="number" placeholder="12341234121201" name="dpi" required>
             <br>
 
             <label for="fecha"><b>Fecha</b></label>
@@ -347,24 +347,24 @@ and open the template in the editor.
             <br>
 
             <label for="peso"><b>Peso En Kg</b></label>
-            <input type="text" placeholder="66 " id="peso" name="tipoSangre" required>
+            <input type="text" placeholder="66 " id="peso" name="peso" required>
 
             <label for="tipoSangre"><b>Tipo De Sangre</b></label>
             <input type="text" placeholder="O+" id="tipoSangre" name="tipoSangre" required>
 
 
             <label for="genero">Genero</label>
-            <select id="inputState" class="form-control">
+            <select id="inputState" class="form-control" name="genero">
                 <option value="Masculino" selected>Masculino</option>
                 <option value="Femenino">Femenino</option>
 
             </select>
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+            <label for="pwd"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="pwd" name="pwd" required>
 
             <br>
             <label for="validarPwd"><b>Validar Password</b></label>
-            <input type="password" placeholder="validar Password" id="psw-repeat" name="validarPwd" required>
+            <input type="password" placeholder="validar Password" id="pwd-repeat" name="validarPwd" required>
 
 
             <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>

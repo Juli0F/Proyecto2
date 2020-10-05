@@ -19,13 +19,16 @@ public class PersonaD implements PersonaDAO {
     private final String DELETE = "DELETE Persona WHERE dpi = ? ";
     private final String GETALL = "SELECT * FROM  Persona  ";
     private final String GETONE = GETALL + "WHERE dpi = ?";
+    
+    private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Persona a on u.Persona_dpi = a.dpi where u.codigo = ? AND u.clave = ?";
+    
 
     public PersonaD(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insert(Persona object) {
+    public boolean insert(Persona object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -38,13 +41,19 @@ public class PersonaD implements PersonaDAO {
                 System.out.println("crear popover Persona");
 
             }
+            
+            return true;
+            
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        
+        
     }
 
     @Override
-    public void modify(Persona object) {
+    public boolean modify(Persona object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -59,7 +68,10 @@ public class PersonaD implements PersonaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
@@ -101,7 +113,7 @@ public class PersonaD implements PersonaDAO {
     }
 
     @Override
-    public void delete(Persona object) {
+    public boolean delete(Persona object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -111,7 +123,10 @@ public class PersonaD implements PersonaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(PersonaD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+        
     }
 
     public Persona convertir(ResultSet rs) {
@@ -144,4 +159,25 @@ public class PersonaD implements PersonaDAO {
         }
         return 0;
     }
+    
+    @Override
+    public Persona getPersonaByCodeANdPwd(String codigo, String pwd) {
+         PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_ADMIN_BY_CODE_AND_PWD);
+            stat.setString(1, codigo);
+            stat.setString(2, pwd);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

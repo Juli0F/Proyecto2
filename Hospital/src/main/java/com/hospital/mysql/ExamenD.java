@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class ExamenD implements ExamenDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Examen (nombre,orden,descripcion,costo,formato,estado,) VALUES (?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Examen (nombre,orden,descripcion,costo,formato,estado,codigo) VALUES (?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Examen set nombre = ?, set orden = ?, set descripcion = ?, set costo = ?, set formato = ?, set estado = ? WHERE Codigo = ? ";
     private final String DELETE = "DELETE Examen WHERE Codigo = ? ";
     private final String GETALL = "SELECT * FROM  Examen  ";
@@ -25,7 +25,7 @@ public class ExamenD implements ExamenDAO {
     }
 
     @Override
-    public void insert(Examen object) {
+    public boolean insert(Examen object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -34,18 +34,21 @@ public class ExamenD implements ExamenDAO {
             stat.setString(3, object.getDescripcion());
             stat.setDouble(4, object.getCosto());
             stat.setString(5, object.getFormato());
-            stat.setString(6, object.getEstado());
+            stat.setString(6, "1");
+            stat.setString(7, object.getCodigo());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Examen");
 
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Examen object) {
+    public boolean modify(Examen object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -62,7 +65,10 @@ public class ExamenD implements ExamenDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
@@ -85,13 +91,13 @@ public class ExamenD implements ExamenDAO {
     }
 
     @Override
-    public Examen obtener(Integer id) {
+    public Examen obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -104,7 +110,7 @@ public class ExamenD implements ExamenDAO {
     }
 
     @Override
-    public void delete(Examen object) {
+    public boolean delete(Examen object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -114,7 +120,9 @@ public class ExamenD implements ExamenDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ExamenD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public Examen convertir(ResultSet rs) {
@@ -130,7 +138,7 @@ public class ExamenD implements ExamenDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -139,12 +147,12 @@ public class ExamenD implements ExamenDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ExamenD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 }

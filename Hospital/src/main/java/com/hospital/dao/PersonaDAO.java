@@ -8,5 +8,6 @@ import com.hospital.entities.Persona;
  */
 public interface PersonaDAO extends DAO<Persona,Integer> {
 
+    public Persona getPersonaByCodeANdPwd(String codigo, String pwd);
 
 }

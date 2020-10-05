@@ -31,7 +31,7 @@ public class AgendaD implements AgendaDAO {
     }
 
     @Override
-    public void insert(Agenda object) {
+    public boolean insert(Agenda object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -44,11 +44,13 @@ public class AgendaD implements AgendaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Agenda object) {
+    public boolean modify(Agenda object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -62,7 +64,9 @@ public class AgendaD implements AgendaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -123,7 +127,7 @@ public class AgendaD implements AgendaDAO {
     }
 
     @Override
-    public void delete(Agenda object) {
+    public boolean delete(Agenda object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -133,7 +137,9 @@ public class AgendaD implements AgendaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(AgendaD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public Agenda convertir(ResultSet rs) {
@@ -144,6 +150,7 @@ public class AgendaD implements AgendaDAO {
             return agenda;
         } catch (SQLException ex) {
             Logger.getLogger(AgendaD.class.getName()).log(Level.SEVERE, null, ex);
+            
         }
         return null;
     }

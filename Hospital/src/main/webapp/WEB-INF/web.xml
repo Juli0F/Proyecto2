@@ -8,6 +8,18 @@
         <servlet-name>AdminController</servlet-name>
         <servlet-class>com.hospital.controllers.AdminController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AgendaController</servlet-name>
+        <servlet-class>com.hospital.controllers.AgendaController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PacienteController</servlet-name>
+        <servlet-class>com.hospital.controllers.PacienteController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CitaController</servlet-name>
+        <servlet-class>com.hospital.controllers.CitaController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -15,6 +27,18 @@
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/AdminController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AgendaController</servlet-name>
+        <url-pattern>/AgendaController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PacienteController</servlet-name>
+        <url-pattern>/PacienteController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CitaController</servlet-name>
+        <url-pattern>/CitaController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

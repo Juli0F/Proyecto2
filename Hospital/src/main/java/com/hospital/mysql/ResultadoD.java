@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class ResultadoD implements ResultadoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,Laboratoristas_registro,Medico_colegiado,Pacientes_codigo,Examen_Codigo,resultadoCodigo,hora) VALUES (?,?,?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,Laboratoristas_registro,Medico_colegiado,Pacientes_codigo,Examen_Codigo,resultadoCodigo,hora,orden) VALUES (?,?,?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fechaHora = ?, set estado = ?, set Laboratoristas_registro = ?, set Medico_colegiado = ?, set Pacientes_codigo = ?, set Examen_Codigo = ? WHERE resultadoCodigo = ? ";
     private final String DELETE = "DELETE Resultado WHERE resultadoCodigo = ? ";
     private final String GETALL = "SELECT * FROM  Resultado  ";
@@ -25,7 +25,7 @@ public class ResultadoD implements ResultadoDAO {
     }
 
     @Override
-    public void insert(Resultado object) {
+    public boolean insert(Resultado object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -38,17 +38,21 @@ public class ResultadoD implements ResultadoDAO {
             stat.setString(7, object.getExamenCodigo());
             stat.setString(8, object.getResultadoCodigo());
             stat.setTime(9, object.getHora());
+            stat.setBinaryStream(10, object.getInputStreamOrden());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Resultado");
 
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+
     }
 
     @Override
-    public void modify(Resultado object) {
+    public boolean modify(Resultado object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -66,7 +70,10 @@ public class ResultadoD implements ResultadoDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+
     }
 
     @Override
@@ -108,7 +115,7 @@ public class ResultadoD implements ResultadoDAO {
     }
 
     @Override
-    public void delete(Resultado object) {
+    public boolean delete(Resultado object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -118,19 +125,22 @@ public class ResultadoD implements ResultadoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ResultadoD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+
     }
 
     public Resultado convertir(ResultSet rs) {
 
         try {
             Resultado resultado = new Resultado(rs.getString("resultadoCodigo"),
-                    rs.getString("descripcion"), rs.getDate("fechaHora"), 
+                    rs.getString("descripcion"), rs.getDate("fechaHora"),
                     rs.getBoolean("estado"), rs.getString("Laboratoristas_registro"),
                     rs.getInt("Medico_colegiado"), rs.getString("Pacientes_codigo"),
                     rs.getString("Examen_Codigo"),
                     rs.getTime("hora")
-                    );
+            );
 
             return resultado;
         } catch (SQLException ex) {
@@ -158,5 +168,4 @@ public class ResultadoD implements ResultadoDAO {
         return "";
     }
 
- 
 }

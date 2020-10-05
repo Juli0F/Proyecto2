@@ -10,13 +10,13 @@ import java.sql.Time;
 public class Medico implements Serializable {
 
     private int colegiado;
-    private String inicio;
+    private java.sql.Date inicio;
     private boolean estado;
     private String Persona_dpi;
     private java.sql.Time entrada;
     private java.sql.Time salida;
 
-    public Medico(int colegiado, String inicio, boolean estado, String Persona_dpi, java.sql.Time entrada, java.sql.Time salida) {
+    public Medico(int colegiado, java.sql.Date inicio, boolean estado, String Persona_dpi, java.sql.Time entrada, java.sql.Time salida) {
 
         this.colegiado = colegiado;
         this.inicio = inicio;
@@ -55,11 +55,11 @@ public class Medico implements Serializable {
         this.colegiado = colegiado;
     }
 
-    public String getInicio() {
+    public java.sql.Date getInicio() {
         return this.inicio;
     }
 
-    public void setInicio(String inicio) {
+    public void setInicio(java.sql.Date inicio) {
         this.inicio = inicio;
     }
 

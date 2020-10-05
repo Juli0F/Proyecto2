@@ -25,7 +25,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
     }
 
     @Override
-    public void insert(ExamenPaciente object) {
+    public boolean insert(ExamenPaciente object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -43,11 +43,13 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(ExamenPaciente object) {
+    public boolean modify(ExamenPaciente object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -66,7 +68,9 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -108,7 +112,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
     }
 
     @Override
-    public void delete(ExamenPaciente object) {
+    public boolean delete(ExamenPaciente object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -118,7 +122,9 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ExamenPacienteD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public ExamenPaciente convertir(ResultSet rs) {

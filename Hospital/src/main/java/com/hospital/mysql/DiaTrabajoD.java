@@ -25,7 +25,7 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
     }
 
     @Override
-    public void insert(DiaTrabajo object) {
+    public boolean insert(DiaTrabajo object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -38,11 +38,13 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(DiaTrabajo object) {
+    public boolean modify(DiaTrabajo object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -56,7 +58,9 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -98,7 +102,7 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
     }
 
     @Override
-    public void delete(DiaTrabajo object) {
+    public boolean delete(DiaTrabajo object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -108,7 +112,9 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(DiaTrabajoD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public DiaTrabajo convertir(ResultSet rs) {

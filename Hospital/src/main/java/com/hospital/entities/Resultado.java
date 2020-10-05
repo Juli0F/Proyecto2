@@ -1,5 +1,6 @@
 package com.hospital.entities;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.Time;
 
@@ -18,6 +19,11 @@ public class Resultado implements Serializable {
     private String Pacientes_codigo;
     private String Examen_Codigo;
     private java.sql.Time hora;
+    private InputStream inputStreamOrden;
+    private byte[] ordenOrden;
+    private InputStream inputStreamArchivo;
+    private byte[] ordenArchivo;
+    
 
     public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora) {
 
@@ -31,6 +37,85 @@ public class Resultado implements Serializable {
         this.Examen_Codigo = Examen_Codigo;
         this.hora = hora;
     }
+
+    public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora,InputStream inputStream) {
+        
+
+        this.resultadoCodigo = resultadoCodigo;
+        this.descripcion = descripcion;
+        this.fechaHora = fechaHora;
+        this.estado = estado;
+        this.Laboratoristas_registro = Laboratoristas_registro;
+        this.Medico_colegiado = Medico_colegiado;
+        this.Pacientes_codigo = Pacientes_codigo;
+        this.Examen_Codigo = Examen_Codigo;
+        this.hora = hora;
+        this.inputStreamOrden = inputStream;
+                
+    }
+
+    /**
+     * para mostrar en el navegador
+     * @return 
+     */
+    public byte[] getOrdenOrden() {
+        return ordenOrden;
+    }
+
+    /**
+     * metodo para mostrar en el navegador la orden
+     * @param ordenOrden 
+     */
+    public void setOrdenOrden(byte[] ordenOrden) {
+        this.ordenOrden = ordenOrden;
+    }
+/**
+ * metodo para guardar el archivo en la db
+ * @return 
+ */
+    public InputStream getInputStreamArchivo() {
+        return inputStreamArchivo;
+    }
+/**
+ * para guardar en la db
+ * @param inputStreamArchivo 
+ */
+    public void setInputStreamArchivo(InputStream inputStreamArchivo) {
+        this.inputStreamArchivo = inputStreamArchivo;
+    }
+/**
+ * para mostrar en el navegador
+ * @return 
+ */
+
+    public byte[] getOrdenArchivo() {
+        return ordenArchivo;
+    }
+/**
+ * settear el archivo que se mostrara en el navegador
+ * @param ordenArchivo 
+ */
+    public void setOrdenArchivo(byte[] ordenArchivo) {
+        this.ordenArchivo = ordenArchivo;
+    }
+
+    /**
+     * para guardar la orden en la db
+     * @return 
+     */
+    public InputStream getInputStreamOrden() {
+        return inputStreamOrden;
+    }
+
+    /**
+     * para settear la orden 
+     * @param inputStreamOrden 
+     */
+    
+    public void setInputStreamOrden(InputStream inputStreamOrden) {
+        this.inputStreamOrden = inputStreamOrden;
+    }
+    
 
     public Resultado() {
         

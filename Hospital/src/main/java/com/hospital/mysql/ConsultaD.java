@@ -25,7 +25,7 @@ public class ConsultaD implements ConsultaDAO {
     }
 
     @Override
-    public void insert(Consulta object) {
+    public boolean insert(Consulta object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -38,11 +38,13 @@ public class ConsultaD implements ConsultaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Consulta object) {
+    public boolean modify(Consulta object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -56,7 +58,9 @@ public class ConsultaD implements ConsultaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class ConsultaD implements ConsultaDAO {
         ResultSet rs = null;
         List<Consulta> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GETALL + " WHERE estado = '1'");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -98,7 +102,7 @@ public class ConsultaD implements ConsultaDAO {
     }
 
     @Override
-    public void delete(Consulta object) {
+    public boolean delete(Consulta object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -108,7 +112,9 @@ public class ConsultaD implements ConsultaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(ConsultaD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public Consulta convertir(ResultSet rs) {

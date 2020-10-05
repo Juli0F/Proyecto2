@@ -1,4 +1,39 @@
 <%-- any content can be specified here e.g.: --%>
-<%@ page pageEncoding="UTF-8" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" prefix="c"  %>
-<h2>Hello World!</h2>
+
+
+
+
+    <p>Cuenta De: </p>
+
+
+            <h3>${personaSession.getNombre()}  </h3>
+
+            <div class="tab">
+                <button class="tablinks" onclick="openCity(event, 'home')">Mi Cuenta</button>
+                <a href="PacienteController?citaMedica=cita"><button class="tablinks" onclick="openCity(event, 'citaMedica')">Agendar Cita Medica</button>
+                <button class="tablinks" onclick="openCity(event, 'citaLab')">Agendar Cita en Laboratorios</button>
+                <button class="tablinks" onclick="openCity(event, 'informe')">Informes</button>
+            </div>
+
+            <div id="citaMedica" class="tabcontent">
+                <h3>Cita Medica</h3>
+                
+                <%@include file="seleccionar-medico.jspf" %>"
+                
+            </div>
+
+            <div id="citaLab" class="tabcontent">
+                <p>Paris is the capital of France.</p> 
+            </div>
+
+            <div id="home" class="tabcontent">
+                <h3>Mi Cuenta</h3>
+                <p>Tokyo is the capital of Japan.</p>
+            </div>
+
+            <div id="informe" class="tabcontent">
+                <h3>Informes</h3>
+                <p>Tokyo is the capital of Japan.</p>
+            </div>
+            
+                <%@include file="../../js/js-perfil.html" %>

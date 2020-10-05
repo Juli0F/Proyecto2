@@ -1,0 +1,23 @@
+<div class="fixed-top">
+  <div class="collapse" id="navbarToggleExternalContent">
+    <div class="bg-dark p-4">
+        <a href="PacienteController?accion=cita"><h5 class="text-white h4">Agendar Cita Medica</h5></a>
+      <span class="text-muted">Toggleable via the navbar brand.</span>
+      
+      <a href="PacienteController?accion=citaLAB"><h5 class="text-white h4">Agendar Cita Examenes </h5></a>
+      <span class="text-muted">examenes de laboratorio</span>
+      
+      <h5 class="text-white h4">Informes </h5>
+      <span class="text-muted">Le aparecera un Menu con los tipos de informe Disponible</span>
+      <h5 class="text-white h4">Home </h5>
+      <span class="text-muted">Informacion Personal</span>
+    </div>
+      
+  </div>
+  <nav class="navbar navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+      <h3 class="bg-">${personaSession.getNombre()}  </h3>
+  </nav>
+</div>

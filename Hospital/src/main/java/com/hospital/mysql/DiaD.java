@@ -31,7 +31,7 @@ public class DiaD implements DiaDAO {
     }
 
     @Override
-    public void insert(Dia object) {
+    public boolean insert(Dia object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -45,11 +45,13 @@ public class DiaD implements DiaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Dia object) {
+    public boolean modify(Dia object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -65,7 +67,9 @@ public class DiaD implements DiaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -107,7 +111,7 @@ public class DiaD implements DiaDAO {
     }
 
     @Override
-    public void delete(Dia object) {
+    public boolean delete(Dia object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -117,7 +121,9 @@ public class DiaD implements DiaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(DiaD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public Dia convertir(ResultSet rs) {

@@ -43,38 +43,35 @@ public class Interprete {
 
     private Manager manager;
     private int idAgenda;
-
+    private List<String> info ;
+    
     public static void main(String[] args) {
-        Interprete interprete = new Interprete();
-        interprete.loadFile();
-//        //DateTimeFormatter parseFormat = new DateTimeFormatterBuilder().appendPattern("hh[:mm]a").toFormatter();
-//        //LocalTime localTime = LocalTime.parse("12:15 am", parseFormat);
-//        System.out.println("Print ");
-//        System.out.println("Hora: " + java.sql.Time.valueOf("10:30:00"));
-////        DateTimeFormatter parser = DateTimeFormatter.ofPattern("h[:mm]a");
-//        //              LocalTime localTime = LocalTime.parse("10AM", parser);
-//
-//        //   System.out.println("Hora: "+localTime.toString());
+        Interprete inter = new Interprete();
+        inter.loadFile(new File(""));
     }
-
     public Interprete() {
         this.manager = new Manager();
+        this.info = new ArrayList<String>();
+        
     }
 
-    public void loadFile() {
+    public void loadFile(File file) {
 
+        
         String path = "/home/julio/Documentos/IPC/Hospital/Proyecto2/data.xml";
+        File file2 = new File(path);
 
         try {
+            System.out.println("Empezara a cargar ");
             // Creo una instancia de DocumentBuilderFactory
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             // Creo un documentBuilder
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             // Obtengo el documento, a partir del XML
-            Document documento = builder.parse(new File(path));
 
-            // Cojo todas las etiquetas admin del documento
+            Document documento = builder.parse(file2);
+            
             NodeList listaDoctores = documento.getElementsByTagName("doctor");
             NodeList listaAdmins = documento.getElementsByTagName("admin");
             NodeList listaLaboratoristas = documento.getElementsByTagName("laboratorista");
@@ -97,7 +94,7 @@ public class Interprete {
             tagConsulta(listadoConsulta);
 
         } catch (ParserConfigurationException | SAXException | IOException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -158,10 +155,16 @@ public class Interprete {
                 persona.setTelefono("");
                 persona.setCorreo("");
                 manager.getPersonaDAO().insert(persona);
-                admin.setCodigo(usuario.getCodigo());
+                info.add((manager.getPersonaDAO().insert(persona)?"Persona Creada Correctamente ":"Error al Insertar Persona ")+"DPI: "+persona.getDpi());
+                
+                admin.setCodigo(usuario.getCodigo());                
                 admin.setPersona_dpi(persona.getDpi());
-                manager.getAdministradorDAO().insert(admin);
-                manager.getUsuarioDAO().insert(usuario);
+                
+                //manager.getAdministradorDAO().insert(admin);
+                ;
+                info.add((manager.getAdministradorDAO().insert(admin)?"Administrador Creado Correctamente":"Error Al Insertar Admin")+admin.getCodigo());
+
+                info.add((manager.getUsuarioDAO().insert(usuario)?"Usuario Creado Correctamente":"Error Al Insertar Usuario")+usuario.getCodigo());
                 admin.setCodigo(usuario.getCodigo());
                 System.out.println("");
             }
@@ -200,6 +203,8 @@ public class Interprete {
                     // Compruebo si es un nodo
                     if (hijo.getNodeType() == Node.ELEMENT_NODE) {
                         // Muestro el contenido
+                        System.out.println("Propiedad: " + hijo.getNodeName()
+                                + ", Valor: " + hijo.getTextContent());
 
                         if (hijo.getNodeName().equalsIgnoreCase("horario")) {
 
@@ -218,13 +223,14 @@ public class Interprete {
                     }
 
                 }
-                manager.getPersonaDAO().insert(persona);
+                //manager.getPersonaDAO().insert(persona);
+                info.add((manager.getPersonaDAO().insert(persona)?"Persona Creada Correctamente ":"Error al Insertar Persona ")+"DPI: "+persona.getDpi());
                 medico.setEntrada(java.sql.Time.valueOf(horario[0] + ":00"));
                 medico.setSalida(java.sql.Time.valueOf(horario[1] + ":00"));
                 medico.setPersona_dpi(persona.getDpi());
                 manager.getMedicoDAO().insert(medico);
                 manager.getUsuarioDAO().insert(usuario);
-                
+
                 for (String especialidad : especialidades) {
 
                     Especialidad es = new Especialidad(0, especialidad, true, medico.getColegiado());
@@ -285,6 +291,7 @@ public class Interprete {
                     }
 
                 }
+                info.add((manager.getPersonaDAO().insert(persona)?"Persona Creada Correctamente ":"Error al Insertar Persona ")+"DPI: "+persona.getDpi());
                 manager.getPersonaDAO().insert(persona);
                 laboratorista.setPersonaDpi(persona.getDpi());
                 manager.getLaboratoristasDAO().insert(laboratorista);
@@ -363,17 +370,18 @@ public class Interprete {
                         crearUsuario(usuario, hijo.getNodeName(), hijo.getTextContent());
                         crearPersona(persona, hijo.getNodeName(), hijo.getTextContent());
                         crearPaciente(paciente, hijo.getNodeName(), hijo.getTextContent());
-                        
 
                     }
 
                 }
-                manager.getPersonaDAO().insert(persona);
-                usuario.setPersonaDpi(persona.getDpi());
                 
+               // manager.getPersonaDAO().insert(persona);
+               info.add((manager.getPersonaDAO().insert(persona)?"Persona Creada Correctamente ":"Error al Insertar Persona ")+"DPI: "+persona.getDpi());
+                usuario.setPersonaDpi(persona.getDpi());
+
                 manager.getUsuarioDAO().insert(usuario);
 
-                paciente.setPersona_dpi(persona.getDpi());
+                paciente.setPersonaDpi(persona.getDpi());
 
                 manager.getPacientesDAO().insert(paciente);
 
@@ -383,7 +391,7 @@ public class Interprete {
         }
     }
 
-    public  void tagExamen(NodeList listadoExamen) {
+    public void tagExamen(NodeList listadoExamen) {
         // Recorro las etiquetas
         System.out.println(" <========>Examen");
         Examen examen;
@@ -391,7 +399,7 @@ public class Interprete {
             // Cojo el nodo actual
             Node nodo = listadoExamen.item(i);
             examen = new Examen();
-                    
+
             // Compruebo si el nodo es un elemento
             if (nodo.getNodeType() == Node.ELEMENT_NODE) {
                 // Lo transformo a Element
@@ -419,14 +427,14 @@ public class Interprete {
         }
     }
 
-    public  void tagInforme(NodeList listadoInforme) {
+    public void tagInforme(NodeList listadoInforme) {
         // Recorro las etiquetas
         System.out.println(" <========>Examen");
-        Informe informe ;
+        Informe informe;
         for (int i = 0; i < listadoInforme.getLength(); i++) {
-            
+
             informe = new Informe();
-                    
+
             // Cojo el nodo actual
             Node nodo = listadoInforme.item(i);
             // Compruebo si el nodo es un elemento
@@ -545,7 +553,6 @@ public class Interprete {
                                 }
 
                                 //}
-                                
                                 break;
                             case "MEDICO":
                                 if (agendaMedica != null) {
@@ -558,11 +565,11 @@ public class Interprete {
                                     } else {
 
                                         if (manager.getAgendaDAO().obtenerAgendaMedica((value)) == null) {
-                                            
-                                           Medico medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(value);
-                                           colegiadoMedico = medico.getColegiado();
+
+                                            Medico medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(value);
+                                            colegiadoMedico = medico.getColegiado();
                                             existeAgenda = false;
-                                            
+
                                         } else {
                                             agendaMedica = manager.getAgendaDAO().obtenerAgendaMedica((value));
                                             existeAgenda = true;
@@ -610,7 +617,7 @@ public class Interprete {
                             System.out.println(" Lanzar Error Cita existe en fecha y hora   ");
                         }
                     } else {
-                        agendaMedica = new Agenda(0, "1",colegiadoMedico , null);
+                        agendaMedica = new Agenda(0, "1", colegiadoMedico, null);
                         manager.getAgendaDAO().insert(agendaMedica);
 
                         agenda = manager.getAgendaDAO().lastInsertId();
@@ -630,12 +637,12 @@ public class Interprete {
         }
     }
 
-    public  void tagConsulta(NodeList listadoDeConsultas) {
+    public void tagConsulta(NodeList listadoDeConsultas) {
         // Recorro las etiquetas
         System.out.println(" <========>Consultas");
         Consulta consulta;
         for (int i = 0; i < listadoDeConsultas.getLength(); i++) {
-            
+
             consulta = new Consulta();
             // Cojo el nodo actual
             Node nodo = listadoDeConsultas.item(i);
@@ -655,7 +662,7 @@ public class Interprete {
 
                         System.out.println("Propiedad: " + hijo.getNodeName()
                                 + ", Valor: " + hijo.getTextContent());
-                        crearConsulta(consulta,hijo.getNodeName(), hijo.getTextContent());
+                        crearConsulta(consulta, hijo.getNodeName(), hijo.getTextContent());
 
                     }
 
@@ -796,7 +803,7 @@ public class Interprete {
                 usuario.setCodigo(valor);
 
                 break;
-            case "CLAVE":
+            case "PASSWORD":
 
                 usuario.setClave(valor);
                 break;
@@ -813,7 +820,7 @@ public class Interprete {
                 medico.setColegiado(Integer.parseInt(value));
                 break;
             case "TRABAJO":
-                medico.setInicio(value);
+                medico.setInicio(java.sql.Date.valueOf(value));
                 break;
 
         }
@@ -821,7 +828,8 @@ public class Interprete {
 
     public void crearLaboratorista(Laboratorista lab, String tag, String value) {
 
-        switch (tag.toUpperCase()) {
+        switch (tag.toUpperCase().trim()) {
+
             case "REGISTRO":
                 lab.setRegistro(value);
                 break;
@@ -829,7 +837,7 @@ public class Interprete {
 
                 lab.setInicio(java.sql.Date.valueOf(value));
 
-                System.out.println("inicio ===========++++++++++++++++++++========================> "+ lab.getInicio().toString());
+                System.out.println("inicio ===========++++++++++++++++++++========================> " + lab.getInicio().toString());
                 break;
             //aun se debe agregar el tipo de examen que realizara
             //============================================================================================================================leer linea 
@@ -986,7 +994,7 @@ public class Interprete {
                 break;
             case "EXAMEN":
 
-                if (manager.getExamenDAO().obtener(Integer.parseInt(value)) == null) {
+                if (manager.getExamenDAO().obtener((value)) == null) {
                     System.out.println("Mostrar error el Examen no existe");
                 } else {
 

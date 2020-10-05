@@ -25,7 +25,7 @@ public class CitaD implements CitaDAO {
     }
 
     @Override
-    public void insert(Cita object) {
+    public boolean insert(Cita object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -39,11 +39,13 @@ public class CitaD implements CitaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Cita object) {
+    public boolean modify(Cita object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -57,7 +59,9 @@ public class CitaD implements CitaDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -99,7 +103,7 @@ public class CitaD implements CitaDAO {
     }
 
     @Override
-    public void delete(Cita object) {
+    public boolean delete(Cita object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -109,7 +113,9 @@ public class CitaD implements CitaDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(CitaD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public Cita convertir(ResultSet rs) {

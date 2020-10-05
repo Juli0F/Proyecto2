@@ -25,7 +25,7 @@ public class TurnoD implements TurnoDAO {
     }
 
     @Override
-    public void insert(Turno object) {
+    public boolean insert(Turno object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -36,11 +36,14 @@ public class TurnoD implements TurnoDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
-    public void modify(Turno object) {
+    public boolean modify(Turno object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -52,7 +55,10 @@ public class TurnoD implements TurnoDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
@@ -94,7 +100,7 @@ public class TurnoD implements TurnoDAO {
     }
 
     @Override
-    public void delete(Turno object) {
+    public boolean delete(Turno object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -104,7 +110,10 @@ public class TurnoD implements TurnoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(TurnoD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+        
     }
 
     public Turno convertir(ResultSet rs) {

@@ -1,6 +1,8 @@
 package com.hospital.dao;
 
+import com.hospital.dto.PersonaLabDto;
 import com.hospital.entities.Laboratorista;
+import java.util.List;
 
 /**
  *
@@ -8,5 +10,7 @@ import com.hospital.entities.Laboratorista;
  */
 public interface LaboratoristasDAO extends DAO<Laboratorista,String> {
 
+    public Laboratorista getLaboratoristaByCodeANdPwd(String codigo, String pwd) ;
+    public List<PersonaLabDto> getPersonaLabDtoByCodeExamen(String codeExamen);
 
 }

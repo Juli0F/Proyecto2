@@ -1,6 +1,7 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.MedicoDAO;
+import com.hospital.dto.MedicoDto;
 import com.hospital.entities.Medico;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,37 +23,43 @@ public class MedicoD implements MedicoDAO {
     private final String GET_MEDICO_BY_CODIGO_USUARIO = "SELECT * FROM "
             + "Usuario u INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi WHERE u.codigo = ?";
 
+    private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Medico a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
+    private final String GET_MEDICO_CON_ESPECIALIDAD = "select u.codigo,a.nombre,m.colegiado,a.correo,m.horaEntrada,m.horaSalida,e.nombre as especialidad from Medico m inner join Persona a on m.Persona_dpi = a.dpi inner join Usuario u on u.Persona_dpi=a.dpi inner join Especialidad e on e.Medico_colegiado = m.colegiado ";
+
     public MedicoD(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public void insert(Medico object) {
+    public boolean insert(Medico object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getInicio());
+            stat.setDate(1, object.getInicio());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getPersona_dpi());
             stat.setInt(4, object.getColegiado());
             stat.setTime(5, object.getEntrada());
             stat.setTime(6, object.getSalida());
-            
+
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Medico");
 
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+
     }
 
     @Override
-    public void modify(Medico object) {
+    public boolean modify(Medico object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
-            stat.setString(1, object.getInicio());
+            stat.setDate(1, object.getInicio());
             stat.setBoolean(2, object.isEstado());
             stat.setString(3, object.getPersona_dpi());
             stat.setInt(4, object.getColegiado());
@@ -62,7 +69,10 @@ public class MedicoD implements MedicoDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+
     }
 
     @Override
@@ -104,7 +114,7 @@ public class MedicoD implements MedicoDAO {
     }
 
     @Override
-    public void delete(Medico object) {
+    public boolean delete(Medico object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -114,7 +124,10 @@ public class MedicoD implements MedicoDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(MedicoD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+
     }
 
     public Medico convertir(ResultSet rs) {
@@ -122,7 +135,7 @@ public class MedicoD implements MedicoDAO {
         try {
 
             Medico medico = new Medico(rs.getInt("colegiado"),
-                    rs.getString("inicio"), rs.getBoolean("estado"),
+                    rs.getDate("inicio"), rs.getBoolean("estado"),
                     rs.getString("Persona_dpi"), rs.getTime("horaEntrada"),
                     rs.getTime("horaSalida"));
 
@@ -171,4 +184,75 @@ public class MedicoD implements MedicoDAO {
         return null;
     }
 
+    @Override
+    public Medico getMedicoByCodeANdPwd(String codigo, String pwd) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_ADMIN_BY_CODE_AND_PWD);
+            stat.setString(1, codigo);
+            stat.setString(2, pwd);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<MedicoDto> getMedicoConEspecialida() {
+
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<MedicoDto> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_MEDICO_CON_ESPECIALIDAD);
+            rs = stat.executeQuery();
+            int id = 0;
+            while (rs.next()) {
+                id++;
+                //lst.add(convertirMedicoDto(rs));
+                MedicoDto mDto = convertirMedicoDto(id, rs);
+                if (lst.contains(mDto)) {
+                    for (MedicoDto medicoDto : lst) {
+                        if (medicoDto.equals(mDto)) {
+                            //medicoDto.setEspecialidades(mDto.getEspecialidades() + ", " + medicoDto.getEspecialidades());
+                            mDto.setEspecialidades(mDto.getEspecialidades() + ", " + medicoDto.getEspecialidades());
+                        }
+                        System.out.println("Medico: "+medicoDto.getId()+" "+medicoDto.getEspecialidades());
+                    }
+
+                } else {
+                    lst.add(mDto);
+                }
+
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public MedicoDto convertirMedicoDto(int id, ResultSet rs) {
+
+        try {
+
+//            Medico medico = new Medico(rs.getInt("colegiado"),
+//                    rs.getDate("inicio"), rs.getBoolean("estado"),
+//                    rs.getString("Persona_dpi"), rs.getTime("horaEntrada"),
+//                    rs.getTime("horaSalida"));
+//public MedicoDto(String codigo,                          String medico,               String correo,            String horaEntrada,     String horaSalida,   String especialidades,String colegiado
+            return new MedicoDto(id, rs.getString("codigo"), rs.getString("nombre"), rs.getString("correo"), rs.getString("horaEntrada"), rs.getString("horaSalida"), rs.getString("especialidad"), rs.getString("colegiado"));
+        } catch (SQLException ex) {
+            Logger.getLogger(MedicoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

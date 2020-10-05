@@ -6,7 +6,7 @@ import com.hospital.entities.Examen;
  *
  * @author Julio
  */
-public interface ExamenDAO extends DAO<Examen,Integer> {
+public interface ExamenDAO extends DAO<Examen,String> {
 
 
 }

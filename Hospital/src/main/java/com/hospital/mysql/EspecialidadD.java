@@ -25,7 +25,7 @@ public class EspecialidadD implements EspecialidadDAO {
     }
 
     @Override
-    public void insert(Especialidad object) {
+    public boolean insert(Especialidad object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -38,11 +38,13 @@ public class EspecialidadD implements EspecialidadDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Especialidad object) {
+    public boolean modify(Especialidad object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -56,7 +58,10 @@ public class EspecialidadD implements EspecialidadDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
+        
     }
 
     @Override
@@ -98,7 +103,7 @@ public class EspecialidadD implements EspecialidadDAO {
     }
 
     @Override
-    public void delete(Especialidad object) {
+    public boolean delete(Especialidad object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -108,7 +113,10 @@ public class EspecialidadD implements EspecialidadDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(EspecialidadD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
+        
     }
 
     public Especialidad convertir(ResultSet rs) {

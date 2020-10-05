@@ -26,7 +26,7 @@ public class AdministradorD implements AdministradorDAO {
     }
 
     @Override
-    public void insert(Administrador object) {
+    public boolean insert(Administrador object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
@@ -35,14 +35,17 @@ public class AdministradorD implements AdministradorDAO {
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Administrador");
 
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
-    public void modify(Administrador object) {
+    public boolean modify(Administrador object) {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
@@ -54,7 +57,9 @@ public class AdministradorD implements AdministradorDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -96,7 +101,7 @@ public class AdministradorD implements AdministradorDAO {
     }
 
     @Override
-    public void delete(Administrador object) {
+    public boolean delete(Administrador object) {
         PreparedStatement stat = null;
         try {
             stat = connection.prepareStatement(DELETE);
@@ -106,7 +111,9 @@ public class AdministradorD implements AdministradorDAO {
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdministradorD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
+        return true;
     }
 
     public Administrador convertir(ResultSet rs) {
