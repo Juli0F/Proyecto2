@@ -13,6 +13,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%@include file="css/css-bootstrap.html" %>
         <%@include file="css/css-radio-button.html" %>
+
         <title>JSP Page</title>
     </head>
     <body>
@@ -36,6 +37,7 @@
                         <th scope="col">Disponible</th>
                         <th scope="col">Dias que labora</th>
                         <th scope="col">Reservar Fecha</th>
+                        <th scope="col">Requiere Orden</th>
                         <th scope="col">Crear</th>
 
                     </tr>
@@ -46,7 +48,7 @@
 
 
                         <tr>
-                    <form name="form" action="CitaController?accion=lab=${item.getRegistro()}" method="POST">
+                    <form name="form" action="CitaController?accion=lab=${item.getRegistro()}" method="POST" enctype="multipart/form-data">
 
                         <th scope="row" >${item.getDpi()}</th>
                         <td>${item.getNombre()}</td>
@@ -68,31 +70,55 @@
                             </c:if>
 
                         </td>
-                        <td> </td>
+                        <td ><input type="text" id="dias" value="${item.getDiasDeTrabajo()}" readonly> </td>
                         <td> 
 
 
                             <label for="inicio"><b>Fecha de la Cita </b></label>
-                            <input type="Date" placeholder="12341234121201" name="fecha" id="inicio" required>
+                            <input type="date" name="fecha" id="mi_calendar" onchange="findDay('${item.getDiasDeTrabajo()}')">
+                            
                             <br>
                         </td>
 
                         <td>
+                            <c:if test="${orden == 1}">
 
-                            <label class="container-radio">
-                                <input type="submit" class="btn btn-outline-primary">Crear Cita</button>
+                                <!--
+                                 <label class="container-radio">
+                                     <input type="checkbox" name="radio" readonly  value="1">
+                                     <span class="checkmark-radio"></span>
+                                 </label>-->
+                                <input type="file" name="ordenFile" required> 
 
-                                <span class="checkmark-radio"></span>
-                            </label>
 
+                            </c:if>
+                            <c:if test="${orden == 0}"> 
+
+                                <label class="container-radio">
+                                    <input type="checkbox" name="radio" readonly  value="0">
+                                    <span class="checkmark-radio"></span>
+                                </label>
+                            </c:if>
+                        </td>
+                        </td>
+                        <td>
+
+                            <div id="oculto" style="display: none;">
+
+                                <input type="submit" class="btn btn-outline-primary" value="Reservar Cita" id="btnSubmit" >
+
+                            </div>
 
                         </td>
                     </form>
                 </tr>
 
 
+                
             </c:forEach>
+                <p id="demo"></p>
 
+            <%@include file="js/js-find-day.html" %>   
             <%@include  file="js/js-bootstrap.html" %>
         </c:if>
 </body>

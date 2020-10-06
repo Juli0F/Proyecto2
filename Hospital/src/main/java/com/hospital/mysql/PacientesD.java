@@ -198,6 +198,7 @@ public class PacientesD implements PacientesDAO {
                 PacienteHistorial pacHistorial = convertirPacienteHistorial(rs);
 
                 System.out.println("Paciente: "+pacHistorial);
+                
                 pacHistorial.setConsultas(
                         manager.getCitaDAO().getInformeConsulta(pacHistorial.getCodigo()));
                 lst.add(pacHistorial);

@@ -62,20 +62,27 @@ public class PacienteController extends HttpServlet {
         switch (accion) {
             case "cita":
                 pagJsp = citaMedica(request);
+                RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
+        vista.forward(request, response);
                 break;
             case "citaLAB":
                 pagJsp = citaLab(request);
+                RequestDispatcher vista2 = request.getRequestDispatcher(pagJsp);
+        vista2.forward(request, response);
                 break;
             default:
         }
 
-        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
-        vista.forward(request, response);
+        
     }
 
     public String citaLab(HttpServletRequest request) {
         //medicos
         List<Examen> examenes = manager.getExamenDAO().obtenerTodo();
+        
+        for (Examen examene : examenes) {
+            System.out.println("Examen: "+examene.getNombre());
+        }
 
         request.setAttribute("examenes", examenes);
         return "cita-laboratorista.jsp";

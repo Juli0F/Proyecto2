@@ -161,6 +161,8 @@ public class UsuarioD implements UsuarioDAO {
         ResultSet rs = null;
 
         try {
+            stat = connection.prepareStatement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))  ");
+            stat.execute();
             stat = connection.prepareStatement(GET_USR_BY_CODIGO_AND_CLAVE);
             stat.setString(1, codigo);
             stat.setString(2,clave);

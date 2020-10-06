@@ -22,7 +22,7 @@ public class CitaD implements CitaDAO {
     private final String DELETE = "DELETE Cita WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Cita  ";
     private final String GET_ONE = GETALL + "WHERE codigo = ?";
-    private final String GET_CITA_PACIENTE_AND_CONSULTA = "select c.codigo as codigoCita ,cons.tipo as consulta,p.codigo as codigoPaciente , per.nombre as paciente, d.fecha, d.hora, cons.costo  from Cita c inner join Pacientes p on c.Pacientes_codigo = p.codigo  inner join Consulta cons on c.Consulta_idConsulta = cons.idConsulta inner join Persona per on per.dpi = p.Persona_dpi inner join Dia d on d.Cita_codigo = c.codigo INNER JOIN Agenda a  where c.estado = 'PENDIENTE' and a.Medico_colegiado = ?";
+    private final String GET_CITA_PACIENTE_AND_CONSULTA = "select c.codigo as codigoCita ,cons.tipo as consulta,p.codigo as codigoPaciente , per.nombre as paciente, d.fecha, d.hora, cons.costo  from Cita c inner join Pacientes p on c.Pacientes_codigo = p.codigo  inner join Consulta cons on c.Consulta_idConsulta = cons.idConsulta inner join Persona per on per.dpi = p.Persona_dpi inner join Dia d on d.Cita_codigo = c.codigo INNER JOIN Agenda a  where  a.Medico_colegiado = ? AND c.estado = 'PENDIENTE' ";
 
     private final String GET_CONSULTA_INFORME_BY_CODIGO_USUARIO ="select (c.codigo) as codigoCita, con.idConsulta as codigoConsulta, con.tipo, con.costo, i.descripcion as informe , d.fecha as fecha, m.colegiado as colegiado, per.nombre    from Consulta con " +
                                                                 "inner join Cita c on con.idConsulta = c.Consulta_idConsulta " +
@@ -204,7 +204,7 @@ public class CitaD implements CitaDAO {
             while (rs.next()) {
                 lst.add(convertirCitaPac(rs));
             }
-
+            System.out.println("Citas Pendientes..."+lst.size());
             return lst;
         } catch (Exception e) {
             e.printStackTrace();
@@ -245,11 +245,14 @@ public class CitaD implements CitaDAO {
             rs = stat.executeQuery();
             while (rs.next()) {
                 InformeConsulta info = convertirInformeConsulta(rs);
+                System.out.println(" informe"
+                        + ""
+                        + "");
                 if (!lst.contains(info)) {
                     lst.add(info);
                 }
             }
-
+            System.out.println("Listado Informes "+lst.size());
             return lst;
         } catch (Exception e) {
             e.printStackTrace();

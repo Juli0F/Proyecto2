@@ -498,37 +498,70 @@ public class LoadSaxBuilder {
         if (lab != null && examen != null && paciente != null) {
 
             Agenda agenda = manager.getAgendaDAO().getAgendaByRegistro(lab.getRegistro());
-            Cita cita = new Cita(codigo, "Desde la Carga de archivos", "1", paciente.getCodigo());
-            Dia dia = new Dia(0, fecha, "Desde la Carga De archivos", agenda.getCodigo(), cita.getCodigo(), hora);
+            Cita cita = new Cita(codigo, "LAB", "PENDIENTE", paciente.getCodigo());
+            Dia dia = new Dia(0, fecha, "PENDIENTE", agenda.getCodigo(), cita.getCodigo(), hora);
 
             if (examen.isOrden()) {
 
-                rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
+                    
+                    
                 if (codeMedico != null && !codeMedico.equals("")) {
 
                     medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(codeMedico);
+                    exPac = new ExamenPaciente(0, ordenPath, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
+                    manager.getExamenPacienteDAO().insert(exPac);
+                    Integer idExPac = manager.getExamenPacienteDAO().lastInsertId();
 
-                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
-                    exPac = new ExamenPaciente(0, rsultad.getResultadoCodigo(), examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), idExPac+"");
+                
 
                 } else {
-                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
+                    
+                    
                     exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                    exPac.setOrdenPath(ordenPath);
+                    
+                    manager.getExamenPacienteDAO().insert(exPac);
+                    
+                    Integer idExPac = manager.getExamenPacienteDAO().lastInsertId();
+                    
+                    
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), idExPac+"");
+                    
                 }
 
+                
+                
+                
+                
             }else{
-                rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
+                //rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), getOrdenPath);
+                
                 if (codeMedico != null && !codeMedico.equals("")) {
 
                     medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(codeMedico);
+                    exPac = new ExamenPaciente(0,"", examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
+                    manager.getExamenPacienteDAO().insert(exPac);
+                    Integer idExPac = manager.getExamenPacienteDAO().lastInsertId();
 
-                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), "");
-                    exPac = new ExamenPaciente(0, rsultad.getResultadoCodigo(), examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), idExPac+"");
+                //rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), getOrdenPath);
 
                 } else {
-                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), "");
+                    
+                    
                     exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                    
+                    
+                    manager.getExamenPacienteDAO().insert(exPac);
+                    
+                    Integer idExPac = manager.getExamenPacienteDAO().lastInsertId();
+                    
+                    
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), idExPac+"");
+                    
                 }
+
             }
 
             manager.getCitaDAO().insertSinConsulta(cita);

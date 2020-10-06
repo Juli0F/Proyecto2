@@ -82,11 +82,11 @@
                             </td>
                             <td>
 
-                                <label class="container-radio">
-                                    <button type="submit" class="btn btn-outline-primary">Crear Cita</button>
+     
+                                <button type="submit" class="btn btn-outline-primary" value="Reservar Cita"/>
 
-                                    <span class="checkmark-radio"></span>
-                                </label>
+                                    
+                                
 
 
                             </td>

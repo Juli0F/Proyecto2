@@ -32,6 +32,14 @@
         <servlet-name>MedicosInforme</servlet-name>
         <servlet-class>com.hospital.controllers.MedicosInforme</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LaboratoristaController</servlet-name>
+        <servlet-class>com.hospital.controllers.LaboratoristaController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ResultadoController</servlet-name>
+        <servlet-class>com.hospital.controllers.ResultadoController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -63,6 +71,14 @@
     <servlet-mapping>
         <servlet-name>MedicosInforme</servlet-name>
         <url-pattern>/MedicosInforme</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LaboratoristaController</servlet-name>
+        <url-pattern>/LaboratoristaController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ResultadoController</servlet-name>
+        <url-pattern>/ResultadoController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

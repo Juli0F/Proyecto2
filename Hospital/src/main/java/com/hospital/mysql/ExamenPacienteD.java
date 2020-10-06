@@ -1,6 +1,7 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.ExamenPacienteDAO;
+import com.hospital.dto.ResultadoPaciente;
 import com.hospital.entities.ExamenPaciente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,11 +15,18 @@ import java.util.logging.Logger;
 public class ExamenPacienteD implements ExamenPacienteDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO ExamenPaciente (Resultado_resultadoCodigo,Examen_Codigo,Laboratoristas_registro,Pacientes_codigo,Medico_colegiado,realizado,cancelar,estado) VALUES (?,?,?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE ExamenPaciente set Resultado_resultadoCodigo = ?, set Examen_Codigo = ?, set Laboratoristas_registro = ?, set Pacientes_codigo = ?, set Medico_colegiado = ?, set realizado = ?, set cancelar = ?, set estado = ? WHERE idExamenPaciente = ? ";
+    private final String INSERT = "INSERT INTO ExamenPaciente (ordenPath,Examen_Codigo,Laboratoristas_registro,Pacientes_codigo,Medico_colegiado,realizado,cancelar,estado) VALUES (?,?,?,?,?,?,?,?)";
+    private final String UPDATE = "UPDATE ExamenPaciente set ordenPath = ?,  Examen_Codigo = ?,  Laboratoristas_registro = ?,  Pacientes_codigo = ?,  Medico_colegiado = ?,  realizado = ?,  cancelar = ?,  estado = ? WHERE idExamenPaciente = ? ";
     private final String DELETE = "DELETE ExamenPaciente WHERE idExamenPaciente = ? ";
-    private final String GETALL = "SELECT * FROM  ExamenPaciente  ";
-    private final String GETONE = GETALL + "WHERE idExamenPaciente = ?";
+    private final String GET_ALL = "SELECT * FROM  ExamenPaciente  ";
+    private final String GET_ONE = GET_ALL + "WHERE idExamenPaciente = ?";
+    private final String GET_RESULTADO_PACIENTE = "select ep.idExamenPaciente,e.nombre as examen,p.codigo as codigo_paciente, per.nombre ,p.masculino as genero,d.fecha,e.formato  from "
+            + " ExamenPaciente ep inner join Pacientes p on ep.Pacientes_codigo = p.codigo "
+            + "inner join Persona per on per.dpi = p.Persona_dpi "
+            + "inner join Examen e on e.codigo = ep.Examen_codigo "
+            + "inner join Agenda a on a.Laboratoristas_registro = ep.Laboratoristas_registro "
+            + "inner join Dia d on d.Agenda_codigo = d.Agenda_codigo "
+            + "where ep.Laboratoristas_registro = ? and ep.realizado = '0' group by ep.idExamenPaciente ";
 
     public ExamenPacienteD(Connection connection) {
         this.connection = connection;
@@ -29,7 +37,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getResultado_resultadoCodigo());
+            stat.setString(1, object.getOrdenPath());
             stat.setString(2, object.getExamen_Codigo());
             stat.setString(3, object.getLaboratoristas_registro());
             stat.setString(4, object.getPacientes_codigo());
@@ -53,7 +61,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
-            stat.setString(1, object.getResultado_resultadoCodigo());
+            stat.setString(1, object.getOrdenPath());
             stat.setString(2, object.getExamen_Codigo());
             stat.setString(3, object.getLaboratoristas_registro());
             stat.setString(4, object.getPacientes_codigo());
@@ -79,7 +87,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         ResultSet rs = null;
         List<ExamenPaciente> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -98,7 +106,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GETONE);
+            stat = connection.prepareStatement(GET_ONE);
             stat.setInt(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
@@ -132,7 +140,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         try {
             ExamenPaciente examenPaciente = new ExamenPaciente(
                     rs.getInt("idExamenPaciente"), 
-                    rs.getString("Resultado_resultadoCodigo"),
+                    rs.getString("ordenPath"),
                     rs.getString("Examen_Codigo"),
                     rs.getString("Laboratoristas_registro"),
                     rs.getString("Pacientes_codigo"), 
@@ -165,5 +173,38 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             Logger.getLogger(ExamenPacienteD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return 0;
+    }
+    
+      @Override
+    public List<ResultadoPaciente> getResultadoPaciente(String registroLaboratorista) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<ResultadoPaciente> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_RESULTADO_PACIENTE);
+            System.out.println("Q " +stat.toString());
+            stat.setString(1, registroLaboratorista);
+            System.out.println("QUery: "+stat.toString());
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertirToResultadoPaciente(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    
+    
+    public ResultadoPaciente convertirToResultadoPaciente(ResultSet rs){
+        
+        try {
+            return new ResultadoPaciente(rs.getString("idExamenPaciente"),rs.getString("examen"),rs.getString("codigo_paciente"),rs.getString("nombre"),rs.getString("genero"),rs.getString("fecha"),rs.getString("formato"));
+        } catch (SQLException ex) {
+            Logger.getLogger(ExamenPacienteD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

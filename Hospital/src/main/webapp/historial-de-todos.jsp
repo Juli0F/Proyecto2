@@ -17,7 +17,7 @@
     <body>
 
         <%@include file="html/navbar-medico-html.html" %>
-        
+
         <c:forEach var="item" items="${historial}">
 
 
@@ -32,15 +32,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
 
                 </tbody>
                 <tfoot style="background-color: gray;  color:#eee">
-                     <th scope="col">Historial </th>
+
+
+                    <tr>
+                        <th scope="col">Historial </th>
                         <th scope="col">De</th>
                         <th scope="col">Consultas</th>
                         <th scope="col"></th>
                         <th scope="col"></th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  </th>
+                        <th scope="col">  </th>
+                        <th scope="col"> </th>
+                        <th scope="col"> </th>
+                        <th scope="col"> </th>
+                    </tr>
+
                 </tfoot>
             </table>
 
@@ -63,7 +75,7 @@
                     <c:forEach var="consultas" items="${item.getConsultas()}">
                         <tr>
                             <th scope="row">${consultas.getCodigoConsulta()}</th>
-                            
+
                             <td>${consultas.getTipo()}</td>
                             <td>${consultas.getCosto()}</td>
                             <td>${consultas.getInforme()}</td>
@@ -71,10 +83,25 @@
                             <td>${consultas.getCodigoCita()}</td>
                             <td>${consultas.getColegiado()}</td>
                             <td>${consultas.getNombre()}</td>
-                            <td>@mdo</td>
                         </tr>
                     </c:forEach>
                 </tbody>
+                <tfoot style="background-color: gray;  color:#eee">
+                    <tr>
+                        <th scope="col">Historial </th>
+                        <th scope="col">De</th>
+                        <th scope="col">Examenes</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                    <tr>
+                        <th scope="col">  </th>
+                        <th scope="col">  </th>
+                        <th scope="col"> </th>
+                        <th scope="col"> </th>
+                        <th scope="col"> </th>
+                    </tr>
+                </tfoot>
             </table>
 
 
@@ -84,20 +111,25 @@
             <table class="table">
                 <thead class="grey lighten-2">
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+
+                        <th scope="col">Codigo Examen</th>
+                        <th scope="col">Examen</th>
+                        <th scope="col">fecha</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">Ver archivo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-
+                    <c:forEach items="${item.getResultados()}"  var="result">
+                        <tr>
+                            <th scope="row">${result.getCodigoExamen()}</th>
+                            <td>${result.getNombreExamen()}</td>
+                            <td>${result.getFecha()}</td>
+                            <td>${result.getCosto()}</td>
+                            <td><a href="${ruta+result.getArchivo()}">ver</a></td>
+                            <td>@mdo</td>
+                        </tr>
+                    </c:forEach>
                 </tbody>
             </table>
 

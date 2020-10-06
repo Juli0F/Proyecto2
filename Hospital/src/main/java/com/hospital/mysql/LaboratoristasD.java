@@ -220,13 +220,15 @@ public class LaboratoristasD implements LaboratoristasDAO {
 
     public PersonaLabDto convertirPersonaLabDto(ResultSet rs) {
         try {
-
+            Manager manager = new  Manager();
+            String dias = manager.getDiaTrabajoDAO().getDiasDeTrabajo(rs.getString("registro"));
             return new PersonaLabDto(!rs.getBoolean("ocupado"),
                                         rs.getString("nombre"),
                                         rs.getString("dpi"),
                                         rs.getString("registro"),
                                         rs.getString("examen"),
-                                        rs.getString("codigo")
+                                        rs.getString("codigo"),
+                    dias
                     );
             
         } catch (SQLException ex) {

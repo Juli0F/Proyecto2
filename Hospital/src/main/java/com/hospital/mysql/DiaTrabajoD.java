@@ -17,8 +17,9 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
     private final String INSERT = "INSERT INTO DiaTrabajo (Turno_idTurno,Laboratoristas_registro,estado) VALUES (?,?,?)";
     private final String UPDATE = "UPDATE DiaTrabajo set Turno_idTurno = ?, set Laboratoristas_registro = ?, set estado = ? WHERE idTrabajoLaboratoristaLaboratorista = ? ";
     private final String DELETE = "DELETE DiaTrabajo WHERE idTrabajoLaboratoristaLaboratorista = ? ";
-    private final String GETALL = "SELECT * FROM  DiaTrabajo  ";
-    private final String GETONE = GETALL + "WHERE idTrabajoLaboratoristaLaboratorista = ?";
+    private final String GET_ALL = "SELECT * FROM  DiaTrabajo  ";
+    private final String GETONE = GET_ALL + "WHERE idTrabajoLaboratoristaLaboratorista = ?";
+    private final String GET_DIAS_DE_TRABAJO="select t.turno from DiaTrabajo dt inner join Laboratoristas l on l.registro = dt.Laboratoristas_registro inner join Turno t on t.idTurno = dt.Turno_idTurno where l.registro = ? ";
 
     public DiaTrabajoD(Connection connection) {
         this.connection = connection;
@@ -64,12 +65,32 @@ public class DiaTrabajoD implements DiaTrabajoDAO {
     }
 
     @Override
+    public String getDiasDeTrabajo(String registro) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        String diasDeTRabajo = "" ;
+        try {
+            stat = connection.prepareStatement(GET_DIAS_DE_TRABAJO);
+            stat.setString(1,registro);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                diasDeTRabajo = diasDeTRabajo+" " +rs.getString("turno");
+                        
+            }
+            return diasDeTRabajo;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return diasDeTRabajo;
+    }
+    @Override
     public List<DiaTrabajo> obtenerTodo() {
         PreparedStatement stat = null;
         ResultSet rs = null;
         List<DiaTrabajo> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));

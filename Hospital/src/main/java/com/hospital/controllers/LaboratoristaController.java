@@ -5,7 +5,8 @@
  */
 package com.hospital.controllers;
 
-import com.hospital.dto.PacienteHistorial;
+import com.hospital.dto.ResultadoPaciente;
+import com.hospital.entities.Laboratorista;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author julio
  */
-public class MedicosInforme extends HttpServlet {
+public class LaboratoristaController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +40,10 @@ public class MedicosInforme extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet MedicosInforme</title>");
+            out.println("<title>Servlet LaboratoristaController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet MedicosInforme at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet LaboratoristaController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,29 +63,30 @@ public class MedicosInforme extends HttpServlet {
             throws ServletException, IOException {
         manager = new Manager();
 
-        String sigJsp = "";
-
+        Laboratorista lab = (Laboratorista) request.getSession().getAttribute("labSession");
         String accion = request.getParameter("accion");
+        String pagJsp = "";
 
         switch (accion) {
-            case "historial":
-                List<PacienteHistorial> lst = manager.getPacientesDAO().getPacienteHistoria();
+            case "subirresultados":
+                //llamar a la lista de examnes sin resultado y enviarla como parametro
+                List<ResultadoPaciente> listado = manager.getExamenPacienteDAO().getResultadoPaciente(lab.getRegistro());
                 
-                for (PacienteHistorial pacienteHistorial : lst) {
-                    System.out.println("Paciente Consultas: "+pacienteHistorial.getConsultas().size()
-                            + "Paciente Examenes" +  pacienteHistorial.getResultados().size());
+                for (ResultadoPaciente resultadoPaciente : listado) {
+                    System.out.println(resultadoPaciente.getNombre());
                 }
-                System.out.println("siguiente: "+ sigJsp);
-                request.setAttribute("historial", lst);
-                sigJsp = "historial-de-todos.jsp";
+                request.setAttribute("listado", listado);
+                
+                pagJsp = "subir-resultado.jsp";
 
                 break;
-            default:
-
+           
         }
 
-        RequestDispatcher vista = request.getRequestDispatcher(sigJsp);
+        System.out.println("pagJsp = " + pagJsp);
+        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
         vista.forward(request, response);
+
     }
 
     /**
@@ -98,7 +100,7 @@ public class MedicosInforme extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        processRequest(request, response);
     }
 
     /**
@@ -112,5 +114,4 @@ public class MedicosInforme extends HttpServlet {
     }// </editor-fold>
 
     private Manager manager;
-
 }

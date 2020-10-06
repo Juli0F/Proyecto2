@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class ResultadoD implements ResultadoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,resultadoCodigo,ordenPath) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fecha = ?, set estado = ?, set Laboratoristas_registro = ?, set Medico_colegiado = ?, set Pacientes_codigo = ?, set Examen_Codigo = ? WHERE resultadoCodigo = ? ";
+    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,resultadoCodigo,ExamenPaciente_idExamenPaciente) VALUES (?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Resultado set descripcion = ?,  fecha = ?,  estado = ?,  Laboratoristas_registro = ?,  Medico_colegiado = ?,  Pacientes_codigo = ?,  Examen_Codigo = ? WHERE resultadoCodigo = ? ";
     private final String DELETE = "DELETE Resultado WHERE resultadoCodigo = ? ";
     private final String GETALL = "SELECT * FROM  Resultado  ";
     private final String GETONE = GETALL + "WHERE resultadoCodigo = ?";
@@ -34,7 +34,7 @@ public class ResultadoD implements ResultadoDAO {
             stat.setBoolean(3, object.isEstado());//estdo
             stat.setString(4, object.getResultadoCodigo());//resultadoCodigo
             //stat.setTime(5, object.getHora());//hora
-            stat.setString(5, object.getOrdenPath());//ordenPath
+            stat.setString(5, object.getOrdenPath());//ExamenPaciente_idExamenPaciente
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Resultado");
 
@@ -135,7 +135,7 @@ public class ResultadoD implements ResultadoDAO {
                                                 rs.getDate("fecha"),//fechaHora
                                                 rs.getBoolean("estado"),//estado
                                                 rs.getTime("hora"),//hora
-                                                rs.getString("ordenPath")
+                                                rs.getString("ExamenPaciente_idExamenPaciente")
             );
 
             return resultado;

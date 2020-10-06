@@ -1,0 +1,28 @@
+<script>
+function findDay(labora) {
+
+            
+	    var dateIn = document.getElementById("mi_calendar");
+	    //var dia  = dateIn.getDate();
+
+	    var valores =dateIn.value.split("-");
+
+            var dias = ["Domingo","Lunes","Martes","Miercoles", "Jueves","Viernes","Sabado"];
+	    var dt = new Date(valores[1]+' '+valores[2]+', '+valores[0]);
+	    
+
+	    
+	    var text =  dias[dt.getUTCDay()];
+            console.log(text);
+	    if (labora.includes(text)) {
+				document.getElementById("demo").innerHTML = text;	// body...
+	    		document.getElementById("oculto").style.display = "block";
+	    }else{
+	    	document.getElementById("oculto").style.display= 'none';
+
+	    }
+	    
+    }    
+    
+    
+</script>

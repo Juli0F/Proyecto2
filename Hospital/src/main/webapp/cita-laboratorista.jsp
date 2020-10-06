@@ -35,74 +35,120 @@
                     <br>
             -->
 
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Codigo</th>
-
-                        <th scope="col">nombre</th>
-                        <th scope="col">Requiere Orden Medica</th>
-                        <th scope="col">Descripcion</th>
-                        <th scope="col">Costo </th>
-                        <th scope="col">Laboratoristas</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    <c:forEach var="item" items="${examenes}">
-
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <input type="Search" id="buscar" name="buscar" onkeypress="">
+                <table id="dtBasicExample"class="table table-bordered table-striped mb-0">
+                    <thead>
                         <tr>
-                            <th scope="row" >${item.getCodigo()}</th>
+                            <th scope="col">Codigo</th>
 
-                            <td>${item.getNombre()}</td>      
+                            <th scope="col">nombre</th>
+                            <th scope="col">Requiere Orden Medica</th>
+                            <th scope="col">Descripcion</th>
+                            <th scope="col">Costo </th>
+                            <th scope="col">Laboratoristas</th>
+                            <th scope="col">         </th>
 
-                            <td>
-                                <c:if test="${item.isOrden() == true}">
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="item" items="${examenes}">
 
-                                   
-                                        <input type="file" name="sinName" required>
-                                   
-                                   
-                                </c:if>
-                                <c:if test="${item.isOrden() == false}"> 
+                            <tr>
+                                <th scope="row" ><input type="text" readonly value="${item.getCodigo()}" name="codigo"></th>
 
-                                    <label class="container-radio">
-                                        <input type="checkbox" name="radio" readonly  >
-                                        <span class="checkmark-radio"></span>
-                                    </label>
-                                </c:if>
-                            </td>
+                                <td>${item.getNombre()}</td>      
 
-
-                            <td>${item.getDescripcion()}</td>
+                                <td>
+                                    <c:if test="${item.isOrden() == true}">
 
 
-                            <td>${item.getCosto()}</td>
-
-                            <td>
-                    <center>
-
-                        <label class="container-radio">
-                            <a class="btn btn-primary" href="AgendaController?accion=verLab-code=${item.getCodigo()}">ver laboratorista</a>
-
-
-                            <span class="checkmark-radio"></span>
-                        </label>
-                    </center>
-
-                </td>
+                                        <label class="container-radio">
+                                            <input type="checkbox" name="radio" readonly  value="1" checked>
+                                            <span class="checkmark-radio"></span>
+                                        </label>
 
 
 
+                                    </c:if>
+                                    <c:if test="${item.isOrden() == false}"> 
 
-            </tr>
+                                        <label class="container-radio">
+                                            <input type="checkbox" name="radio" readonly  value="0" >
+                                            <span class="checkmark-radio"></span>
+                                        </label>
+                                    </c:if>
+                                </td>
 
-        </form>
-
-    </c:forEach>
 
 
-    <%@include file="js/js-bootstrap.html" %>
-</c:if>
-</body>
+                                <td>${item.getDescripcion()}</td>
+
+
+                                <td>${item.getCosto()}</td>
+
+
+                        <center>
+
+                            <label class="container-radio">
+                                <form action="AgendaController">
+                                    <td><input type="submit" class="btn btn-outline-primary" value="Elegir"></td>
+                                    <td>
+                                        <div id="div-oculto" style="display: none">
+                                    
+                                            
+                                            
+                                            <c:if test="${item.isOrden() == true}">
+
+
+                                                <label class="container-radio">
+                                                    <input type="checkbox" name="orden" readonly  value="1" checked>
+                                                    <span class="checkmark-radio"></span>
+                                                </label>
+
+
+
+                                            </c:if>
+                                            <c:if test="${item.isOrden() == false}"> 
+
+                                                <label class="container-radio">
+                                                    <input type="checkbox" name="orden" readonly  value="0" >
+                                                    <span class="checkmark-radio"></span>
+                                                </label>
+                                            </c:if>
+
+                                            <input type="text" value="${item.getCodigo()}" name="codigo">
+
+                                            
+                                            <input type="text" readonly value="${item.isOrden()}" name="archivo">
+
+                                        </div>
+                                    </td>
+                                    
+                                </form>
+                               <!--<a class="btn btn-primary" href="AgendaController?accion=verLab-code=${item.getCodigo()}" >ver laboratorista</a>-->
+
+
+                                <span class="checkmark-radio"></span>
+                            </label>
+                        </center>
+
+
+
+
+
+                        </tr>
+
+
+
+
+                    </c:forEach>
+                </table>
+            </div>
+            
+                <%@include  file="js/js-ocultar-div-informe.html" %>
+                <%@include  file="js/js-test-buscar.html" %>
+                <%@include file="js/js-bootstrap.html" %>
+            </c:if>
+    </body>
 </html>

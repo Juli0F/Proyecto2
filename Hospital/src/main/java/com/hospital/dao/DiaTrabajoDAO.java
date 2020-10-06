@@ -8,5 +8,6 @@ import com.hospital.entities.DiaTrabajo;
  */
 public interface DiaTrabajoDAO extends DAO<DiaTrabajo,Integer> {
 
+    public String getDiasDeTrabajo(String registro);
 
 }

@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,22 +6,29 @@
  */
 package com.hospital.controllers;
 
-import com.hospital.dto.PacienteHistorial;
+import com.hospital.controllers.fileupload.FIleUpload;
+import com.hospital.entities.ExamenPaciente;
+import com.hospital.entities.Resultado;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Random;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 /**
  *
  * @author julio
  */
-public class MedicosInforme extends HttpServlet {
+@MultipartConfig(maxFileSize = 16177215)
+public class ResultadoController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +47,10 @@ public class MedicosInforme extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet MedicosInforme</title>");
+            out.println("<title>Servlet ResultadoController</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet MedicosInforme at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ResultadoController at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,31 +68,7 @@ public class MedicosInforme extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        manager = new Manager();
-
-        String sigJsp = "";
-
-        String accion = request.getParameter("accion");
-
-        switch (accion) {
-            case "historial":
-                List<PacienteHistorial> lst = manager.getPacientesDAO().getPacienteHistoria();
-                
-                for (PacienteHistorial pacienteHistorial : lst) {
-                    System.out.println("Paciente Consultas: "+pacienteHistorial.getConsultas().size()
-                            + "Paciente Examenes" +  pacienteHistorial.getResultados().size());
-                }
-                System.out.println("siguiente: "+ sigJsp);
-                request.setAttribute("historial", lst);
-                sigJsp = "historial-de-todos.jsp";
-
-                break;
-            default:
-
-        }
-
-        RequestDispatcher vista = request.getRequestDispatcher(sigJsp);
-        vista.forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -99,6 +83,40 @@ public class MedicosInforme extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        manager = new Manager();
+        Random r = new Random();
+
+        Part part = request.getPart("resultFile");
+        String idExPac = request.getParameter("idExPac");
+        String fechaHora = request.getParameter("fecha");
+        ExamenPaciente exPacObj = manager.getExamenPacienteDAO().obtener(Integer.parseInt(idExPac));
+        String id = "";
+        String pagJsp = "feed-laboratorista.jsp";
+
+        FIleUpload subir = new FIleUpload();
+        subir.upload(request, "resultFile");
+
+        for (int i = 0; i < 9; i++) {
+
+            id += r.nextInt(9);
+
+        }
+
+        String nameFile = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+        //(String resultadoCodigo, String informePath, Date fechaHora, boolean estado , Time hora, String ordenPath) {
+        Resultado result = new Resultado(id, nameFile, java.sql.Date.valueOf(LocalDate.now()), true, java.sql.Time.valueOf("00:00:00"), idExPac);
+        exPacObj.setRealizado(true);
+
+        boolean insert = manager.getResultadoDAO().insert(result);
+        System.out.println("Insert : " + insert);
+        insert = insert && manager.getExamenPacienteDAO().modify(exPacObj);
+        System.out.println("Insert  ::"+ insert);
+
+        request.setAttribute("registro", insert);
+
+        System.out.println("pagJsp = " + pagJsp);
+        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
+        vista.forward(request, response);
     }
 
     /**
@@ -112,5 +130,4 @@ public class MedicosInforme extends HttpServlet {
     }// </editor-fold>
 
     private Manager manager;
-
 }

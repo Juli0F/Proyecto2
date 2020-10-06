@@ -16,15 +16,28 @@ public class PersonaLabDto {
     private String registro;
     private String examen;
     private String codeExamen;
+    private String diasDeTrabajo;
 
-    public PersonaLabDto(boolean disponible, String nombre, String dpi, String registro, String examen, String codeExamen) {
+    public PersonaLabDto(boolean disponible, String nombre, String dpi, String registro, String examen, String codeExamen, String diasDeTrabajo) {
+        
+        this.diasDeTrabajo = diasDeTrabajo;
         this.disponible = disponible;
         this.nombre = nombre;
         this.dpi = dpi;
         this.registro = registro;
         this.examen = examen;
         this.codeExamen = codeExamen;
+        
     }
+
+    public String getDiasDeTrabajo() {
+        return diasDeTrabajo;
+    }
+
+    public void setDiasDeTrabajo(String diasDeTrabajo) {
+        this.diasDeTrabajo = diasDeTrabajo;
+    }
+    
 
     public String getExamen() {
         return examen;

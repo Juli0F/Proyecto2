@@ -81,6 +81,7 @@ public class ReadFileController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         Part archivo = request.getPart("dataFile");
 
         String nombreArchivo = Paths.get(archivo.getSubmittedFileName()).getFileName().toString();
@@ -90,9 +91,11 @@ public class ReadFileController extends HttpServlet {
 
         LoadSaxBuilder copyDataToDb = new LoadSaxBuilder();
         copyDataToDb.readFile(PATH_FILES + nombreArchivo);
+        
         //Guardar todos los Archivos que estan incluidos dentro de la carga del Archivo en la carpeta ArchivosDB
         ArrayList<Part> filePartArchivosDB = (ArrayList<Part>) request.getParts();
         for (Part part : filePartArchivosDB) {
+           
             String rutaArchivo = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 
             guardarArchivos(part, rutaArchivo);

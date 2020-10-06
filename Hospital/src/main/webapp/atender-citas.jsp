@@ -21,8 +21,7 @@
 
         <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
-        <table id="dtHorizontalVerticalExample" class="table table-striped table-bordered table-sm " cellspacing="0"
-               width="100%">
+        <table  class="table table-striped table-bordered table-sm " cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th scope="col">Codigo Cita</th>
@@ -44,7 +43,7 @@
                         <th scope="row" >
 
                             <input type="text"  id="codigo-cita" name="codigo-cita"class="form-control"   value="${item.getCodigoCita()}" readonly="">${item.getCodigoCita()}
-
+                            hola
                         </th>
 
                         <td>

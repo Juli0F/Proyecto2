@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class ExamenPaciente implements Serializable {
 
     private int idExamenPaciente;
-    private String Resultado_resultadoCodigo;
+    private String ordenPath;
     private String Examen_Codigo;
     private String Laboratoristas_registro;
     private String Pacientes_codigo;
@@ -18,10 +18,22 @@ public class ExamenPaciente implements Serializable {
     private boolean cancelar;
     private boolean estado;
 
-    public ExamenPaciente(int idExamenPaciente, String Resultado_resultadoCodigo, String Examen_Codigo, String Laboratoristas_registro, String Pacientes_codigo, String Medico_colegiado, boolean realizado, boolean cancelar, boolean estado) {
+    public ExamenPaciente(int idExamenPaciente, String ordenPath, String Examen_Codigo, String Laboratoristas_registro, String Pacientes_codigo, String Medico_colegiado, boolean realizado, boolean cancelar, boolean estado) {
 
         this.idExamenPaciente = idExamenPaciente;
-        this.Resultado_resultadoCodigo = Resultado_resultadoCodigo;
+        this.ordenPath = ordenPath;
+        this.Examen_Codigo = Examen_Codigo;
+        this.Laboratoristas_registro = Laboratoristas_registro;
+        this.Pacientes_codigo = Pacientes_codigo;
+        this.Medico_colegiado = Medico_colegiado;
+        this.realizado = realizado;
+        this.cancelar = cancelar;
+        this.estado = estado;
+    }
+    public ExamenPaciente(int idExamenPaciente, String ordenPath, String Examen_Codigo, String Laboratoristas_registro, String Pacientes_codigo, boolean realizado, boolean cancelar, boolean estado) {
+
+        this.idExamenPaciente = idExamenPaciente;
+        this.ordenPath = ordenPath;
         this.Examen_Codigo = Examen_Codigo;
         this.Laboratoristas_registro = Laboratoristas_registro;
         this.Pacientes_codigo = Pacientes_codigo;
@@ -39,12 +51,12 @@ public class ExamenPaciente implements Serializable {
         this.idExamenPaciente = idExamenPaciente;
     }
 
-    public String getResultado_resultadoCodigo() {
-        return this.Resultado_resultadoCodigo;
+    public String getOrdenPath() {
+        return this.ordenPath;
     }
 
-    public void setResultado_resultadoCodigo(String Resultado_resultadoCodigo) {
-        this.Resultado_resultadoCodigo = Resultado_resultadoCodigo;
+    public void setOrdenPath(String Resultado_resultadoCodigo) {
+        this.ordenPath = Resultado_resultadoCodigo;
     }
 
     public String getExamen_Codigo() {

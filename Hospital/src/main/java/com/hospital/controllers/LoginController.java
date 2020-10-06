@@ -139,6 +139,7 @@ public class LoginController extends HttpServlet {
                     
                     request.setAttribute("laboratorista", laboratorista);
                     request.getSession().setAttribute("labSession", laboratorista);
+                    pagJsp = "laboratorista-home.jsp";
 
                 } else if (admin != null) {
                     

@@ -51,31 +51,46 @@ public class AgendaController extends HttpServlet {
             throws ServletException, IOException {
         manager = new Manager();
         String mostrarJsp = "";
-        String accion = request.getParameter("accion");
-        
-        if (accion.contains("crearCita")) {
+            String accion = request.getParameter("accion");
+        System.out.println("A-Ccion "+accion);
+        if (accion != null) {
             String[] agendar = accion.split("=");
+            
+            System.out.println("Agenda size : "+agendar.length);
+            
             List<Consulta> consultas = manager.getConsultaDAO().obtenerTodo();
             request.setAttribute("consultas", consultas);
+            
+            System.out.println("Accion: "+accion);
+            
             request.getSession().setAttribute("colegiado", agendar[1]);
             mostrarJsp = "crear-cita.jsp";
 
-        } else if (accion.contains("verLab")) {
-            
+        } else{
+
             //PersonaLabDto
-            String[] agendar = accion.split("=");
+            //String[] codigo = accion.split("=");
+            String codigo = request.getParameter("codigo");
+            String necesitaOrden = request.getParameter("archivo");
             
-            List<PersonaLabDto> personaLabDto = manager.getLaboratoristasDAO().getPersonaLabDtoByCodeExamen(agendar[1]);
-            Examen examen = manager.getExamenDAO().obtener(agendar[1]);
             
-            request.getSession().setAttribute("registro", agendar[1]);
+            
+            request.getSession().setAttribute("codeExamen", codigo);
+            request.getSession().setAttribute("necesita", necesitaOrden.contains("t"));
+            
+            List<PersonaLabDto> personaLabDto = manager.getLaboratoristasDAO().getPersonaLabDtoByCodeExamen(codigo);
+            
+            Examen examen = manager.getExamenDAO().obtener(codigo);
+            
+            request.setAttribute("orden", request.getParameter("orden"));
+            request.getSession().setAttribute("registro", codigo);
             request.setAttribute("laboratoristas", personaLabDto);
             request.setAttribute("examen", examen);
-            
-            
-         //   request.getSession().setAttribute("colegiado", agendar[1]);
+
+            //   request.getSession().setAttribute("colegiado", agendar[1]);
             mostrarJsp = "ver-laboratorista.jsp";
         }
+        System.out.println("pagJsp: "+ mostrarJsp);
         RequestDispatcher vista = request.getRequestDispatcher(mostrarJsp);
         vista.forward(request, response);
     }
@@ -93,7 +108,7 @@ public class AgendaController extends HttpServlet {
             throws ServletException, IOException {
 
         String accion = request.getParameter("accion");
-        System.out.println("accion do Post Agenda Controller"+accion);
+        System.out.println("accion do Post Agenda Controller" + accion);
         accionPost(accion, request);
     }
 
