@@ -25,39 +25,7 @@
 
             <%@include file="paciente.jsp" %>
 <!--
-            <p>Cuenta De: </p>
-
-
-     
-
-            <div class="tab">
-                <button class="tablinks" onclick="openCity(event, 'home')">Mi Cuenta</button>
-                <a href="PacienteController?citaMedica=cita"><button class="tablinks" onclick="openCity(event, 'citaMedica')">Agendar Cita Medica</button>
-                    <button class="tablinks" onclick="openCity(event, 'citaLab')">Agendar Cita en Laboratorios</button>
-                    <button class="tablinks" onclick="openCity(event, 'informe')">Informes</button>
-            </div>
-
-            <div id="citaMedica" class="tabcontent">
-                <h3>Cita Medica</h3>
-
-
-
-            </div>
-
-            <div id="citaLab" class="tabcontent">
-                <p>Paris is the capital of France.</p> 
-            </div>
-
-            <div id="home" class="tabcontent">
-                <h3>Mi Cuenta</h3>
-                <p>Tokyo is the capital of Japan.</p>
-            </div>
-
-            <div id="informe" class="tabcontent">
-                <h3>Informes</h3>
-                <p>Tokyo is the capital of Japan.</p>
-            </div>
-              
+   
 
 -->
         </c:if>

@@ -5,11 +5,17 @@
  */
 package com.hospital.controllers;
 
+import com.hospital.connection.Conexion;
 import com.hospital.dto.MedicoDto;
 import com.hospital.entities.Examen;
+import com.hospital.entities.Paciente;
+import com.hospital.entities.Persona;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -98,7 +104,56 @@ public class PacienteController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //guardar-cambios
+        String accion = request.getParameter("accion");
+        switch (accion) {
+            case "guardar-cambios":
+
+                guardarCambiosDatos(request, response);
+                break;
+            default:
+
+        }
+
+    }
+
+    private void guardarCambiosDatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            manager = new Manager();
+            String nombre = request.getParameter("nombre");
+            String dpi = request.getParameter("dpi");
+            String tipo = request.getParameter("tipo");
+            String peso = request.getParameter("peso");
+            String fecha = request.getParameter("fecha");
+
+            Persona persona = (Persona) request.getSession().getAttribute("personaSession");
+            Paciente paciente = (Paciente) request.getSession().getAttribute("pacienteSession");
+
+            persona.setNombre(nombre);
+            persona.setDpi(dpi);
+
+            paciente.setTipoDeSangre(tipo);
+            paciente.setPeso(peso);
+            paciente.setFecha(java.sql.Date.valueOf(fecha));
+            paciente.setPersonaDpi(dpi);
+            ;
+
+            Conexion.getInstancia().setAutoCommit(false);
+            
+            request.setAttribute("registro", manager.getPersonaDAO().modify(persona) && manager.getPacientesDAO().modify(paciente));
+            
+            Conexion.getInstancia().setAutoCommit(true);
+        } catch (SQLException ex) {
+            try {
+                Logger.getLogger(PacienteController.class.getName()).log(Level.SEVERE, null, ex);
+                Conexion.getInstancia().rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(PacienteController.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+        }
+
+        RequestDispatcher vista = request.getRequestDispatcher("paciente-feed.jsp");
+        vista.forward(request, response);
     }
 
     /**

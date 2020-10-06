@@ -16,7 +16,7 @@ import java.sql.Time;
 public class InformeD implements InformeDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Informe (descripcion,fechaHora,Medico_colegiado,estado,hora) VALUES (?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO Informe (descripcion,fechaHora,Medico_colegiado,estado,hora,Cita_codigo,idInforme) VALUES (?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Informe set descripcion = ?, set fechaHora = ?, set Medico_colegiado = ?, set estado = ?, set hora = ?  WHERE idInforme = ? ";
     private final String DELETE = "DELETE Informe WHERE idInforme = ? ";
     private final String GETALL = "SELECT * FROM  Informe  ";
@@ -36,7 +36,8 @@ public class InformeD implements InformeDAO {
             stat.setInt(3, object.getMedico_colegiado());
             stat.setBoolean(4, object.isEstado());
             stat.setTime(5, (object.getHora()));
-            stat.setString(6, object.getCodigo());
+            stat.setString(6, object.getCodigoCita());
+            stat.setString(7, object.getIdInforme());
             
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Informe");

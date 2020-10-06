@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class DiaTrabajoD implements DiaTrabajoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO DiaTrabajo (Turno_idTurno,Laboratoristas_registro,estado,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO DiaTrabajo (Turno_idTurno,Laboratoristas_registro,estado) VALUES (?,?,?)";
     private final String UPDATE = "UPDATE DiaTrabajo set Turno_idTurno = ?, set Laboratoristas_registro = ?, set estado = ? WHERE idTrabajoLaboratoristaLaboratorista = ? ";
     private final String DELETE = "DELETE DiaTrabajo WHERE idTrabajoLaboratoristaLaboratorista = ? ";
     private final String GETALL = "SELECT * FROM  DiaTrabajo  ";

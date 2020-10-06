@@ -1,6 +1,7 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.PacientesDAO;
+import com.hospital.dto.PacienteHistorial;
 import com.hospital.entities.Paciente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,11 +16,12 @@ public class PacientesD implements PacientesDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Pacientes (masculino,fecha,peso,estado,tipo_de_sangre,Persona_dpi,codigo) VALUES (?,?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Pacientes set masculino = ?, set fecha = ?, set peso = ?, set estado = ?, set tipo_de_sangre = ?, set Persona_dpi = ? WHERE codigo = ? ";
+    private final String UPDATE = "UPDATE Pacientes set masculino = ?,fecha = ?,peso = ?,estado = ?,tipo_de_sangre = ?,Persona_dpi = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Pacientes WHERE codigo = ? ";
     private final String GET_ALL = "SELECT * FROM  Pacientes  ";
     private final String GETONE = GET_ALL + "WHERE codigo = ?";
     private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Pacientes a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
+    private final String GET_ALL_WHIT_PERSONA = "select pac.codigo , per.nombre as nombre, pac.masculino, pac.fecha, pac.peso, pac.tipo_de_sangre as sangre from Pacientes pac inner join Persona per on pac.Persona_dpi = per.dpi";
 
     public PacientesD(Connection connection) {
         this.connection = connection;
@@ -46,7 +48,7 @@ public class PacientesD implements PacientesDAO {
             return false;
         }
         return true;
-        
+
     }
 
     @Override
@@ -70,7 +72,7 @@ public class PacientesD implements PacientesDAO {
             return false;
         }
         return true;
-        
+
     }
 
     @Override
@@ -125,7 +127,7 @@ public class PacientesD implements PacientesDAO {
             return false;
         }
         return true;
-        
+
     }
 
     public Paciente convertir(ResultSet rs) {
@@ -175,6 +177,47 @@ public class PacientesD implements PacientesDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PacienteHistorial> getPacienteHistoria() {
+        Manager manager = new Manager();
+
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<PacienteHistorial> lst = new ArrayList<>();
+
+        try {
+
+            stat = connection.prepareStatement(GET_ALL_WHIT_PERSONA);
+            rs = stat.executeQuery();
+
+            while (rs.next()) {
+                PacienteHistorial pacHistorial = convertirPacienteHistorial(rs);
+
+                System.out.println("Paciente: "+pacHistorial);
+                pacHistorial.setConsultas(
+                        manager.getCitaDAO().getInformeConsulta(pacHistorial.getCodigo()));
+                lst.add(pacHistorial);
+
+            }
+
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public PacienteHistorial convertirPacienteHistorial(ResultSet rs) {
+        try {
+
+            return new PacienteHistorial(rs.getString("codigo"), rs.getString("nombre"), rs.getString("masculino"), rs.getString("fecha"), rs.getString("peso"), rs.getString("sangre"));
+        } catch (SQLException ex) {
+            Logger.getLogger(PacientesD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

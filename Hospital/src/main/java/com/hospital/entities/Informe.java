@@ -9,44 +9,44 @@ import java.time.LocalTime;
  */
 public class Informe implements Serializable {
 
-    private String codigo;
+    private String idInforme;
     private String descripcion;
     private java.sql.Date fecha;
     private int Medico_colegiado;
     private boolean estado;
     private java.sql.Time hora;
-    private String consultaCodigo;
+    private String codigoCita;
 
     public Informe(String idInforme, String descripcion, java.sql.Date fechaHora, int Medico_colegiado, boolean estado, java.sql.Time hora,String consutalCodigo) {
 
-        this.codigo = idInforme;
+        this.idInforme = idInforme;
         this.descripcion = descripcion;
         this.fecha = fechaHora;
         this.Medico_colegiado = Medico_colegiado;
         this.estado = estado;
         this.hora = hora;
-        this.consultaCodigo = consutalCodigo;
+        this.codigoCita = consutalCodigo;
     }
 
     public Informe() {
     
     }
 
-    public String getConsultaCodigo() {
-        return consultaCodigo;
+    public String getCodigoCita() {
+        return codigoCita;
     }
 
-    public void setConsultaCodigo(String consultaCodigo) {
-        this.consultaCodigo = consultaCodigo;
+    public void setCodigoCita(String codigoCita) {
+        this.codigoCita = codigoCita;
     }
 
     
     public String getCodigo() {
-        return codigo;
+        return idInforme;
     }
 
     public void setCodigo(String codigo) {
-        this.codigo = codigo;
+        this.idInforme = codigo;
     }
 
     public java.sql.Time getHora() {
@@ -60,11 +60,11 @@ public class Informe implements Serializable {
 
     
     public String getIdInforme() {
-        return this.codigo;
+        return this.idInforme;
     }
 
     public void setIdInforme(String idInforme) {
-        this.codigo = idInforme;
+        this.idInforme = idInforme;
     }
 
     public String getDescripcion() {

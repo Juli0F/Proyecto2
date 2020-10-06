@@ -112,7 +112,7 @@
       <DIA>Jueves</DIA>
       <DIA>Sabado</DIA>
     </TRABAJO>
-    <TRABAJO>2010-9-2</TRABAJO>
+    <TRABAJOF>2010-9-2</TRABAJOF>
     <PASSWORD>7"UAYz~z</PASSWORD>
   </laboratorista>
   <laboratorista>
@@ -128,7 +128,7 @@
       <DIA>Jueves</DIA>
       <DIA>Sabado</DIA>
     </TRABAJO>
-    <TRABAJO>2015-1-1</TRABAJO>
+    <TRABAJOF>2015-1-1</TRABAJOF>
     <PASSWORD>Sh*8sA\X</PASSWORD>
   </laboratorista>
   <laboratorista>
@@ -145,7 +145,7 @@
       <DIA>Jueves</DIA>
       <DIA>Sabado</DIA>
     </TRABAJO>
-    <TRABAJO>2018-12-18</TRABAJO>
+    <TRABAJOF>2018-12-18</TRABAJOF>
     <PASSWORD>C9^r:F/j</PASSWORD>
   </laboratorista>
   <laboratorista>
@@ -161,7 +161,7 @@
       <DIA>Jueves</DIA>
       <DIA>Sabado</DIA>
     </TRABAJO>
-    <TRABAJO>2001-11-25</TRABAJO>
+    <TRABAJOF>2001-11-25</TRABAJOF>
     <PASSWORD>QwC_;%5$</PASSWORD>
   </laboratorista>
   <laboratorista>
@@ -178,7 +178,7 @@
       <DIA>Jueves</DIA>
       <DIA>Sabado</DIA>
     </TRABAJO>
-    <TRABAJO>2011-01-26</TRABAJO>
+    <TRABAJOF>2011-01-26</TRABAJOF>
     <PASSWORD>T7gh>!Ag</PASSWORD>
   </laboratorista>
   <laboratorista>
@@ -194,7 +194,7 @@
       <DIA>Jueves</DIA>
       <DIA>Sabado</DIA>
     </TRABAJO>
-    <TRABAJO>2019-01-07</TRABAJO>
+    <TRABAJOF>2019-01-07</TRABAJOF>
     <PASSWORD>3rJeSD.></PASSWORD>
   </laboratorista>
   <paciente>
@@ -412,7 +412,7 @@
   <cita>
     <CODIGO>604518</CODIGO>
     <PACIENTE>922677</PACIENTE>
-    <MEDICO>MED-159</MEDICO>
+    <MEDICO>MED-123</MEDICO>
     <FECHA>2020-09-10</FECHA>
     <HORA>7:00</HORA>
   </cita>
@@ -440,7 +440,7 @@
   <cita>
     <CODIGO>450347</CODIGO>
     <PACIENTE>922677</PACIENTE>
-    <MEDICO>MED-127</MEDICO>
+    <MEDICO>MED-123</MEDICO>
     <FECHA>2020-09-10</FECHA>
     <HORA>13:00</HORA>
   </cita>

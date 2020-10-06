@@ -617,16 +617,16 @@ public class Interprete {
                             System.out.println(" Lanzar Error Cita existe en fecha y hora   ");
                         }
                     } else {
-                        agendaMedica = new Agenda(0, "1", colegiadoMedico, null);
-                        manager.getAgendaDAO().insert(agendaMedica);
-
-                        agenda = manager.getAgendaDAO().lastInsertId();
-                        agendaMedica = manager.getAgendaDAO().obtener(agenda);
-
-                        manager.getCitaDAO().insert(cita);
-                        //(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, int Cita_codigo, java.sql.Time hora) {
-                        dia = new Dia(0, fechaCita, "", agendaMedica.getCodigo(), cita.getCodigo(), horaCita);
-                        manager.getDiaDAO().insert(dia);
+//                        agendaMedica = new Agenda(0, "1", colegiadoMedico="", null,0);
+//                        manager.getAgendaDAO().insert(agendaMedica);
+//
+//                        agenda = manager.getAgendaDAO().lastInsertId();
+//                        agendaMedica = manager.getAgendaDAO().obtener(agenda);
+//
+//                        manager.getCitaDAO().insert(cita);
+//                        //(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, int Cita_codigo, java.sql.Time hora) {
+//                        dia = new Dia(0, fechaCita, "", agendaMedica.getCodigo(), cita.getCodigo(), horaCita);
+//                        manager.getDiaDAO().insert(dia);
                     }
                 } else {
                     System.out.println("no se puede crear cita, falta paciente");

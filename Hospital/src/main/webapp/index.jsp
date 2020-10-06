@@ -27,14 +27,14 @@
         </c:if>
         <c:if test="${personaSession == null}" >
             
-            <FORM class="col-12 caja2" METHOD="POST" ACTION="LoginController?accion=cargar" enctype="multipart/form-data">  
+            <FORM class="col-12 caja2" METHOD="POST" ACTION="ReadFileController?accion=cargar" enctype="multipart/form-data">  
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>Elija el Archivo que desea Cargar a la Base de Datos: </label>
                     </div>
                     <div class="form-group col-md-4">
                         
-                        <input class="form-control" type="file"  name="archivoDB" id="archivoDB" placeholder="Elija el Archivo" accept="application/xml" required>
+                        <input class="form-control" type="file"  name="dataFile" id="archivoDB" placeholder="Elija el Archivo" accept="application/xml" required>
                     </div>
                 </div>
                 <div class="row">

@@ -5,13 +5,16 @@
  */
 package com.hospital.controllers;
 
+import com.hospital.dto.CitaPac;
 import com.hospital.entities.Agenda;
 import com.hospital.entities.Cita;
 import com.hospital.entities.Dia;
+import com.hospital.entities.Medico;
 import com.hospital.entities.Paciente;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -64,7 +67,17 @@ public class CitaController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String siguiente = "";
+        String accion = request.getParameter("accion");
+        switch (accion) {
+            case "citas":
+                siguiente = cargarCitasPendientes(request,response);
+                break;
+            default:
+         
+        }
+        RequestDispatcher vista = request.getRequestDispatcher(siguiente);
+            vista.forward(request, response);
     }
 
     /**
@@ -87,14 +100,23 @@ public class CitaController extends HttpServlet {
     }
 
     public void accionesDoPost(String action, HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("action: " + action);
         try {
             System.out.println("Acciones Do Post");
             String pagJsp = "";
             switch (action) {
-                case "crearCita":
-                    request.setAttribute("almacenarCita", crearCita(request, response));
+                case "crearCita": {
+                    
+                    boolean valor = crearCita(request, response);
+                        //request.setAttribute("almacenarCita", crearCita(request, response));
+                        request.setAttribute("almacenarCita", valor);
+                   
+                    
                     pagJsp = "feedback-cita.jsp";
+
                     break;
+                }
+
                 case "lab":
                     break;
 
@@ -129,41 +151,51 @@ public class CitaController extends HttpServlet {
         //verificar si existe una cita a esa fecha y hora d
         Dia citaEnDia = manager.getDiaDAO().searchCoincidenceByDateHourAndAgenda(dia.getFecha(), dia.getHora(), agenda.getCodigo());
 
-        if (citaEnDia != null) {
+        if (citaEnDia == null) {
 
             return manager.getCitaDAO().insert(cita) && manager.getDiaDAO().insert(dia);
 
         } else {
             return false;
         }
-        
+
     }
 
     public boolean crearCita(HttpServletRequest request, HttpServletResponse response) {
 
-        System.out.println("crearCita");
+       
         Agenda agenda = manager.getAgendaDAO().getAgendaByColegido((String) request.getSession().getAttribute("colegiado"));
-
+       
         Paciente paciente = (Paciente) request.getSession().getAttribute("pacienteSession");
+        
+        System.out.println("Paciente que reserva la cita: " + paciente.getCodigo());
 
-        Cita cita = new Cita("cita-1", "Cita Medica", "1", paciente.getCodigo());
+        String idConsulta = request.getParameter("idConsulta");
+
+        //public Cita(String codigo, String descripcion, String estado, String Pacientes_codigo) {
+        Cita cita = new Cita("cita-1", "Cita Medica", "PENDIENTE", paciente.getCodigo(), Integer.parseInt(idConsulta));
 
         Dia dia = new Dia(
                 0,
                 java.sql.Date.valueOf(request.getParameter("fecha")),
-                "Cita Medica",
+                "PENDIENTE",
                 agenda.getCodigo(),
                 cita.getCodigo(),
                 java.sql.Time.valueOf(request.getParameter("hora") + ":00")
         );
 
-        //verificar si existe una cita a esa fecha y hora d
-        //  manager.getAgendaDAO().getAgendaByColegido(""+agenda.getMedico_colegiado());
+        //verificar si existe una cita a esa fecha
         Dia citaEnDia = manager.getDiaDAO().searchCoincidenceByDateHourAndAgenda(dia.getFecha(), dia.getHora(), agenda.getCodigo());
 
-        if (citaEnDia != null) {
+        if ((citaEnDia == null || citaEnDia.getDescripcion().equalsIgnoreCase("CANCELADA"))  ) {
 
-            return manager.getCitaDAO().insert(cita) && manager.getDiaDAO().insert(dia);
+            boolean citaReturn = manager.getCitaDAO().insert(cita);
+            ;
+            dia.setCitaCodigo((manager.getCitaDAO().lastInsertId()));
+            System.out.println("codigo Cita"+ dia.getCita_codigo());
+            boolean diaReturn = manager.getDiaDAO().insert(dia);
+            
+            return citaReturn == diaReturn;
 
         } else {
             return false;
@@ -180,5 +212,13 @@ public class CitaController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public String cargarCitasPendientes(HttpServletRequest request, HttpServletResponse response){
+        manager = new Manager();
+        Medico medico = (Medico) request.getSession().getAttribute("medicoSession");
+        //List<CitaPac> listado = manager.getCitaDAO().getCitaPac((String) request.getSession().getAttribute("medicoSession"));
+        List<CitaPac> listado = manager.getCitaDAO().getCitaPac(medico.getColegiado()+"");
+        request.setAttribute("citasPaciente", listado);
+        return "atender-citas.jsp";
+    }
     private Manager manager;
 }

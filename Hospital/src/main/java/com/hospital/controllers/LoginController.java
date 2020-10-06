@@ -35,6 +35,7 @@ import javax.servlet.annotation.MultipartConfig;
 
 import javax.servlet.http.Part;
 import com.hospital.controllers.fileupload.FIleUpload;
+import com.hospital.loadxml.LoadSaxBuilder;
 
 /**
  *
@@ -96,15 +97,7 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         manager = new Manager();
-
-        
-        if (request.getParameter("accion").equalsIgnoreCase("cargar")) {
-
-           FIleUpload fUpload = new FIleUpload();
-           fUpload.upload(request);
-           
-
-        } else{
+{
 
             String pagJsp = "index.jsp";
             System.out.println("Request: " + request.getParameter("uname"));
@@ -137,16 +130,22 @@ public class LoginController extends HttpServlet {
                     pagJsp = "paciente.jsp";
                     
                 } else if (medico != null) {
+                    
                     request.getSession().setAttribute("medicoSession", medico);
                     request.setAttribute("medico", medico);
+                    pagJsp = "Doctor.jsp";
+                    
                 } else if (laboratorista != null) {
+                    
                     request.setAttribute("laboratorista", laboratorista);
                     request.getSession().setAttribute("labSession", laboratorista);
 
                 } else if (admin != null) {
+                    
                     request.setAttribute("admin", admin);
                     System.out.println("Admin" + admin.getCodigo());
                     request.getSession().setAttribute("admin", admin);
+                    
                 }
 
                

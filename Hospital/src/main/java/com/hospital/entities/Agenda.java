@@ -10,7 +10,8 @@ public class Agenda implements Serializable {
 
     private int codigo;
     private String estado;
-    private int Medico_colegiado;
+    private String Medico_colegiado;
+    private int noEnviar;
     private String Laboratoristas_registro;
 
     /**
@@ -19,7 +20,7 @@ public class Agenda implements Serializable {
      * @param estado
      * @param Medico_colegiado 
      */
-    public Agenda(int codigo, String estado, int Medico_colegiado) {
+    public Agenda(int codigo, String estado, String Medico_colegiado ) {
         this.codigo = codigo;
         this.estado = estado;
         this.Medico_colegiado = Medico_colegiado;
@@ -31,15 +32,17 @@ public class Agenda implements Serializable {
      * @param estado
      * @param Laboratoristas_registro 
      */
-    public Agenda(int codigo, String estado, String Laboratoristas_registro) {
+    public Agenda(int codigo, String estado, String Laboratoristas_registro, int extraNoEnviar) {
+        this.Medico_colegiado = null;
         this.codigo = codigo;
         this.estado = estado;
         this.Laboratoristas_registro = Laboratoristas_registro;
+        this.noEnviar = noEnviar;
     }
     
 
     
-    public Agenda(int codigo, String estado, int Medico_colegiado, String Laboratoristas_registro) {
+    public Agenda(int codigo, String estado, String Medico_colegiado, String Laboratoristas_registro) {
 
         this.codigo = codigo;
         this.estado = estado;
@@ -68,11 +71,11 @@ public class Agenda implements Serializable {
         this.estado = estado;
     }
 
-    public int getMedico_colegiado() {
+    public String getMedico_colegiado() {
         return this.Medico_colegiado;
     }
 
-    public void setMedico_colegiado(int Medico_colegiado) {
+    public void setMedico_colegiado(String Medico_colegiado) {
         this.Medico_colegiado = Medico_colegiado;
     }
 

@@ -32,5 +32,7 @@ public interface AgendaDAO extends DAO<Agenda, Integer> {
      */
     public Agenda getAgendaByRegistro(String registroLaboratorista);
     
+    
+    public boolean insertLab(Agenda object);
 
 }

@@ -59,10 +59,10 @@
                             <td>
                                 <c:if test="${item.isOrden() == true}">
 
-                                    <label class="container-radio">
-                                        <input type="checkbox" name="sinName" readonly checked>
-                                        <span class="checkmark-radio"></span>
-                                    </label>
+                                   
+                                        <input type="file" name="sinName" required>
+                                   
+                                   
                                 </c:if>
                                 <c:if test="${item.isOrden() == false}"> 
 

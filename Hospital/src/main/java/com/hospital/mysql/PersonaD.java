@@ -15,7 +15,8 @@ public class PersonaD implements PersonaDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Persona (nombre,telefono,correo,estado,dpi) VALUES (?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Persona set nombre = ?, set telefono = ?, set correo = ?, set estado = ? WHERE dpi = ? ";
+    //                  UPDATE `Hospital`.`Persona` SET `nombre`='Galarga', `correo`='galarga@othermail.com' WHERE `dpi`='69749736369';
+    private final String UPDATE = "UPDATE Persona SET nombre = ?, telefono = ?, correo = ? , estado = ? WHERE  dpi = ? ";
     private final String DELETE = "DELETE Persona WHERE dpi = ? ";
     private final String GETALL = "SELECT * FROM  Persona  ";
     private final String GETONE = GETALL + "WHERE dpi = ?";

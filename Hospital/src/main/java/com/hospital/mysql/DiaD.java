@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class DiaD implements DiaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Dia (fecha,descripcion,Agenda_codigo,Cita_codigo,) VALUES (?,?,?,?)";
+    private final String INSERT = "INSERT INTO Dia (fecha,descripcion,Agenda_codigo,Cita_codigo,hora) VALUES (?,?,?,?,?)";
     private final String UPDATE = "UPDATE Dia set fecha = ?, set descripcion = ?, set Agenda_codigo = ?, set Cita_codigo = ? WHERE idDia = ? ";
     private final String DELETE = "DELETE Dia WHERE idDia = ? ";
     private final String GETALL = "SELECT * FROM  Dia  ";
@@ -41,6 +41,7 @@ public class DiaD implements DiaDAO {
             stat.setString(2, object.getDescripcion());
             stat.setInt(3, object.getAgenda_codigo());
             stat.setString(4, object.getCita_codigo());
+            stat.setTime(5, object.getHora());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Dia");
 

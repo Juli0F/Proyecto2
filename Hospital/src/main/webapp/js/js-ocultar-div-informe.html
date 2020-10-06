@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<script>
+
+    function showDiv(textoVisible, textoNoVisible) {
+        var x = document.getElementById("div-oculto");
+        var valor = true;
+
+        if ((x.style.display === "none")) {
+            x.style.display = "block";
+
+        } else {
+            x.style.display = "none";
+            
+        }
+
+
+        var uno = document.getElementById('myBoton');
+        valor ? uno.innerText = textoVisible : uno.innerText = textoNoVisible;
+        valor = !valor
+
+
+    }
+    var valor = true
+    function FbotonOn() {
+        var uno = document.getElementById('botonOn');
+        valor ? uno.innerText = "off" : uno.innerText = "on";
+        valor = !valor
+    }
+
+</script>

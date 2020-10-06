@@ -20,6 +20,18 @@
         <servlet-name>CitaController</servlet-name>
         <servlet-class>com.hospital.controllers.CitaController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReadFileController</servlet-name>
+        <servlet-class>com.hospital.controllers.ReadFileController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InformeController</servlet-name>
+        <servlet-class>com.hospital.controllers.InformeController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>MedicosInforme</servlet-name>
+        <servlet-class>com.hospital.controllers.MedicosInforme</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -39,6 +51,18 @@
     <servlet-mapping>
         <servlet-name>CitaController</servlet-name>
         <url-pattern>/CitaController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReadFileController</servlet-name>
+        <url-pattern>/ReadFileController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InformeController</servlet-name>
+        <url-pattern>/InformeController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>MedicosInforme</servlet-name>
+        <url-pattern>/MedicosInforme</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

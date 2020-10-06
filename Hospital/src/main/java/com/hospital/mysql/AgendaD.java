@@ -14,14 +14,15 @@ import java.util.logging.Logger;
 public class AgendaD implements AgendaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Agenda (estado,Medico_colegiado,Laboratoristas_registro) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO Agenda (estado,Medico_colegiado,Laboratoristas_registro) VALUES ('1',?,?)";
+    private final String INSERT_LAB = "INSERT INTO Agenda (estado,Laboratoristas_registro) VALUES ('1',?)";
     private final String UPDATE = "UPDATE Agenda set estado = ?, set Medico_colegiado = ?, set Laboratoristas_registro = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Agenda WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Agenda  ";
     private final String GETONE = GETALL + "WHERE codigo = ?";
     private final String GET_AGENDA_MEDICO2 = GETALL + " a "
             + "Usuario u INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi WHERE u.codigo = ? ";
-    private final String GET_AGENDA_MEDICO_BY_CODIGO_USUARIO = "SELECT * FROM"
+    private final String GET_AGENDA_MEDICO_BY_CODIGO_USUARIO = "SELECT a.codigo,a.estado,a.Medico_colegiado,a.Laboratoristas_registro FROM"
             + " Usuario u "
             + "INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi "
             + "INNER JOIN Agenda a on a.Medico_colegiado = m.colegiado  WHERE u.codigo = ?";
@@ -38,9 +39,27 @@ public class AgendaD implements AgendaDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getEstado());
-            stat.setInt(2, object.getMedico_colegiado());
-            stat.setString(3, object.getLaboratoristas_registro());
+           // stat.setString(1, object.getEstado());
+            stat.setString(1, object.getMedico_colegiado());
+            stat.setString(2, object.getLaboratoristas_registro());
+            if (stat.executeUpdate() == 0) {
+                System.out.println("crear popover Agenda");
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+     @Override
+    public boolean insertLab(Agenda object) {
+        PreparedStatement stat = null;;
+        try {
+            stat = connection.prepareStatement(INSERT_LAB);
+           // stat.setString(1, object.getEstado());
+            //stat.setInt(1, object.getMedico_colegiado());
+            stat.setString(1, object.getLaboratoristas_registro());
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Agenda");
 
@@ -58,7 +77,7 @@ public class AgendaD implements AgendaDAO {
         try {
             stat = connection.prepareStatement(UPDATE);
             stat.setString(1, object.getEstado());
-            stat.setInt(2, object.getMedico_colegiado());
+            stat.setString(2, object.getMedico_colegiado());
             stat.setString(3, object.getLaboratoristas_registro());
             stat.setInt(4, object.getCodigo());
             if (stat.executeUpdate() == 0) {
@@ -187,7 +206,8 @@ public class AgendaD implements AgendaDAO {
     public Agenda convertir(ResultSet rs) {
 
         try {
-            Agenda agenda = new Agenda(rs.getInt("codigo"), rs.getString("estado"), rs.getInt("Medico_colegiado"), rs.getString("Laboratoristas_registro"));
+                            //public Agenda(int codigo,           String estado,      String Medico_colegiado,     String Laboratoristas_registro) {
+            Agenda agenda = new Agenda(rs.getInt("codigo"), rs.getString("estado"), rs.getString("Medico_colegiado"), rs.getString("Laboratoristas_registro"));
 
             return agenda;
         } catch (SQLException ex) {

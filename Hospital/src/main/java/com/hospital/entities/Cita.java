@@ -35,6 +35,7 @@ public class Cita implements Serializable {
     }
     
 
+     
     public Cita() {
 
     }

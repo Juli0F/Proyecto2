@@ -19,7 +19,7 @@
         <c:if test="${personaSession != null}" >
 
             <%@include file="html/paciente-html-navbar.html" %>
-            <%@include file="archivos/" %>
+   
             <br>
             <br>
             <br>
@@ -53,7 +53,7 @@
                         <tr>
                             <td scope="row" >
                                 <div class="md-form mt-0">
-                                    <input class="form-control" type="text"  aria-label="Search" value="${item.getIdConsulta()}" name="idConsulta" readonly onmousedown="return false;">
+                                    <input class="form-control" type="text"  " value="${item.getIdConsulta()}" name="idConsulta" readonly onmousedown="return false;">
                                 </div>
 
                             </td>

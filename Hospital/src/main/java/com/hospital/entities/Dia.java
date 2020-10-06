@@ -15,6 +15,7 @@ public class Dia implements Serializable {
     private int Agenda_codigo;
     private String citaCodigo;
     private java.sql.Time hora;
+    private String horaa;
 
     public Dia(int idDia, java.sql.Date fecha, String descripcion, int Agenda_codigo, String Cita_codigo, java.sql.Time hora) {
 
@@ -80,6 +81,7 @@ public class Dia implements Serializable {
     }
 
     public void setCitaCodigo(String citaCodigo) {
+        
         this.citaCodigo = citaCodigo;
     }
 
