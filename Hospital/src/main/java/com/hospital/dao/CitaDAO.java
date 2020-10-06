@@ -14,4 +14,6 @@ public interface CitaDAO extends DAO<Cita, String> {
     public List<CitaPac> getCitaPac(String codigoAgenda);
 
     public List<InformeConsulta> getInformeConsulta(String codigoPaciente);
+    
+    public boolean insertSinConsulta(Cita object);
 }

@@ -239,7 +239,11 @@ public class LoadSaxBuilder {
             String costo = element.getChildTextTrim("COSTO");
             String informe = element.getChildTextTrim("INFORME");
 
-            System.out.println("codigo "+codigo+" nombre: "+ nombre+" Ordend:"+ orden+" descripcion" +descripcion+" Costo: "+ costo+" informe"+informe);
+            if (descripcion.length() > 1999) {
+                descripcion = descripcion.substring(0, 1999);
+
+            }
+            System.out.println("codigo " + codigo + " nombre: " + nombre + " Ordend:" + orden + " descripcion" + descripcion + " Costo: " + costo + " informe" + informe);
             crearExamen(codigo, nombre, orden, descripcion, costo, informe);
 
         }
@@ -274,9 +278,9 @@ public class LoadSaxBuilder {
             String orden = element.getChildTextTrim("ORDEN");
             String informe = element.getChildTextTrim("INFORME");
             String fecha = element.getChildTextTrim("FECHA");
-            String hora = element.getChildTextTrim("HORA")+":00";
+            String hora = element.getChildTextTrim("HORA") + ":00";
 
-            System.out.println("codigo: "+codigo+" paciente: "+ paciente+ "Medico: "+ medico+"examen : "+ examen+"laboratorista"+ laborat+"informe"+ informe+ "fecha"+fecha+"hora"+ hora+ " orden"+orden);
+            System.out.println("codigo: " + codigo + " paciente: " + paciente + "Medico: " + medico + "examen : " + examen + "laboratorista" + laborat + "informe" + informe + "fecha" + fecha + "hora" + hora + " orden" + orden);
             crearResultado(codigo, paciente, medico, examen, laborat, informe, fecha, hora, orden);
 
         }
@@ -297,7 +301,6 @@ public class LoadSaxBuilder {
             crearCita(codigo, paciente, medico, especial, fecha, hora);
         }
 
-        
     }
 
     public void readConsulta(List<Element> consultas) {
@@ -375,7 +378,7 @@ public class LoadSaxBuilder {
             manager.getUsuarioDAO().insert(usuario);
             manager.getLaboratoristasDAO().insert(lab);
 
-            Agenda agenda = new Agenda(0, "1", registro,0);
+            Agenda agenda = new Agenda(0, "1", registro, 0);
 
             manager.getAgendaDAO().insertLab(agenda);
 
@@ -441,7 +444,7 @@ public class LoadSaxBuilder {
     public void crearExamen(String codigo, String nombre, String orden, String descripcion, String costo, String informe) {
 
         Examen examen = new Examen(codigo, nombre, orden.equalsIgnoreCase("TRUE"), descripcion, Double.parseDouble(costo), informe, "1");
-        
+
         if ((manager.getExamenDAO().obtener(codigo) == null)) {
 
             manager.getExamenDAO().insert(examen);
@@ -469,15 +472,13 @@ public class LoadSaxBuilder {
             Cita yaVencida = new Cita(codigo, "Cita Creada, para un Resultado, que se encontro en la carga de archivo", "1", paciente);
             Dia paraLaCita = new Dia(0, java.sql.Date.valueOf(fecha), "dia carga de archivo, --", agenda.getCodigo(), yaVencida.getCodigo(), java.sql.Time.valueOf(hora));
 
-
             manager.getCitaDAO().insert(yaVencida);
             String codeCita = manager.getCitaDAO().lastInsertId();
-            
+
             manager.getDiaDAO().insert(paraLaCita);
-            
-            
+
             Informe inf = new Informe(codigo, informeRedactado, java.sql.Date.valueOf(fecha), medic.getColegiado(), true, java.sql.Time.valueOf("hora"), codeCita);
-            
+
             manager.getInformeDAO().insert(inf);
         }
 
@@ -485,9 +486,8 @@ public class LoadSaxBuilder {
 
     public void crearResultado(String codigo, String idPaciente, String codeMedico, String idExamen, String codeLab, String informePath, String fecha, String hora, String ordenPath) {
 
-        
-        
-        
+        System.out.println("codigo: " + codigo + " paciente: " + idPaciente + "Medico: " + codeMedico + "examen : " + idExamen + "laboratorista" + codeLab + "informe" + informePath + "fecha" + fecha + "hora" + hora + " orden" + ordenPath);
+
         Laboratorista lab = manager.getLaboratoristasDAO().getLabByCodeUsr(codeLab);
         Examen examen = manager.getExamenDAO().obtener(idExamen);
         Paciente paciente = manager.getPacientesDAO().obtener(idPaciente);
@@ -508,14 +508,34 @@ public class LoadSaxBuilder {
 
                     medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(codeMedico);
 
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
+                    exPac = new ExamenPaciente(0, rsultad.getResultadoCodigo(), examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
+
+                } else {
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
+                    exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
                 }
 
+            }else{
+                rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
+                if (codeMedico != null && !codeMedico.equals("")) {
+
+                    medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(codeMedico);
+
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), "");
+                    exPac = new ExamenPaciente(0, rsultad.getResultadoCodigo(), examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
+
+                } else {
+                    rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), "");
+                    exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                }
             }
 
-            rsultad = new Resultado(codigo, informePath, java.sql.Date.valueOf(fecha), true, java.sql.Time.valueOf(hora), ordenPath);
-            exPac = new ExamenPaciente(0, rsultad.getResultadoCodigo(), examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado(), true, true, false);
-
-            manager.getCitaDAO().insert(cita);
+            manager.getCitaDAO().insertSinConsulta(cita);
+            
+            String idCita = manager.getCitaDAO().lastInsertId();
+            dia.setCitaCodigo(idCita);
+            
             manager.getDiaDAO().insert(dia);
             manager.getResultadoDAO().insert(rsultad);
             manager.getExamenPacienteDAO().insert(exPac);
@@ -549,7 +569,7 @@ public class LoadSaxBuilder {
             if ((citaEnDia == null || citaEnDia.getDescripcion().equalsIgnoreCase("CANCELADA"))) {
 
                 manager.getCitaDAO().insert(cita);
-                
+
                 dia.setCitaCodigo((manager.getCitaDAO().lastInsertId()));
                 System.out.println("codigo Cita" + dia.getCita_codigo());
                 manager.getDiaDAO().insert(dia);

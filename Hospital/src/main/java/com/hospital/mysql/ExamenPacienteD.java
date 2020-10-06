@@ -33,7 +33,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             stat.setString(2, object.getExamen_Codigo());
             stat.setString(3, object.getLaboratoristas_registro());
             stat.setString(4, object.getPacientes_codigo());
-            stat.setInt(5, object.getMedico_colegiado());
+            stat.setString(5, object.getMedico_colegiado());
             stat.setBoolean(6, object.isRealizado());
             stat.setBoolean(7, object.isCancelar());
             stat.setBoolean(8, object.isEstado());
@@ -57,7 +57,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
             stat.setString(2, object.getExamen_Codigo());
             stat.setString(3, object.getLaboratoristas_registro());
             stat.setString(4, object.getPacientes_codigo());
-            stat.setInt(5, object.getMedico_colegiado());
+            stat.setString(5, object.getMedico_colegiado());
             stat.setBoolean(6, object.isRealizado());
             stat.setBoolean(7, object.isCancelar());
             stat.setBoolean(8, object.isEstado());
@@ -130,7 +130,16 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
     public ExamenPaciente convertir(ResultSet rs) {
 
         try {
-            ExamenPaciente examenPaciente = new ExamenPaciente(rs.getInt("idExamenPaciente"), rs.getString("Resultado_resultadoCodigo"), rs.getString("Examen_Codigo"), rs.getString("Laboratoristas_registro"), rs.getString("Pacientes_codigo"), rs.getInt("Medico_colegiado"), rs.getBoolean("realizado"), rs.getBoolean("cancelar"), rs.getBoolean("estado"));
+            ExamenPaciente examenPaciente = new ExamenPaciente(
+                    rs.getInt("idExamenPaciente"), 
+                    rs.getString("Resultado_resultadoCodigo"),
+                    rs.getString("Examen_Codigo"),
+                    rs.getString("Laboratoristas_registro"),
+                    rs.getString("Pacientes_codigo"), 
+                    rs.getString("Medico_colegiado"),
+                    rs.getBoolean("realizado"), 
+                    rs.getBoolean("cancelar"),
+                    rs.getBoolean("estado"));
 
             return examenPaciente;
         } catch (SQLException ex) {

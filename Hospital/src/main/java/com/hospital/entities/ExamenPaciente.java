@@ -13,12 +13,12 @@ public class ExamenPaciente implements Serializable {
     private String Examen_Codigo;
     private String Laboratoristas_registro;
     private String Pacientes_codigo;
-    private int Medico_colegiado;
+    private String Medico_colegiado;
     private boolean realizado;
     private boolean cancelar;
     private boolean estado;
 
-    public ExamenPaciente(int idExamenPaciente, String Resultado_resultadoCodigo, String Examen_Codigo, String Laboratoristas_registro, String Pacientes_codigo, int Medico_colegiado, boolean realizado, boolean cancelar, boolean estado) {
+    public ExamenPaciente(int idExamenPaciente, String Resultado_resultadoCodigo, String Examen_Codigo, String Laboratoristas_registro, String Pacientes_codigo, String Medico_colegiado, boolean realizado, boolean cancelar, boolean estado) {
 
         this.idExamenPaciente = idExamenPaciente;
         this.Resultado_resultadoCodigo = Resultado_resultadoCodigo;
@@ -71,11 +71,11 @@ public class ExamenPaciente implements Serializable {
         this.Pacientes_codigo = Pacientes_codigo;
     }
 
-    public int getMedico_colegiado() {
+    public String getMedico_colegiado() {
         return this.Medico_colegiado;
     }
 
-    public void setMedico_colegiado(int Medico_colegiado) {
+    public void setMedico_colegiado(String Medico_colegiado) {
         this.Medico_colegiado = Medico_colegiado;
     }
 

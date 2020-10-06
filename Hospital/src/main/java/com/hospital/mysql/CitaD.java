@@ -17,6 +17,7 @@ public class CitaD implements CitaDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Cita (descripcion,estado,Pacientes_codigo,Consulta_idConsulta) VALUES (?,?,?,?)";
+    private final String INSERT_SIN_CONSULTA = "INSERT INTO Cita (descripcion,estado,Pacientes_codigo) VALUES (?,?,?)";
     private final String UPDATE = "UPDATE Cita set descripcion = ?, estado = ?, Pacientes_codigo = ? WHERE codigo = ? ";
     private final String DELETE = "DELETE Cita WHERE codigo = ? ";
     private final String GETALL = "SELECT * FROM  Cita  ";
@@ -43,6 +44,27 @@ public class CitaD implements CitaDAO {
             stat.setString(2, object.getEstado());
             stat.setString(3, object.getPacientes_codigo());
             stat.setInt(4, object.getIdConsulta());
+
+            System.out.println("idConsulta " + object.getIdConsulta());
+            if (stat.executeUpdate() == 0) {
+                System.out.println("crear popover Cita");
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public boolean insertSinConsulta(Cita object) {
+        PreparedStatement stat = null;;
+        try {
+            stat = connection.prepareStatement(INSERT_SIN_CONSULTA);
+            stat.setString(1, object.getDescripcion());
+            stat.setString(2, object.getEstado());
+            stat.setString(3, object.getPacientes_codigo());
+            
 
             System.out.println("idConsulta " + object.getIdConsulta());
             if (stat.executeUpdate() == 0) {

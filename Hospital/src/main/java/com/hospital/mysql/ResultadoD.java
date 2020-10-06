@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class ResultadoD implements ResultadoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Resultado (descripcion,fecha,estado,resultadoCodigo,hora,ordenPath) VALUES (?,?,?,?,?,?,)";
+    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,resultadoCodigo,ordenPath) VALUES (?,?,?,?,?)";
     private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fecha = ?, set estado = ?, set Laboratoristas_registro = ?, set Medico_colegiado = ?, set Pacientes_codigo = ?, set Examen_Codigo = ? WHERE resultadoCodigo = ? ";
     private final String DELETE = "DELETE Resultado WHERE resultadoCodigo = ? ";
     private final String GETALL = "SELECT * FROM  Resultado  ";
@@ -32,9 +32,9 @@ public class ResultadoD implements ResultadoDAO {
             stat.setString(1, object.getInformePath());//descripcion
             stat.setDate(2, object.getFechaHora());//fecha
             stat.setBoolean(3, object.isEstado());//estdo
-            stat.setString(8, object.getResultadoCodigo());//resultadoCodigo
-            stat.setTime(9, object.getHora());//hora
-            stat.setString(10, object.getOrdenPath());//ordenPath
+            stat.setString(4, object.getResultadoCodigo());//resultadoCodigo
+            //stat.setTime(5, object.getHora());//hora
+            stat.setString(5, object.getOrdenPath());//ordenPath
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Resultado");
 
