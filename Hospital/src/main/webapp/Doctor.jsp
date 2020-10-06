@@ -12,12 +12,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <%@include file="css/css-bootstrap.html" %>
+  <!--      <%@include file="css/css-bootstrap.html" %>   -->
         <title>JSP Page</title>
     </head>
     <body>
         <%@include file="html/navbar-medico-html.html" %>
         
-        <%@include file="js/js-bootstrap.html" %>
+        <!-- <%@include file="js/js-bootstrap.html" %>-->
+        
     </body>
 </html>

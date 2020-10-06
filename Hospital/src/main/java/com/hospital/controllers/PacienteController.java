@@ -6,12 +6,16 @@
 package com.hospital.controllers;
 
 import com.hospital.connection.Conexion;
+import com.hospital.dto.ExamenIntervalo;
+import com.hospital.dto.ExamenMedico;
 import com.hospital.dto.MedicoDto;
+import com.hospital.dto.Ultimos;
 import com.hospital.entities.Examen;
 import com.hospital.entities.Paciente;
 import com.hospital.entities.Persona;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -56,32 +60,57 @@ public class PacienteController extends HttpServlet {
             throws ServletException, IOException {
 
         manager = new Manager();
+        Paciente actual = (Paciente) request.getSession().getAttribute("pacienteSession");
         String pagJsp = "";
 
         String accion = request.getParameter("accion");
         switch (accion) {
             case "cita":
                 pagJsp = citaMedica(request);
-                RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
-        vista.forward(request, response);
+
                 break;
             case "citaLAB":
                 pagJsp = citaLab(request);
-                RequestDispatcher vista2 = request.getRequestDispatcher(pagJsp);
-        vista2.forward(request, response);
+
+                break;
+            case "ultimos":
+
+                List<Ultimos> ultimos = manager.getPacientesDAO().getLastExamenesByCodePaciente(actual.getCodigo());
+                request.setAttribute("ultimos", ultimos);
+                pagJsp = "ultimos-cinco.jsp";
+                break;
+            case "porTipo":
+
+                pagJsp = "por-tipo-intervalo.jsp";
+
+                break;
+            case "consultas":
+                List<Ultimos> consultas = manager.getPacientesDAO().getLastExamenesByCodePaciente(actual.getCodigo());
+                request.setAttribute("ultimos", consultas);
+                pagJsp = "ultimas-consultas.jsp";
+
+                break;
+            case "porMedico":
+                pagJsp = "consultas-por-intervalo-y-medico.jsp";
+                break;
+            case "cerrar":
+                request.getSession().setAttribute("personaSession", null);
+                request.getSession().setAttribute("pacienteSession", null);
+                pagJsp = "index.jsp";
                 break;
             default:
         }
+        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
+        vista.forward(request, response);
 
-        
     }
 
     public String citaLab(HttpServletRequest request) {
         //medicos
         List<Examen> examenes = manager.getExamenDAO().obtenerTodo();
-        
+
         for (Examen examene : examenes) {
-            System.out.println("Examen: "+examene.getNombre());
+            System.out.println("Examen: " + examene.getNombre());
         }
 
         request.setAttribute("examenes", examenes);
@@ -112,15 +141,52 @@ public class PacienteController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //guardar-cambios
+        String sigJsp = "";
+        manager = new Manager();
+
         String accion = request.getParameter("accion");
         switch (accion) {
             case "guardar-cambios":
 
                 guardarCambiosDatos(request, response);
+                sigJsp = "paciente-feed.jsp";
+                break;
+            case "porTipoFecha":
+
+                examenPorTipoYFecha(request);
+                sigJsp = "por-tipo-intervalo.jsp";
+
+                break;
+            case "porMedico":
+                getListCitasByMedico(request);
+                System.out.println("Listado de citas por medico y rango de fecha");
+                sigJsp = "consultas-por-intervalo-y-medico.jsp";
                 break;
             default:
 
         }
+
+        RequestDispatcher vista = request.getRequestDispatcher(sigJsp);
+        vista.forward(request, response);
+
+    }
+
+    private void getListCitasByMedico(HttpServletRequest request) {
+        Paciente paciente = (Paciente) request.getSession().getAttribute("pacienteSession");
+        String medico = request.getParameter("medico");
+        String fechaInicial = request.getParameter("inicio");
+        String fechaFinal = request.getParameter("final");
+
+        if (fechaInicial.equals("")) {
+            fechaInicial = null;
+        }
+        if (fechaFinal.equals("")) {
+            fechaFinal = null;
+        }
+
+        List<ExamenMedico> listado = manager.getPacientesDAO().getConsultaByCodigoPacienteMedicoFechas(paciente.getCodigo(), medico, fechaInicial, fechaFinal);
+
+        request.setAttribute("ultimos", listado);
 
     }
 
@@ -146,9 +212,9 @@ public class PacienteController extends HttpServlet {
             ;
 
             Conexion.getInstancia().setAutoCommit(false);
-            
+
             request.setAttribute("registro", manager.getPersonaDAO().modify(persona) && manager.getPacientesDAO().modify(paciente));
-            
+
             Conexion.getInstancia().setAutoCommit(true);
         } catch (SQLException ex) {
             try {
@@ -159,19 +225,26 @@ public class PacienteController extends HttpServlet {
             }
         }
 
-        RequestDispatcher vista = request.getRequestDispatcher("paciente-feed.jsp");
-        vista.forward(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    public void examenPorTipoYFecha(HttpServletRequest request) {
 
+        Paciente paciente = (Paciente) request.getSession().getAttribute("pacienteSession");
+        String Examen = request.getParameter("tipo");
+        String fechaInicial = request.getParameter("inicio");
+        String fechaFinal = request.getParameter("final");
+
+        if (fechaInicial.equals("")) {
+            fechaInicial = null;
+        }
+        if (fechaFinal.equals("")) {
+            fechaFinal = null;
+        }
+
+        List<ExamenIntervalo> porIntervalo = manager.getPacientesDAO().getExamenPorIntervalo(Examen, fechaInicial, fechaFinal, paciente.getCodigo());
+
+        request.setAttribute("porTipo", porIntervalo);
+
+    }
     private Manager manager;
 }

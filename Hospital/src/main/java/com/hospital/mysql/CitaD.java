@@ -1,8 +1,10 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.CitaDAO;
+import com.hospital.dto.CantidadInformes;
 import com.hospital.dto.CitaPac;
 import com.hospital.dto.InformeConsulta;
+import com.hospital.dto.Intervalo;
 import com.hospital.entities.Cita;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,6 +33,11 @@ public class CitaD implements CitaDAO {
                                                                 "inner join Dia d on d.Cita_codigo = c.codigo  " +
                                                                 "inner join Persona per on per.dpi = m.Persona_dpi where c.Pacientes_codigo = ?";
     
+    private final String GET_CITA_INTERVALO_DE_TIEMPO = "select c.codigo as codigoCita, p.codigo as codigoPersona, per.nombre, d.fecha, c.descripcion as tipo from Cita c inner join Pacientes p on c.Pacientes_codigo = p.codigo inner join Persona per on per.dpi =  p.Persona_dpi inner join Dia d on d.Cita_codigo = c.codigo inner join Agenda a on d.Agenda_codigo =  a.codigo  WHERE d.fecha BETWEEN ifnull(?,'1970-01-01') AND ifnull(?,'2900-01-01') and a.Medico_colegiado = ?  group by c.codigo ORDER BY d.fecha asc";
+    
+    private final String GET_CITAS_PARA_HOY_MEDICO_ACTUAL = "select c.codigo as codigoCita, p.codigo as codigoPersona, per.nombre, d.hora as fecha , cons.tipo ,d.fecha from Cita c inner join Pacientes p on c.Pacientes_codigo = p.codigo inner join Persona per on per.dpi =  p.Persona_dpi inner join Dia d on d.Cita_codigo = c.codigo inner join Agenda a on d.Agenda_codigo =  a.codigo inner join Consulta cons on cons.idConsulta = c.Consulta_idConsulta where a.Medico_colegiado = ? and d.fecha =curdate()  order by d.fecha asc  group by c.codigo";
+    
+    private final String GET_CANTIDDAD_DE_INFORMES = "select p.codigo, per.nombre, count(*)  as cantidad from Cita  c  inner join Informe i on i.Cita_codigo = c.codigo inner join Pacientes p on p.codigo = c.Pacientes_codigo inner join Persona per on per.dpi = p.Persona_dpi inner join Dia d on d.Cita_codigo = c.codigo where d.fecha BETWEEN ifnull(?,'1970-01-01') AND ifnull(?,'2900-01-01') group by p.codigo order by cantidad asc";
     public CitaD(Connection connection) {
         this.connection = connection;
     }
@@ -259,6 +266,40 @@ public class CitaD implements CitaDAO {
         }
         return lst;
     }
+    public List<Intervalo> getCitasIntervaloFechasByColegiado(String fechaInicial, String fechaFinal, String colegiado){
+        
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Intervalo> lst = new ArrayList<>();
+//        System.out.println("En CItaD -> "
+//                + "Fecha Inicial :" + fechaInicial.length()+ "Final "+fechaFinal.length());
+        try {
+            stat = connection.prepareStatement(GET_CITA_INTERVALO_DE_TIEMPO);
+            stat.setString(1, fechaInicial);
+            stat.setString(2, fechaFinal);
+            stat.setString(3, colegiado);
+            stat.toString();
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertToIntervalo(rs));
+            }
+            System.out.println("Listado Informes "+lst.size());
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
+    private Intervalo convertToIntervalo(ResultSet rs){
+        
+        try {
+            return new Intervalo(rs.getString("codigoCita"), rs.getString("codigoPersona"), rs.getString("nombre"), rs.getString("fecha"), rs.getString("tipo"));
+        } catch (SQLException ex) {
+            Logger.getLogger(CitaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public InformeConsulta convertirInformeConsulta(ResultSet rs) {
 
         try {
@@ -281,5 +322,62 @@ public class CitaD implements CitaDAO {
         }
         return null;
 
+    }
+
+    @Override
+    public List<Intervalo> getCitasParaHoyFechasByColegiado(String colegiado) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Intervalo> lst = new ArrayList<>();
+//        System.out.println("En CItaD -> "
+//                + "Fecha Inicial :" + fechaInicial.length()+ "Final "+fechaFinal.length());
+        try {
+            stat = connection.prepareStatement(GET_CITAS_PARA_HOY_MEDICO_ACTUAL);
+            stat.setString(1, colegiado);
+            stat.toString();
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertToIntervalo(rs));
+            }
+            System.out.println("Listado Informes "+lst.size());
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
+    
+    
+    @Override
+    public List<CantidadInformes> getCantidadDeInformesPorPaciente(String fechaInicial, String fechaFinal) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<CantidadInformes> lst = new ArrayList<>();
+//        System.out.println("En CItaD -> "
+//                + "Fecha Inicial :" + fechaInicial.length()+ "Final "+fechaFinal.length());
+        try {
+            stat = connection.prepareStatement(GET_CANTIDDAD_DE_INFORMES);
+            stat.setString(1, fechaInicial);
+            stat.setString(2, fechaFinal);
+            stat.toString();
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertToCantidadInformes(rs));
+            }
+            System.out.println("Listado Informes "+lst.size());
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lst;
+    }
+    private CantidadInformes convertToCantidadInformes (ResultSet rs){
+        
+        try {
+            return new CantidadInformes(rs.getString("codigo"), rs.getString("nombre"),rs.getString("cantidad"));
+        } catch (SQLException ex) {
+            Logger.getLogger(CitaD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

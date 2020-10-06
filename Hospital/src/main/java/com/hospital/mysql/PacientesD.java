@@ -1,7 +1,10 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.PacientesDAO;
+import com.hospital.dto.ExamenIntervalo;
+import com.hospital.dto.ExamenMedico;
 import com.hospital.dto.PacienteHistorial;
+import com.hospital.dto.Ultimos;
 import com.hospital.entities.Paciente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +25,37 @@ public class PacientesD implements PacientesDAO {
     private final String GETONE = GET_ALL + "WHERE codigo = ?";
     private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Pacientes a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
     private final String GET_ALL_WHIT_PERSONA = "select pac.codigo , per.nombre as nombre, pac.masculino, pac.fecha, pac.peso, pac.tipo_de_sangre as sangre from Pacientes pac inner join Persona per on pac.Persona_dpi = per.dpi";
+    private final String GET_LAST_EXAMENES_BY_CODE_USER = "select e.Codigo, e.nombre, d.fecha , expac.idExamenPaciente from ExamenPaciente expac "
+            + "inner join Examen e on expac.Examen_Codigo = e.Codigo "
+            + "inner join Agenda a on expac.Laboratoristas_registro = a.Laboratoristas_registro "
+            + "inner join Dia d    on d.Agenda_codigo = a.codigo "
+            + "WHERE  expac.Pacientes_codigo = ?  and expac.realizado = '1' "
+            + "group by expac.idExamenPaciente order by d.fecha desc limit 5";
+
+    private final String GET_EXAMEN_BY_TIPO_AND_CODE_PACIENTE = "select e.Codigo as codigo, e.nombre as nombre ,lab.registro as registro,per.nombre as lab, d.fecha , expac.idExamenPaciente from ExamenPaciente expac  "
+            + "inner join Examen e on expac.Examen_Codigo = e.Codigo  "
+            + "inner join Agenda a on expac.Laboratoristas_registro = a.Laboratoristas_registro "
+            + "inner join Dia d    on d.Agenda_codigo = a.codigo  "
+            + "inner join Laboratoristas lab on lab.registro = a.Laboratoristas_registro "
+            + "inner join Persona  per on per.dpi =lab.Persona_dpi "
+            + "where e.nombre = ? and d.fecha between ifnull(?,'1970-01-01') and ifnull(?,'3000-01-01') and expac.Pacientes_codigo = ? "
+            + "group by expac.idExamenPaciente order by d.fecha desc    ";
+
+    private final String GET_ULTIAMS_CONSULTAS = "select co.tipo as Codigo, d.fecha , d.hora as nombre from Cita c  "
+            + "inner join Dia d on d.Cita_codigo = c.codigo "
+            + "inner join Consulta co on co.idConsulta = c.Consulta_idConsulta "
+            + "where c.Pacientes_codigo = ? "
+            + "group by c.codigo order by d.fecha desc limit 5";
+
+    private final String GET_CONSULTAS_BY_MEDICO_INTERVALO_FECHAS = "select co.tipo as consulta, d.fecha,d.hora,per.nombre  from Cita c "
+            + "inner join Dia d on d.Cita_codigo = c.codigo "
+            + "inner join Consulta co on co.idConsulta = c.Consulta_idConsulta "
+            + "inner join Agenda a on a.codigo = d.Agenda_codigo "
+            + "inner join Medico m on a.Medico_colegiado = m.colegiado "
+            + "inner join Persona per on per.dpi = m.Persona_dpi "
+            + "where c.Pacientes_codigo = ? and per.nombre like ?"
+            + "and d.fecha between ifnull(?,'1970-01-01') and ifnull(?,'3000-01-01') "
+            + "group by c.codigo order by d.fecha desc ";
 
     public PacientesD(Connection connection) {
         this.connection = connection;
@@ -197,10 +231,13 @@ public class PacientesD implements PacientesDAO {
             while (rs.next()) {
                 PacienteHistorial pacHistorial = convertirPacienteHistorial(rs);
 
-                System.out.println("Paciente: "+pacHistorial);
-                
+                System.out.println("Paciente: " + pacHistorial);
+
                 pacHistorial.setConsultas(
                         manager.getCitaDAO().getInformeConsulta(pacHistorial.getCodigo()));
+
+                pacHistorial.setResultados(manager.getExamenPacienteDAO().getExamenResultado(pacHistorial.getCodigo()));
+
                 lst.add(pacHistorial);
 
             }
@@ -210,6 +247,122 @@ public class PacientesD implements PacientesDAO {
             e.printStackTrace();
         }
 
+        return null;
+    }
+
+    @Override
+    public List<Ultimos> getLastExamenesByCodePaciente(String codigoPaciente) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Ultimos> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_LAST_EXAMENES_BY_CODE_USER);
+            stat.setString(1, codigoPaciente);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertToLast(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Ultimos> getLastConsultas(String codigoPaciente) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Ultimos> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_ULTIAMS_CONSULTAS);
+            stat.setString(1, codigoPaciente);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertToLast(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    //EXAMEN,INICIAL,FINAL CODIGO PACIENTE
+    @Override
+    public List<ExamenIntervalo> getExamenPorIntervalo(String tipoExamen, String fechaInicial, String fechaFinal, String codigoPaciente) {
+
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<ExamenIntervalo> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_EXAMEN_BY_TIPO_AND_CODE_PACIENTE);
+            stat.setString(1, tipoExamen);
+            stat.setString(2, fechaInicial);
+            stat.setString(3, fechaFinal);
+            stat.setString(4, codigoPaciente);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertToExamenIntervalo(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    ////codigo_paciente medico, fecha inicial y final
+    public List<ExamenMedico> getConsultaByCodigoPacienteMedicoFechas(String codePaciente,
+            String medico, String fechaInicial, String fechaFinal) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<ExamenMedico> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_CONSULTAS_BY_MEDICO_INTERVALO_FECHAS);
+            stat.setString(1, codePaciente);
+            stat.setString(2, "%" + medico + "%");
+            stat.setString(3, fechaInicial);
+            stat.setString(4, fechaFinal);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(new ExamenMedico(rs.getString("consulta"),
+                        rs.getString("fecha"),
+                        rs.getString("hora"),
+                        rs.getString("nombre")));
+
+            }
+            for (ExamenMedico examenMedico : lst) {
+                System.out.println("examen: "+examenMedico);
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private ExamenIntervalo convertToExamenIntervalo(ResultSet rs) {
+
+        try {
+            return new ExamenIntervalo(rs.getString("codigo"), rs.getString("nombre"), rs.getString("registro"), rs.getString("lab"), rs.getString("fecha"));
+        } catch (SQLException ex) {
+            Logger.getLogger(PacientesD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    private Ultimos convertToLast(ResultSet rs) {
+
+        try {
+            return new Ultimos(rs.getString("Codigo"), rs.getString("nombre"), rs.getString("fecha"));
+        } catch (SQLException ex) {
+            Logger.getLogger(PacientesD.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 

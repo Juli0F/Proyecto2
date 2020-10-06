@@ -5,8 +5,11 @@
  */
 package com.hospital.controllers;
 
+import com.hospital.dto.ExamenHoy;
+import com.hospital.dto.FechaConMasTrabajo;
 import com.hospital.dto.ResultadoPaciente;
 import com.hospital.entities.Laboratorista;
+import com.hospital.entities.Resultado;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,17 +73,36 @@ public class LaboratoristaController extends HttpServlet {
         switch (accion) {
             case "subirresultados":
                 //llamar a la lista de examnes sin resultado y enviarla como parametro
-                List<ResultadoPaciente> listado = manager.getExamenPacienteDAO().getResultadoPaciente(lab.getRegistro());
-                
-                for (ResultadoPaciente resultadoPaciente : listado) {
-                    System.out.println(resultadoPaciente.getNombre());
-                }
-                request.setAttribute("listado", listado);
-                
-                pagJsp = "subir-resultado.jsp";
+                if (lab.getRegistro() == null) {
+                    System.out.println("lab es null");
+                } else {
 
+                    List<ResultadoPaciente> listado = manager.getExamenPacienteDAO().getResultadoPaciente(lab.getRegistro());
+
+                    for (ResultadoPaciente resultadoPaciente : listado) {
+                        System.out.println(resultadoPaciente.getNombre()+ ", "+resultadoPaciente.getFecha() );
+                    }
+                    request.setAttribute("listado", listado);
+
+                    pagJsp = "subir-resultado.jsp";
+                }
                 break;
-           
+            case "hoy":
+                getCitasLabHoy(request);
+                pagJsp = "lab-examenes-hoy.jsp";
+                break;
+            case "realizados":
+                
+                realizadosHoyTodos(request);
+                pagJsp = "realizados.jsp";
+                break;
+                
+            case "fechas":
+                
+                getListDatesWithWork(request);
+                pagJsp = "fechas-mas-trabajo.jsp";
+                break;
+                        
         }
 
         System.out.println("pagJsp = " + pagJsp);
@@ -100,18 +122,56 @@ public class LaboratoristaController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String accion = request.getParameter("accion");
+        String pagJsp = "";
+        
+        switch (accion) {
+            case "realizados":
+                realizadosHoyActual(request);
+                pagJsp = "realizados.jsp";
+                
+                break;
+            default:
+                throw new AssertionError();
+        }
+        
+        System.out.println("pagJsp = " + pagJsp);
+        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
+        vista.forward(request, response);
+        
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    
+    public void realizadosHoyActual(HttpServletRequest request ){
+        Laboratorista actual = (Laboratorista) request.getSession().getAttribute("labSession");
+        List<ResultadoPaciente> misResultados = manager.getResultadoDAO().resultadoDeHoy(actual.getRegistro());
+        
+        request.getSession().setAttribute("realizados", misResultados);       
+        
+    }
+    public void realizadosHoyTodos(HttpServletRequest request ){
+        
+        List<ResultadoPaciente> misResultados = manager.getResultadoDAO().resultadoDeHoy(null);
+        
+        request.getSession().setAttribute("realizados", misResultados);       
+        
+    }
+    
+    public void getCitasLabHoy(HttpServletRequest request){
+        
+        Laboratorista actual = (Laboratorista) request.getSession().getAttribute("labSession");
+        List<ExamenHoy>  listado = manager.getExamenPacienteDAO().getExamenesParaHoy(actual.getRegistro());
+        
+        request.setAttribute("citasHoy", listado);
+        
+    }
+    
+    public void getListDatesWithWork(HttpServletRequest request){
+        List<FechaConMasTrabajo> lista = manager.getDiaDAO().getDateWithMostWork();
+        request.setAttribute("fechas", lista);
+    }
+            
+    
 
     private Manager manager;
 }

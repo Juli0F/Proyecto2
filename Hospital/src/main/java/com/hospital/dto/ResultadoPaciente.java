@@ -6,11 +6,13 @@
  */
 package com.hospital.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author julio
  */
-public class ResultadoPaciente {
+public class ResultadoPaciente implements Serializable{
     
     private String idExamenPaciente;
     private String examen;
@@ -20,6 +22,16 @@ public class ResultadoPaciente {
     private String fecha;
     private String formato;
 
+    public ResultadoPaciente(String examen, String codigoPaciente, String nombre, String formato) {
+        this.examen = examen;
+        this.codigoPaciente = codigoPaciente;
+        this.nombre = nombre;
+        this.formato = formato;
+        System.out.println(formato);
+        
+    }
+
+    
     public ResultadoPaciente(String idExamenPaciente, String examen, String codigoPaciente, String nombre, String genero, String fecha, String formato) {
         this.idExamenPaciente = idExamenPaciente;
         this.examen = examen;
@@ -79,6 +91,7 @@ public class ResultadoPaciente {
     }
 
     public String getFormato() {
+        System.out.println("get "+ this.formato);
         return formato;
     }
 

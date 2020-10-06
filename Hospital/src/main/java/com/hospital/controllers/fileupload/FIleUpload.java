@@ -23,7 +23,7 @@ import javax.servlet.http.Part;
  */
 public class FIleUpload {
 
-    public final String PATH_FILES = "/home/julio/Documentos/IPC/Hospital/Proyecto2/Hospital/src/main/webapp/archivos/";
+    public static final String PATH_FILES = "/home/julio/Documentos/IPC/Hospital/Proyecto2/Hospital/src/main/webapp/archivos/";
 
     public void upload(HttpServletRequest request,String nameTag) throws IOException, ServletException {
         

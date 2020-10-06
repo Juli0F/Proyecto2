@@ -1,8 +1,10 @@
 package com.hospital.dao;
 
+import com.hospital.dto.FechaConMasTrabajo;
 import com.hospital.entities.Dia;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.List;
 
 /**
  *
@@ -16,5 +18,6 @@ public interface DiaDAO extends DAO<Dia,Integer> {
     
     public Dia searchCoincidenceByDateHourAndColegiado(Date fecha, Time hora, int colegiado);
 
+    public List<FechaConMasTrabajo> getDateWithMostWork();
 
 }

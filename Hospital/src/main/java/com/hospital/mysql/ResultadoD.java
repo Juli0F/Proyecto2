@@ -1,6 +1,7 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.ResultadoDAO;
+import com.hospital.dto.ResultadoPaciente;
 import com.hospital.entities.Resultado;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +20,13 @@ public class ResultadoD implements ResultadoDAO {
     private final String DELETE = "DELETE Resultado WHERE resultadoCodigo = ? ";
     private final String GETALL = "SELECT * FROM  Resultado  ";
     private final String GETONE = GETALL + "WHERE resultadoCodigo = ?";
+    private final String GET_RESULTADOS_DE_HOY = " select per.nombre,pac.codigo,e.nombre as examen,r.descripcion\n" +
+"from Resultado r " +
+"inner join ExamenPaciente exp on r.ExamenPaciente_idExamenPaciente = exp.idExamenPaciente  " +
+"inner join Pacientes pac on pac.codigo = exp.Pacientes_codigo  " +
+"inner join Persona per on per.dpi = pac.Persona_dpi  " +
+"inner join Examen e on e.Codigo = exp.Examen_Codigo " +
+"where r.fechaHora = current_date()";
 
     public ResultadoD(Connection connection) {
         this.connection = connection;
@@ -164,4 +172,41 @@ public class ResultadoD implements ResultadoDAO {
         return "";
     }
 
+   @Override
+    public List<ResultadoPaciente> resultadoDeHoy(String registro) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<ResultadoPaciente> lst = new ArrayList<>();
+        try {
+            if (registro != null) {
+                stat = connection.prepareStatement(GET_RESULTADOS_DE_HOY+ "and  exp.Laboratoristas_registro = "+registro);
+                rs = stat.executeQuery();
+                
+            }else{
+                stat = connection.prepareStatement(GET_RESULTADOS_DE_HOY);
+                rs = stat.executeQuery();
+                
+            }
+            while (rs.next()) {
+                lst.add(convertToResultadosDeHoy(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    
+    private ResultadoPaciente convertToResultadosDeHoy(ResultSet rs){
+        
+        try {
+            System.out.println("descripcion: "+ rs.getString("descripcion"));
+            return new ResultadoPaciente(rs.getString("examen"), rs.getString("codigo"), rs.getString("nombre"), rs.getString("descripcion"));
+        } catch (SQLException ex) {
+            Logger.getLogger(ResultadoD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+        
+    }
 }

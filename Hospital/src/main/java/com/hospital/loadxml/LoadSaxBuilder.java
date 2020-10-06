@@ -517,8 +517,8 @@ public class LoadSaxBuilder {
 
                 } else {
                     
-                    
-                    exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                      exPac = new ExamenPaciente(0, ordenPath, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                    //exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
                     exPac.setOrdenPath(ordenPath);
                     
                     manager.getExamenPacienteDAO().insert(exPac);
@@ -540,6 +540,7 @@ public class LoadSaxBuilder {
                 if (codeMedico != null && !codeMedico.equals("")) {
 
                     medico = manager.getMedicoDAO().getMedicoByCodigoUsuario(codeMedico);
+                    //  exPac = new ExamenPaciente(0, ordenPath, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
                     exPac = new ExamenPaciente(0,"", examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), medico.getColegiado() + "", true, true, false);
                     manager.getExamenPacienteDAO().insert(exPac);
                     Integer idExPac = manager.getExamenPacienteDAO().lastInsertId();
@@ -549,8 +550,8 @@ public class LoadSaxBuilder {
 
                 } else {
                     
-                    
-                    exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                      exPac = new ExamenPaciente(0, ordenPath, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
+                    //exPac = new ExamenPaciente(0, codigo, examen.getCodigo(), lab.getRegistro(), paciente.getCodigo(), null, true, true, false);
                     
                     
                     manager.getExamenPacienteDAO().insert(exPac);

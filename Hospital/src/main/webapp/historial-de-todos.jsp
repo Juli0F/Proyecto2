@@ -21,24 +21,21 @@
         <c:forEach var="item" items="${historial}">
 
 
+
+
+
+            <h3 style="color:#338bff">Paciente</h3>
+            <h3 style="color:#338bff">${item.getCodigo()}</h3>
+            <h3 style="color:#338bff">${item.getNombrePaciente()}</h3>
+            <h3 style="color:#338bff">${item.getGenero()}</h3>
+            <h3 style="color:#338bff">${item.getNacimiento()}</h3>
+
             <table class="table">
                 <thead class="black white-text" style="background-color: black; font-style: oblique; color:#eee ">
-                    <tr>
-                        <th scope="col">Paciente</th>
-                        <th scope="col">${item.getCodigo()}</th>
-                        <th scope="col">${item.getNombrePaciente()}</th>
-                        <th scope="col">${item.getGenero()}</th>
-                        <th scope="col">${item.getNacimiento()}</th>
-                    </tr>
-                </thead>
-                <tbody>
 
 
-                </tbody>
-                <tfoot style="background-color: gray;  color:#eee">
 
-
-                    <tr>
+                    <tr style="background-color: gray;  color:#eee">
                         <th scope="col">Historial </th>
                         <th scope="col">De</th>
                         <th scope="col">Consultas</th>
@@ -53,7 +50,8 @@
                         <th scope="col"> </th>
                     </tr>
 
-                </tfoot>
+
+                </thead>
             </table>
 
 
@@ -126,13 +124,15 @@
                             <td>${result.getNombreExamen()}</td>
                             <td>${result.getFecha()}</td>
                             <td>${result.getCosto()}</td>
-                            <td><a href="${ruta+result.getArchivo()}">ver</a></td>
-                            <td>@mdo</td>
+                            <td><a href="archivos/${result.getArchivo()}" target="__blank">ver</a></td>
+                            
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
 
+            <br><br><br><br>
+            
         </c:forEach>
         <%@include file="js/js-bootstrap.html" %>
     </body>

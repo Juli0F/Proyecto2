@@ -120,7 +120,7 @@ public class LoginController extends HttpServlet {
                 System.out.println("Persona p"+ persona.getNombre());
 
                 request.getSession().setAttribute("personaSession", persona);
-                request.getSession().setAttribute("t", persona);
+                
                 
                 if (paciente != null) {
 

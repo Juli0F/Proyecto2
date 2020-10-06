@@ -1,6 +1,7 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.DiaDAO;
+import com.hospital.dto.FechaConMasTrabajo;
 import com.hospital.entities.Dia;
 import java.sql.Connection;
 import java.sql.Date;
@@ -19,8 +20,9 @@ public class DiaD implements DiaDAO {
     private final String INSERT = "INSERT INTO Dia (fecha,descripcion,Agenda_codigo,Cita_codigo,hora) VALUES (?,?,?,?,?)";
     private final String UPDATE = "UPDATE Dia set fecha = ?, set descripcion = ?, set Agenda_codigo = ?, set Cita_codigo = ? WHERE idDia = ? ";
     private final String DELETE = "DELETE Dia WHERE idDia = ? ";
-    private final String GETALL = "SELECT * FROM  Dia  ";
-    private final String GETONE = GETALL + "WHERE idDia = ?";
+    private final String GET_ALL = "SELECT * FROM  Dia  ";
+    private final String GETONE = GET_ALL + "WHERE idDia = ?";
+    private final String GET_DAY_WHIT_MOST_WORK = "select d.fecha, count(d.fecha) cantidad from Dia d inner join Cita c on c.codigo =  d.Cita_codigo group by d.fecha order by cantidad desc limit 10";
 
     
     //consultas
@@ -81,7 +83,7 @@ public class DiaD implements DiaDAO {
         ResultSet rs = null;
         List<Dia> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -198,6 +200,26 @@ public class DiaD implements DiaDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+    @Override
+    public List<FechaConMasTrabajo> getDateWithMostWork() {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<FechaConMasTrabajo> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_DAY_WHIT_MOST_WORK);
+            rs = stat.executeQuery();
+            
+            while (rs.next()) {
+                lst.add(new FechaConMasTrabajo(rs.getString("fecha"),rs.getString("cantidad")));
+            }
+            
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }

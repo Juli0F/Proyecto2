@@ -69,6 +69,7 @@ public class CitaController extends HttpServlet {
         System.out.println("Accion doGet Citas Controller" + accion);
 
         switch (accion) {
+
             case "citas":
 
                 manager = new Manager();
@@ -85,8 +86,8 @@ public class CitaController extends HttpServlet {
             
 
         }
-      //  RequestDispatcher vista = request.getRequestDispatcher(siguiente);
-       // vista.forward(request, response);
+        RequestDispatcher vista = request.getRequestDispatcher(siguiente);
+        vista.forward(request, response);
     }
 
     /**
@@ -148,6 +149,7 @@ public class CitaController extends HttpServlet {
         String registro = accion.split("=")[1];
         String codeExamen = (String) request.getSession().getAttribute("codeExamen");
         String fechaRequest = (request.getParameter("fecha"));
+        System.out.println("fechaRequest = " + fechaRequest);
 
         //objetos
         Paciente paciente = (Paciente) request.getSession().getAttribute("pacienteSession");
@@ -172,6 +174,8 @@ public class CitaController extends HttpServlet {
                 java.sql.Time.valueOf("00:00:00")
         );
 
+        System.out.println("fecha norma + "+ fechaRequest);
+        System.out.println("java.sql.Date: "+java.sql.Date.valueOf(fechaRequest));
         //verificar si existe una cita a esa fecha y hora d
         //Dia citaEnDia = manager.getDiaDAO().searchCoincidenceByDateHourAndAgenda(dia.getFecha(), dia.getHora(), agenda.getCodigo());
         //if (citaEnDia == null) {

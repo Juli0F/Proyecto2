@@ -5,7 +5,11 @@
  */
 package com.hospital.controllers;
 
+import com.hospital.controllers.fileupload.FIleUpload;
+import com.hospital.dto.CantidadInformes;
+import com.hospital.dto.Intervalo;
 import com.hospital.dto.PacienteHistorial;
+import com.hospital.entities.Medico;
 import com.hospital.mysql.Manager;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -69,16 +73,38 @@ public class MedicosInforme extends HttpServlet {
         switch (accion) {
             case "historial":
                 List<PacienteHistorial> lst = manager.getPacientesDAO().getPacienteHistoria();
-                
-                for (PacienteHistorial pacienteHistorial : lst) {
-                    System.out.println("Paciente Consultas: "+pacienteHistorial.getConsultas().size()
-                            + "Paciente Examenes" +  pacienteHistorial.getResultados().size());
-                }
-                System.out.println("siguiente: "+ sigJsp);
+
+////                for (PacienteHistorial pacienteHistorial : lst) {
+////                    System.out.println("Paciente Consultas: "+pacienteHistorial.getConsultas().size()
+//                            + "Paciente Examenes" +  pacienteHistorial.getResultados().size());
+////                }
+                System.out.println("siguiente: " + sigJsp);
+                request.setAttribute("ruta", FIleUpload.PATH_FILES);
                 request.setAttribute("historial", lst);
                 sigJsp = "historial-de-todos.jsp";
 
                 break;
+            case "intervalo":
+
+                sigJsp = "Citas-intervalo-tiempo.jsp";
+                break;
+            case "hoy":
+                Medico medico = (Medico) request.getSession().getAttribute("medicoSession");
+                List<Intervalo> citasHoy = manager.getCitaDAO().getCitasParaHoyFechasByColegiado(String.valueOf(medico.getColegiado()));
+                
+                request.setAttribute("citasHoy", citasHoy);
+                sigJsp= "citas-para-hoy.jsp";
+                 
+                break;
+            case "cantidad":
+                
+                List<CantidadInformes> cantidad = manager.getCitaDAO().getCantidadDeInformesPorPaciente(null, null);                        
+                        request.setAttribute("citasHoy", cantidad);
+                        
+                    sigJsp = "cantidad-informes.jsp";
+                    
+                    break;
+                            
             default:
 
         }
@@ -98,7 +124,71 @@ public class MedicosInforme extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String accion = request.getParameter("accion");
+        String sigJsp = "";
+        
+        switch (accion) {
+            case "intervalo":
+                sigJsp = citasPorIntervalo(request, response);
+                break;
+                
+            case "cantidad":
+                sigJsp = cantidadDeInformesPorPaciente(request, response);
+                break;
+            default:
+                
+        }
+        RequestDispatcher vista = request.getRequestDispatcher(sigJsp);
+        vista.forward(request, response);
+                
 
+    }
+    private String cantidadDeInformesPorPaciente(HttpServletRequest request, HttpServletResponse response){
+        String fechaInicial = request.getParameter("inicio");
+        String fechaFinal = request.getParameter("final");
+        System.out.println("Fecha" + fechaInicial.length()+ ": "+fechaFinal.length());
+        
+        
+        if (fechaInicial.equals("")) {
+            fechaInicial  = null;
+        }
+        if (fechaFinal.equals("")) {
+            fechaFinal = null;
+        }
+        
+        List<CantidadInformes> cantidad = manager.getCitaDAO().getCantidadDeInformesPorPaciente(fechaInicial, fechaFinal);
+        request.setAttribute("citasHoy", cantidad);
+        
+        
+        
+     return "cantidad-informes.jsp";
+    }
+    
+    private String citasPorIntervalo(HttpServletRequest request , HttpServletResponse response){
+        
+        String fechaInicial = request.getParameter("inicio");
+        String fechaFinal = request.getParameter("final");
+        System.out.println("Fecha" + fechaInicial.length()+ ": "+fechaFinal.length());
+        
+        
+        if (fechaInicial.equals("")) {
+            fechaInicial  = null;
+        }
+        if (fechaFinal.equals("")) {
+            fechaFinal = null;
+        }
+        
+        Medico medico = (Medico) request.getSession().getAttribute("medicoSession");
+        System.out.println("Colegiado Acutal: "+ medico.getColegiado());
+        List<Intervalo> citas = manager.getCitaDAO().
+                    getCitasIntervaloFechasByColegiado
+                                                (fechaInicial,
+                                                fechaFinal,
+                                                String.valueOf(medico.getColegiado()));
+        
+        request.setAttribute("citas", citas);
+        //       Citas-intervalo-tiempo
+        return  "Citas-intervalo-tiempo.jsp";
     }
 
     /**
