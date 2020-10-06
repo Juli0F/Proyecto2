@@ -82,13 +82,13 @@ public class AdministradorD implements AdministradorDAO {
     }
 
     @Override
-    public Administrador obtener(Integer id) {
+    public Administrador obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -129,7 +129,7 @@ public class AdministradorD implements AdministradorDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -138,13 +138,13 @@ public class AdministradorD implements AdministradorDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(AdministradorD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 
     @Override

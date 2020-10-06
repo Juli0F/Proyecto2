@@ -16,73 +16,84 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <%@include file="html/paciente-html-navbar.html" %>
-        <br>
-        <br>
-        <br>
-        <br>
-        <h3><strong>Nombre</strong>  ${examen.getNombre()}</h3>
-        <h3><strong>Costo</strong>${examen.getCosto()}</h3>
-        <h3><strong>Requiere Orden</strong>${examen.isOrden()}</h3>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-
-                    <th scope="col">DPI</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Registro</th>
-                    <th scope="col">Disponible</th>
-                    <th scope="col">Dias que labora</th>
-                    <th scope="col">Reservar Fecha</th>
-                    <th scope="col">Crear</th>
-
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="item" items="${laboratoristas}">
-
-
-
+        <c:if test="${personaSession != null}" >
+            <%@include file="html/paciente-html-navbar.html" %>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h3><strong>Nombre</strong>  ${examen.getNombre()}</h3>
+            <h3><strong>Costo</strong>${examen.getCosto()}</h3>
+            <h3><strong>Requiere Orden</strong>${examen.isOrden()}</h3>
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <form name="form" action="CitaController?accion=lab-${item.getRegistro()}" method="POST">
-                            <th scope="row" >${item.getDpi()}</th>
-                            <td>${item.getNombre()}</td>
-                            <td>${item.getRegistro()}</td>
-                            <td>
+
+
+                        <th scope="col">DPI</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Registro</th>
+                        <th scope="col">Disponible</th>
+                        <th scope="col">Dias que labora</th>
+                        <th scope="col">Reservar Fecha</th>
+                        <th scope="col">Crear</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="item" items="${laboratoristas}">
+
+
+
+                        <tr>
+                    <form name="form" action="CitaController?accion=lab=${item.getRegistro()}" method="POST">
+
+                        <th scope="row" >${item.getDpi()}</th>
+                        <td>${item.getNombre()}</td>
+                        <td>${item.getRegistro()}</td>
+                        <td>
+                            <c:if test="${item.isDisponible() == true}">
 
                                 <label class="container-radio">
-                                    <input type="checkbox" class="btn btn-outline-primary">
-
+                                    <input type="checkbox" name="sinName" readonly checked>
                                     <span class="checkmark-radio"></span>
                                 </label>
-
-
-                            </td>
-                            <td> 
-
-
-                                <label for="inicio"><b>Fecha de la Cita </b></label>
-                                <input type="Date" placeholder="12341234121201" name="inicio" id="inicio" required>
-                                <br>
-                            </td>
-
-                            <td>
+                            </c:if>
+                            <c:if test="${item.isDisponible() == false}"> 
 
                                 <label class="container-radio">
-                                    <input type="submit" class="btn btn-outline-primary">Crear Cita</button>
-
+                                    <input type="checkbox" name="radio" readonly  >
                                     <span class="checkmark-radio"></span>
                                 </label>
+                            </c:if>
+
+                        </td>
+                        <td> </td>
+                        <td> 
 
 
-                            </td>
-                        </form>
-            </tr>
+                            <label for="inicio"><b>Fecha de la Cita </b></label>
+                            <input type="Date" placeholder="12341234121201" name="fecha" id="inicio" required>
+                            <br>
+                        </td>
+
+                        <td>
+
+                            <label class="container-radio">
+                                <input type="submit" class="btn btn-outline-primary">Crear Cita</button>
+
+                                <span class="checkmark-radio"></span>
+                            </label>
 
 
-        </c:forEach>
+                        </td>
+                    </form>
+                </tr>
 
-        <%@include  file="js/js-bootstrap.html" %>
+
+            </c:forEach>
+
+            <%@include  file="js/js-bootstrap.html" %>
+        </c:if>
 </body>
 </html>

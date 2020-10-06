@@ -16,8 +16,8 @@ import java.sql.Time;
 public class InformeD implements InformeDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Informe (descripcion,fechaHora,Medico_colegiado,estado,Consulta_idConsulta,Pacientes_codigo,hora) VALUES (?,?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Informe set descripcion = ?, set fechaHora = ?, set Medico_colegiado = ?, set estado = ?, set Consulta_idConsulta = ?, set hora = ? set Pacientes_codigo = ? WHERE idInforme = ? ";
+    private final String INSERT = "INSERT INTO Informe (descripcion,fechaHora,Medico_colegiado,estado,hora) VALUES (?,?,?,?,?)";
+    private final String UPDATE = "UPDATE Informe set descripcion = ?, set fechaHora = ?, set Medico_colegiado = ?, set estado = ?, set hora = ?  WHERE idInforme = ? ";
     private final String DELETE = "DELETE Informe WHERE idInforme = ? ";
     private final String GETALL = "SELECT * FROM  Informe  ";
     private final String GETONE = GETALL + "WHERE idInforme = ?";
@@ -32,13 +32,11 @@ public class InformeD implements InformeDAO {
         try {
             stat = connection.prepareStatement(INSERT);
             stat.setString(1, object.getDescripcion());
-            stat.setDate(2, object.getFechaHora());
+            stat.setDate(2, object.getFecha());
             stat.setInt(3, object.getMedico_colegiado());
             stat.setBoolean(4, object.isEstado());
-            stat.setInt(5, object.getConsulta_idConsulta());
-            stat.setString(6, object.getPacientes_codigo());
-            stat.setTime(7, (object.getHora()));
-            stat.setString(8, object.getCodigo());
+            stat.setTime(5, (object.getHora()));
+            stat.setString(6, object.getCodigo());
             
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Informe");
@@ -57,13 +55,12 @@ public class InformeD implements InformeDAO {
         try {
             stat = connection.prepareStatement(UPDATE);
             stat.setString(1, object.getDescripcion());
-            stat.setDate(2, object.getFechaHora());
+            stat.setDate(2, object.getFecha());
             stat.setInt(3, object.getMedico_colegiado());
             stat.setBoolean(4, object.isEstado());
-            stat.setInt(5, object.getConsulta_idConsulta());
-            stat.setString(6, object.getPacientes_codigo());
-            stat.setTime(7, (object.getHora()));
-            stat.setString(8, object.getIdInforme());
+            
+            stat.setTime(5, (object.getHora()));
+            stat.setString(6, object.getIdInforme());
             
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Informe");
@@ -139,9 +136,9 @@ public class InformeD implements InformeDAO {
             Informe informe = new Informe(rs.getString("idInforme"), 
                     rs.getString("descripcion"), rs.getDate("fechaHora"), 
                     rs.getInt("Medico_colegiado"), rs.getBoolean("estado"),
-                    rs.getInt("Consulta_idConsulta"), rs.getString("Pacientes_codigo"),
-                    (rs.getTime("hora"))
                     
+                    (rs.getTime("hora")),
+                    rs.getString("Consulta_codigo")
                     );
             
 

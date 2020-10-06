@@ -89,13 +89,13 @@ public class UsuarioD implements UsuarioDAO {
     }
 
     @Override
-    public Usuario obtener(Integer id) {
+    public Usuario obtener(String id) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
             stat = connection.prepareStatement(GETONE);
-            stat.setInt(1, id);
+            stat.setString(1, id);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -137,7 +137,7 @@ public class UsuarioD implements UsuarioDAO {
     }
 
     @Override
-    public Integer lastInsertId() {
+    public String lastInsertId() {
         String ultimo = "SELECT last_insert_id()";
         PreparedStatement stat = null;
         ResultSet rs = null;
@@ -146,13 +146,13 @@ public class UsuarioD implements UsuarioDAO {
             stat = connection.prepareStatement(ultimo);
             rs = stat.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                return rs.getString(1);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(UsuarioD.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return "";
     }
 
     @Override

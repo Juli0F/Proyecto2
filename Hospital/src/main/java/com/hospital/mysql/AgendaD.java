@@ -21,10 +21,13 @@ public class AgendaD implements AgendaDAO {
     private final String GETONE = GETALL + "WHERE codigo = ?";
     private final String GET_AGENDA_MEDICO2 = GETALL + " a "
             + "Usuario u INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi WHERE u.codigo = ? ";
-    private final String GET_AGENDA_MEDICO = "SELECT * FROM"
+    private final String GET_AGENDA_MEDICO_BY_CODIGO_USUARIO = "SELECT * FROM"
             + " Usuario u "
             + "INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi "
             + "INNER JOIN Agenda a on a.Medico_colegiado = m.colegiado  WHERE u.codigo = ?";
+    private final String GET_AGENDA_BY_COLEGIADO = "select * from Agenda a where a.Medico_colegiado = ? ";
+    
+    private final String GET_AGENDA_BY_REGISTRO = "select * from Agenda a where a.Laboratoristas_registro = ?";
 
     public AgendaD(Connection connection) {
         this.connection = connection;
@@ -107,14 +110,53 @@ public class AgendaD implements AgendaDAO {
         return null;
     }
 
-     @Override
-    public Agenda obtenerAgendaMedica(String colegiadoMedico) {
+    @Override
+    public Agenda obtenerAgendaMedica(String codigoUsuario) {
         PreparedStatement stat = null;
         ResultSet rs = null;
 
         try {
-            stat = connection.prepareStatement(GET_AGENDA_MEDICO);
+            stat = connection.prepareStatement(GET_AGENDA_MEDICO_BY_CODIGO_USUARIO);
+            stat.setString(1, codigoUsuario);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Agenda getAgendaByColegido(String colegiadoMedico) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_AGENDA_BY_COLEGIADO);
             stat.setString(1, colegiadoMedico);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    
+    @Override
+    public Agenda getAgendaByRegistro(String registroLaboratorista) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_AGENDA_BY_REGISTRO);
+            stat.setString(1, registroLaboratorista);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));
@@ -150,7 +192,7 @@ public class AgendaD implements AgendaDAO {
             return agenda;
         } catch (SQLException ex) {
             Logger.getLogger(AgendaD.class.getName()).log(Level.SEVERE, null, ex);
-            
+
         }
         return null;
     }

@@ -25,6 +25,15 @@ public class Dia implements Serializable {
         this.Agenda_codigo = Agenda_codigo;
         this.citaCodigo = Cita_codigo;
     }
+      public Dia(int idDia, String fecha, String descripcion, int Agenda_codigo, String Cita_codigo, String hora) {
+
+        this.hora = java.sql.Time.valueOf(hora);
+        this.idDia = idDia;
+        this.fecha = java.sql.Date.valueOf(fecha);
+        this.descripcion = descripcion;
+        this.Agenda_codigo = Agenda_codigo;
+        this.citaCodigo = Cita_codigo;
+    }
 
     public Time getHora() {
         return hora;

@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 import javax.servlet.annotation.MultipartConfig;
 
 import javax.servlet.http.Part;
+import com.hospital.controllers.fileupload.FIleUpload;
 
 /**
  *
@@ -97,31 +98,13 @@ public class LoginController extends HttpServlet {
         manager = new Manager();
 
         
-//        if (request.getParameter("accion").equalsIgnoreCase("cargar")) {
-//
-//           Part part = request.getPart("contenido-archivo");
-//           
-//           // System.out.println("Path===> "+part.getSubmittedFileName());
-//            
-//            File xmlFile = new File("/home/julio/Documents/Hospital/data.xml");
-//
-//            //Part part = request.getPart("filw");
-//            InputStream inputStream = request.getInputStream();
-//            
-//            String s = new Scanner(inputStream,"UTF-8").useDelimiter("\\A").next();
-//            
-//   
-//            String[] contenido = s.split("Content-Type: text/xml");
-//            
-//            fileWrite(xmlFile,contenido[1].strip().split("</hospital>")[0].concat("</hospital>").trim());
-//            
-//           ///////////////////////////// System.out.println("subir archivo==>"+subirArchivo(0, request, response));
-//            Interprete interprete = new Interprete();
-//            interprete.loadFile(xmlFile);
-//            
-//            
-//
-//        } else
+        if (request.getParameter("accion").equalsIgnoreCase("cargar")) {
+
+           FIleUpload fUpload = new FIleUpload();
+           fUpload.upload(request);
+           
+
+        } else{
 
             String pagJsp = "index.jsp";
             System.out.println("Request: " + request.getParameter("uname"));
@@ -139,11 +122,10 @@ public class LoginController extends HttpServlet {
             Persona persona = manager.getPersonaDAO().getPersonaByCodeANdPwd(name, clave);
 
             if (usuario != null) {
-               // pagJsp = "Perfil.jsp";
+
                 
                 System.out.println("Persona p"+ persona.getNombre());
-//                HttpServlet session = request.getS
-              //  request.getSession().setAttribute("mySession", usuario);
+
                 request.getSession().setAttribute("personaSession", persona);
                 request.getSession().setAttribute("t", persona);
                 
@@ -179,7 +161,7 @@ public class LoginController extends HttpServlet {
             vista.forward(request, response);
         }
     
-
+    }
     // InputStream -> File
     private static void copyInputStreamToFile(InputStream inputStream, File file)
             throws IOException {

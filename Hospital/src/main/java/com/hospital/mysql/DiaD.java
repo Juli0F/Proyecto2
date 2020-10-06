@@ -24,7 +24,9 @@ public class DiaD implements DiaDAO {
 
     
     //consultas
-    private final String SEARCH_COINCIDENCIA_OF_DIA_AND_HOUR = "select * from Dia d where fecha = ? and hora = ? and Agenda_codigo = ?";
+    private final String SEARCH_COINCIDENCIA_OF_DIA_AND_HOUR ="select d.idDia ,d.Agenda_codigo, d.Cita_codigo  ,d.descripcion,d.fecha,d.hora from Dia d inner join Agenda a on a.codigo = d.Agenda_codigo where d.fecha = ? and d.hora  = ? and a.codigo = ? " ;
+    private final String SEARCH_COINCIDENCIA_OF_DIA_AND_HOUR_WHIT_COLEGIADO ="select d.idDia ,d.Agenda_codigo, d.Cita_codigo  ,d.descripcion,d.fecha,d.hora from Dia d inner join Agenda a on a.codigo = d.Agenda_codigo where d.fecha = ? and d.hora  = ? and a.Medico_colegiado = ?";
+    //
     
     public DiaD(Connection connection) {
         this.connection = connection;
@@ -167,6 +169,26 @@ public class DiaD implements DiaDAO {
             stat.setDate(1, fecha);
             stat.setTime(2, hora);
             stat.setInt(3,codigoAgenda);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @Override
+    public Dia searchCoincidenceByDateHourAndColegiado(Date fecha, Time hora, int colegiado) {
+       PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(SEARCH_COINCIDENCIA_OF_DIA_AND_HOUR_WHIT_COLEGIADO);
+            stat.setDate(1, fecha);
+            stat.setTime(2, hora);
+            stat.setInt(3,colegiado);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));

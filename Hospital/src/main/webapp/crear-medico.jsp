@@ -13,7 +13,9 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <c:if test="${personaSession != null}" >
         <%@include file="html/navbar-admin.html" %>
+        </c:if>
         
         
     </body>

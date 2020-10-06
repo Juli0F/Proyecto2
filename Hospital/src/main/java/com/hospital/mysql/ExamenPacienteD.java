@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class ExamenPacienteD implements ExamenPacienteDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO ExamenPaciente (Resultado_resultadoCodigo,Examen_Codigo,Laboratoristas_registro,Pacientes_codigo,Medico_colegiado,realizado,cancelar,estado,) VALUES (?,?,?,?,?,?,?,?)";
+    private final String INSERT = "INSERT INTO ExamenPaciente (Resultado_resultadoCodigo,Examen_Codigo,Laboratoristas_registro,Pacientes_codigo,Medico_colegiado,realizado,cancelar,estado) VALUES (?,?,?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE ExamenPaciente set Resultado_resultadoCodigo = ?, set Examen_Codigo = ?, set Laboratoristas_registro = ?, set Pacientes_codigo = ?, set Medico_colegiado = ?, set realizado = ?, set cancelar = ?, set estado = ? WHERE idExamenPaciente = ? ";
     private final String DELETE = "DELETE ExamenPaciente WHERE idExamenPaciente = ? ";
     private final String GETALL = "SELECT * FROM  ExamenPaciente  ";
@@ -29,10 +29,10 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setInt(1, object.getResultado_resultadoCodigo());
+            stat.setString(1, object.getResultado_resultadoCodigo());
             stat.setString(2, object.getExamen_Codigo());
             stat.setString(3, object.getLaboratoristas_registro());
-            stat.setInt(4, object.getPacientes_codigo());
+            stat.setString(4, object.getPacientes_codigo());
             stat.setInt(5, object.getMedico_colegiado());
             stat.setBoolean(6, object.isRealizado());
             stat.setBoolean(7, object.isCancelar());
@@ -53,10 +53,10 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
-            stat.setInt(1, object.getResultado_resultadoCodigo());
+            stat.setString(1, object.getResultado_resultadoCodigo());
             stat.setString(2, object.getExamen_Codigo());
             stat.setString(3, object.getLaboratoristas_registro());
-            stat.setInt(4, object.getPacientes_codigo());
+            stat.setString(4, object.getPacientes_codigo());
             stat.setInt(5, object.getMedico_colegiado());
             stat.setBoolean(6, object.isRealizado());
             stat.setBoolean(7, object.isCancelar());
@@ -130,7 +130,7 @@ public class ExamenPacienteD implements ExamenPacienteDAO {
     public ExamenPaciente convertir(ResultSet rs) {
 
         try {
-            ExamenPaciente examenPaciente = new ExamenPaciente(rs.getInt("idExamenPaciente"), rs.getInt("Resultado_resultadoCodigo"), rs.getString("Examen_Codigo"), rs.getString("Laboratoristas_registro"), rs.getInt("Pacientes_codigo"), rs.getInt("Medico_colegiado"), rs.getBoolean("realizado"), rs.getBoolean("cancelar"), rs.getBoolean("estado"));
+            ExamenPaciente examenPaciente = new ExamenPaciente(rs.getInt("idExamenPaciente"), rs.getString("Resultado_resultadoCodigo"), rs.getString("Examen_Codigo"), rs.getString("Laboratoristas_registro"), rs.getString("Pacientes_codigo"), rs.getInt("Medico_colegiado"), rs.getBoolean("realizado"), rs.getBoolean("cancelar"), rs.getBoolean("estado"));
 
             return examenPaciente;
         } catch (SQLException ex) {

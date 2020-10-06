@@ -2,6 +2,7 @@ package com.hospital.entities;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Time;
 
 /**
@@ -11,7 +12,7 @@ import java.sql.Time;
 public class Resultado implements Serializable {
 
     private String resultadoCodigo;
-    private String descripcion;
+    private String informePath;
     private java.sql.Date fechaHora;
     private boolean estado;
     private String Laboratoristas_registro;
@@ -23,35 +24,52 @@ public class Resultado implements Serializable {
     private byte[] ordenOrden;
     private InputStream inputStreamArchivo;
     private byte[] ordenArchivo;
-    
+    private String ordenPath;
 
-    public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora) {
-
+    public Resultado(String resultadoCodigo, String informePath, Date fechaHora, boolean estado , Time hora, String ordenPath) {
         this.resultadoCodigo = resultadoCodigo;
-        this.descripcion = descripcion;
+        this.informePath = informePath;
         this.fechaHora = fechaHora;
         this.estado = estado;
-        this.Laboratoristas_registro = Laboratoristas_registro;
-        this.Medico_colegiado = Medico_colegiado;
-        this.Pacientes_codigo = Pacientes_codigo;
-        this.Examen_Codigo = Examen_Codigo;
         this.hora = hora;
+        this.ordenPath = ordenPath;
     }
 
-    public Resultado(String resultadoCodigo, String descripcion, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora,InputStream inputStream) {
-        
+    public String getOrdenPath() {
+        return ordenPath;
+    }
 
-        this.resultadoCodigo = resultadoCodigo;
-        this.descripcion = descripcion;
-        this.fechaHora = fechaHora;
-        this.estado = estado;
-        this.Laboratoristas_registro = Laboratoristas_registro;
-        this.Medico_colegiado = Medico_colegiado;
-        this.Pacientes_codigo = Pacientes_codigo;
-        this.Examen_Codigo = Examen_Codigo;
-        this.hora = hora;
-        this.inputStreamOrden = inputStream;
-                
+//
+//    public Resultado(String resultadoCodigo, String informePath, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora) {
+//
+//        this.resultadoCodigo = resultadoCodigo;
+//        this.informePath = informePath;
+//        this.fechaHora = fechaHora;
+//        this.estado = estado;
+//        this.Laboratoristas_registro = Laboratoristas_registro;
+//        this.Medico_colegiado = Medico_colegiado;
+//        this.Pacientes_codigo = Pacientes_codigo;
+//        this.Examen_Codigo = Examen_Codigo;
+//        this.hora = hora;
+//    }
+//
+//    public Resultado(String resultadoCodigo, String informePath, java.sql.Date fechaHora, boolean estado, String Laboratoristas_registro, int Medico_colegiado, String Pacientes_codigo, String Examen_Codigo, java.sql.Time hora,InputStream inputStream) {
+//
+//
+//        this.resultadoCodigo = resultadoCodigo;
+//        this.informePath = informePath;
+//        this.fechaHora = fechaHora;
+//        this.estado = estado;
+//        this.Laboratoristas_registro = Laboratoristas_registro;
+//        this.Medico_colegiado = Medico_colegiado;
+//        this.Pacientes_codigo = Pacientes_codigo;
+//        this.Examen_Codigo = Examen_Codigo;
+//        this.hora = hora;
+//        this.inputStreamOrden = inputStream;
+//                
+//    }
+    public void setOrdenPath(String ordenPath) {
+        this.ordenPath = ordenPath;
     }
 
     /**
@@ -138,12 +156,12 @@ public class Resultado implements Serializable {
         this.resultadoCodigo = resultadoCodigo;
     }
 
-    public String getDescripcion() {
-        return this.descripcion;
+    public String getInformePath() {
+        return this.informePath;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setInformePath(String informePath) {
+        this.informePath = informePath;
     }
 
     public java.sql.Date getFechaHora() {

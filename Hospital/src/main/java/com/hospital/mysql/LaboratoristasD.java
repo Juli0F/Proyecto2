@@ -22,6 +22,7 @@ public class LaboratoristasD implements LaboratoristasDAO {
     private final String GETONE = GETALL + "WHERE registro = ?";
     private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Laboratoristas a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
     private final String GET_PERSONALABDTO_BY_CODE_EXAMEN = "select p.dpi,p.nombre,l.registro,l.ocupado,e.codigo,e.nombre as examen from ExamenLaboratorista  el inner join Examen e on el.Examen_Codigo = e.Codigo inner join Laboratoristas l on el.Laboratoristas_registro = l.registro inner join Persona p on p.dpi = l.Persona_dpi where e.codigo = ? AND l.estado = 1 and e.estado = 1" ;
+    private final String GET_LAB_CODE_USR = "select l.registro,l.inicio,l.ocupado,l.estado,l.Persona_dpi from Laboratoristas l inner join Usuario u on u.Persona_dpi = l.Persona_dpi where u.codigo = ?";
 
     public LaboratoristasD(Connection connection) {
         this.connection = connection;
@@ -155,6 +156,25 @@ public class LaboratoristasD implements LaboratoristasDAO {
         return "";
     }
 
+    
+    @Override
+    public Laboratorista getLabByCodeUsr(String codeUsr) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_LAB_CODE_USR);
+            stat.setString(1, codeUsr);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     @Override
     public Laboratorista getLaboratoristaByCodeANdPwd(String codigo, String pwd) {
         PreparedStatement stat = null;
@@ -188,6 +208,7 @@ public class LaboratoristasD implements LaboratoristasDAO {
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertirPersonaLabDto(rs));
+              
             }
 
             return lst;
@@ -205,7 +226,7 @@ public class LaboratoristasD implements LaboratoristasDAO {
                                         rs.getString("dpi"),
                                         rs.getString("registro"),
                                         rs.getString("examen"),
-                                        rs.getString("codeExamen")
+                                        rs.getString("codigo")
                     );
             
         } catch (SQLException ex) {

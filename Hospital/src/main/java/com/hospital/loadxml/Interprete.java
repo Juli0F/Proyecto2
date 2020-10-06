@@ -931,7 +931,7 @@ public class Interprete {
                 if (manager.getPacientesDAO().obtener(value) == null) {
                     System.out.println("Mostrar error el paciente no existe");
                 } else {
-                    informe.setPacientes_codigo(value);
+//                    informe.setPacientes_codigo(value);
                 }
 
                 break;
@@ -951,7 +951,7 @@ public class Interprete {
                 break;
 
             case "FECHA":
-                informe.setFechaHora(java.sql.Date.valueOf(value));
+                informe.setFecha(java.sql.Date.valueOf(value));
 
                 break;
             case "HORA":

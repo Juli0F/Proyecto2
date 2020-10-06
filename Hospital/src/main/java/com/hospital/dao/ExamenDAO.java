@@ -9,4 +9,5 @@ import com.hospital.entities.Examen;
 public interface ExamenDAO extends DAO<Examen,String> {
 
 
+    public Examen getExamenByName(String name);
 }

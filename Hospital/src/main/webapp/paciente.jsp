@@ -15,10 +15,10 @@
         <title>JSP Page</title>
     </head>
     <body>
+        
+        <c:if test="${personaSession != null}" >
         <%@include file="html/paciente-html-navbar.html" %>
-        
-        
-        
         <%@include file="js/js-bootstrap.html" %>
+        </c:if>
     </body>
 </html>

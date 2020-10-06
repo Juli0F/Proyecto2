@@ -14,11 +14,13 @@ import java.util.logging.Logger;
 public class ConsultaD implements ConsultaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Consulta (tipo,costo,estado,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO Consulta (tipo,costo,estado) VALUES (?,?,?)";
     private final String UPDATE = "UPDATE Consulta set tipo = ?, set costo = ?, set estado = ? WHERE idConsulta = ? ";
     private final String DELETE = "DELETE Consulta WHERE idConsulta = ? ";
     private final String GETALL = "SELECT * FROM  Consulta  ";
     private final String GETONE = GETALL + "WHERE idConsulta = ?";
+    private final String GET_BY_TIPO = "SELECT * FROM Consulta WHERE tipo = ? ";
+    
 
     public ConsultaD(Connection connection) {
         this.connection = connection;
@@ -90,6 +92,25 @@ public class ConsultaD implements ConsultaDAO {
         try {
             stat = connection.prepareStatement(GETONE);
             stat.setInt(1, id);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+     @Override
+    public Consulta getCOnsultaByTipo(String  tipo) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_BY_TIPO);
+            stat.setString(1, tipo);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));

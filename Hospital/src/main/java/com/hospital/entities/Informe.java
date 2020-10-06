@@ -11,29 +11,36 @@ public class Informe implements Serializable {
 
     private String codigo;
     private String descripcion;
-    private java.sql.Date fechaHora;
+    private java.sql.Date fecha;
     private int Medico_colegiado;
     private boolean estado;
-    private int Consulta_idConsulta;
-    private String Pacientes_codigo;
     private java.sql.Time hora;
+    private String consultaCodigo;
 
-    public Informe(String idInforme, String descripcion, java.sql.Date fechaHora, int Medico_colegiado, boolean estado, int Consulta_idConsulta, String Pacientes_codigo, java.sql.Time hora) {
+    public Informe(String idInforme, String descripcion, java.sql.Date fechaHora, int Medico_colegiado, boolean estado, java.sql.Time hora,String consutalCodigo) {
 
         this.codigo = idInforme;
         this.descripcion = descripcion;
-        this.fechaHora = fechaHora;
+        this.fecha = fechaHora;
         this.Medico_colegiado = Medico_colegiado;
         this.estado = estado;
-        this.Consulta_idConsulta = Consulta_idConsulta;
-        this.Pacientes_codigo = Pacientes_codigo;
         this.hora = hora;
+        this.consultaCodigo = consutalCodigo;
     }
 
     public Informe() {
     
     }
 
+    public String getConsultaCodigo() {
+        return consultaCodigo;
+    }
+
+    public void setConsultaCodigo(String consultaCodigo) {
+        this.consultaCodigo = consultaCodigo;
+    }
+
+    
     public String getCodigo() {
         return codigo;
     }
@@ -68,12 +75,12 @@ public class Informe implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public java.sql.Date getFechaHora() {
-        return this.fechaHora;
+    public java.sql.Date getFecha() {
+        return this.fecha;
     }
 
-    public void setFechaHora(java.sql.Date fechaHora) {
-        this.fechaHora = fechaHora;
+    public void setFecha(java.sql.Date fecha) {
+        this.fecha = fecha;
     }
 
     public int getMedico_colegiado() {
@@ -92,20 +99,6 @@ public class Informe implements Serializable {
         this.estado = estado;
     }
 
-    public int getConsulta_idConsulta() {
-        return this.Consulta_idConsulta;
-    }
 
-    public void setConsulta_idConsulta(int Consulta_idConsulta) {
-        this.Consulta_idConsulta = Consulta_idConsulta;
-    }
-
-    public String getPacientes_codigo() {
-        return this.Pacientes_codigo;
-    }
-
-    public void setPacientes_codigo(String Pacientes_codigo) {
-        this.Pacientes_codigo = Pacientes_codigo;
-    }
 
 }

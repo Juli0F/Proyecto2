@@ -8,5 +8,6 @@ import com.hospital.entities.Consulta;
  */
 public interface ConsultaDAO extends DAO<Consulta,Integer> {
 
+    public Consulta getCOnsultaByTipo(String  tipo);
 
 }

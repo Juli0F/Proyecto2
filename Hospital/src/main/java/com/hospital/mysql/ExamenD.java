@@ -19,6 +19,7 @@ public class ExamenD implements ExamenDAO {
     private final String DELETE = "DELETE Examen WHERE Codigo = ? ";
     private final String GETALL = "SELECT * FROM  Examen  ";
     private final String GETONE = GETALL + "WHERE Codigo = ?";
+    private final String GET_EXAMEN_BY_NAME = "SELECT * FROM Examen WHERE nombre = ?";
 
     public ExamenD(Connection connection) {
         this.connection = connection;
@@ -68,7 +69,7 @@ public class ExamenD implements ExamenDAO {
             return false;
         }
         return true;
-        
+
     }
 
     @Override
@@ -98,6 +99,25 @@ public class ExamenD implements ExamenDAO {
         try {
             stat = connection.prepareStatement(GETONE);
             stat.setString(1, id);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                return (convertir(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Examen getExamenByName(String name) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+
+        try {
+            stat = connection.prepareStatement(GET_EXAMEN_BY_NAME);
+            stat.setString(1, name);
             rs = stat.executeQuery();
             while (rs.next()) {
                 return (convertir(rs));

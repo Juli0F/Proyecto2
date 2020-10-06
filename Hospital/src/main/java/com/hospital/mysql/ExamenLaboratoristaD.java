@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class ExamenLaboratoristaD implements ExamenLaboratoristaDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO ExamenLaboratorista (Examen_Codigo,Laboratoristas_registro,estado,) VALUES (?,?,?)";
+    private final String INSERT = "INSERT INTO ExamenLaboratorista (Examen_Codigo,Laboratoristas_registro,estado) VALUES (?,?,?)";
     private final String UPDATE = "UPDATE ExamenLaboratorista set Examen_Codigo = ?, set Laboratoristas_registro = ?, set estado = ? WHERE idExamenLaboratorista = ? ";
     private final String DELETE = "DELETE ExamenLaboratorista WHERE idExamenLaboratorista = ? ";
     private final String GETALL = "SELECT * FROM  ExamenLaboratorista  ";
@@ -33,6 +33,7 @@ public class ExamenLaboratoristaD implements ExamenLaboratoristaDAO {
             stat.setString(1, object.getExamen_Codigo());
             stat.setString(2, object.getLaboratoristas_registro());
             stat.setBoolean(3, object.isEstado());
+            
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover ExamenLaboratorista");
 

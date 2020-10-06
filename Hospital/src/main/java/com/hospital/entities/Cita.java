@@ -12,18 +12,41 @@ public class Cita implements Serializable {
     private String descripcion;
     private String estado;
     private String Pacientes_codigo;
+    private int idConsulta;
 
     public Cita(String codigo, String descripcion, String estado, String Pacientes_codigo) {
+        
 
+        
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.Pacientes_codigo = Pacientes_codigo;
+        
+    }
+     public Cita(String codigo, String descripcion, String estado, String Pacientes_codigo, int consulta) {
+        
+
+        this.idConsulta = consulta;
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.estado = estado;
         this.Pacientes_codigo = Pacientes_codigo;
     }
+    
 
     public Cita() {
 
     }
+
+    public int getIdConsulta() {
+        return idConsulta;
+    }
+
+    public void setIdConsulta(int idConsulta) {
+        this.idConsulta = idConsulta;
+    }
+    
 
     public String getCodigo() {
         return this.codigo;

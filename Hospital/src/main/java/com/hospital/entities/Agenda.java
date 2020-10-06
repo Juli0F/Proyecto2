@@ -13,6 +13,32 @@ public class Agenda implements Serializable {
     private int Medico_colegiado;
     private String Laboratoristas_registro;
 
+    /**
+     * Agenda Medica
+     * @param codigo
+     * @param estado
+     * @param Medico_colegiado 
+     */
+    public Agenda(int codigo, String estado, int Medico_colegiado) {
+        this.codigo = codigo;
+        this.estado = estado;
+        this.Medico_colegiado = Medico_colegiado;
+    }
+
+    /**
+     * Agenda para el laboratorista
+     * @param codigo
+     * @param estado
+     * @param Laboratoristas_registro 
+     */
+    public Agenda(int codigo, String estado, String Laboratoristas_registro) {
+        this.codigo = codigo;
+        this.estado = estado;
+        this.Laboratoristas_registro = Laboratoristas_registro;
+    }
+    
+
+    
     public Agenda(int codigo, String estado, int Medico_colegiado, String Laboratoristas_registro) {
 
         this.codigo = codigo;

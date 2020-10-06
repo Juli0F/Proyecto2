@@ -61,13 +61,18 @@ public class AgendaController extends HttpServlet {
             mostrarJsp = "crear-cita.jsp";
 
         } else if (accion.contains("verLab")) {
+            
             //PersonaLabDto
             String[] agendar = accion.split("=");
-            List<PersonaLabDto> examenes = manager.getLaboratoristasDAO().getPersonaLabDtoByCodeExamen(agendar[1]);
-            System.out.println("Codigo examen "+agendar[1]);
+            
+            List<PersonaLabDto> personaLabDto = manager.getLaboratoristasDAO().getPersonaLabDtoByCodeExamen(agendar[1]);
             Examen examen = manager.getExamenDAO().obtener(agendar[1]);
+            
+            request.getSession().setAttribute("registro", agendar[1]);
+            request.setAttribute("laboratoristas", personaLabDto);
             request.setAttribute("examen", examen);
-            request.setAttribute("laboratoristas", examenes);
+            
+            
          //   request.getSession().setAttribute("colegiado", agendar[1]);
             mostrarJsp = "ver-laboratorista.jsp";
         }

@@ -14,8 +14,8 @@ import java.util.logging.Logger;
 public class ResultadoD implements ResultadoDAO {
 
     private Connection connection;
-    private final String INSERT = "INSERT INTO Resultado (descripcion,fechaHora,estado,Laboratoristas_registro,Medico_colegiado,Pacientes_codigo,Examen_Codigo,resultadoCodigo,hora,orden) VALUES (?,?,?,?,?,?,?,?,?,?)";
-    private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fechaHora = ?, set estado = ?, set Laboratoristas_registro = ?, set Medico_colegiado = ?, set Pacientes_codigo = ?, set Examen_Codigo = ? WHERE resultadoCodigo = ? ";
+    private final String INSERT = "INSERT INTO Resultado (descripcion,fecha,estado,resultadoCodigo,hora,ordenPath) VALUES (?,?,?,?,?,?,)";
+    private final String UPDATE = "UPDATE Resultado set descripcion = ?, set fecha = ?, set estado = ?, set Laboratoristas_registro = ?, set Medico_colegiado = ?, set Pacientes_codigo = ?, set Examen_Codigo = ? WHERE resultadoCodigo = ? ";
     private final String DELETE = "DELETE Resultado WHERE resultadoCodigo = ? ";
     private final String GETALL = "SELECT * FROM  Resultado  ";
     private final String GETONE = GETALL + "WHERE resultadoCodigo = ?";
@@ -29,16 +29,12 @@ public class ResultadoD implements ResultadoDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(INSERT);
-            stat.setString(1, object.getDescripcion());
-            stat.setDate(2, object.getFechaHora());
-            stat.setBoolean(3, object.isEstado());
-            stat.setString(4, object.getLaboratoristas_registro());
-            stat.setInt(5, object.getMedico_colegiado());
-            stat.setString(6, object.getPacientesCodigo());
-            stat.setString(7, object.getExamenCodigo());
-            stat.setString(8, object.getResultadoCodigo());
-            stat.setTime(9, object.getHora());
-            stat.setBinaryStream(10, object.getInputStreamOrden());
+            stat.setString(1, object.getInformePath());//descripcion
+            stat.setDate(2, object.getFechaHora());//fecha
+            stat.setBoolean(3, object.isEstado());//estdo
+            stat.setString(8, object.getResultadoCodigo());//resultadoCodigo
+            stat.setTime(9, object.getHora());//hora
+            stat.setString(10, object.getOrdenPath());//ordenPath
             if (stat.executeUpdate() == 0) {
                 System.out.println("crear popover Resultado");
 
@@ -56,7 +52,7 @@ public class ResultadoD implements ResultadoDAO {
         PreparedStatement stat = null;;
         try {
             stat = connection.prepareStatement(UPDATE);
-            stat.setString(1, object.getDescripcion());
+            stat.setString(1, object.getInformePath());
             stat.setDate(2, object.getFechaHora());
             stat.setBoolean(3, object.isEstado());
             stat.setString(4, object.getLaboratoristas_registro());
@@ -134,12 +130,12 @@ public class ResultadoD implements ResultadoDAO {
     public Resultado convertir(ResultSet rs) {
 
         try {
-            Resultado resultado = new Resultado(rs.getString("resultadoCodigo"),
-                    rs.getString("descripcion"), rs.getDate("fechaHora"),
-                    rs.getBoolean("estado"), rs.getString("Laboratoristas_registro"),
-                    rs.getInt("Medico_colegiado"), rs.getString("Pacientes_codigo"),
-                    rs.getString("Examen_Codigo"),
-                    rs.getTime("hora")
+            Resultado resultado = new Resultado(rs.getString("resultadoCodigo"),//resultadoCodigo
+                                                rs.getString("descripcion"),//descripcion
+                                                rs.getDate("fecha"),//fechaHora
+                                                rs.getBoolean("estado"),//estado
+                                                rs.getTime("hora"),//hora
+                                                rs.getString("ordenPath")
             );
 
             return resultado;

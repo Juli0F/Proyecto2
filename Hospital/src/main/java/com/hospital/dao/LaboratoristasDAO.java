@@ -12,5 +12,6 @@ public interface LaboratoristasDAO extends DAO<Laboratorista,String> {
 
     public Laboratorista getLaboratoristaByCodeANdPwd(String codigo, String pwd) ;
     public List<PersonaLabDto> getPersonaLabDtoByCodeExamen(String codeExamen);
+    public Laboratorista getLabByCodeUsr(String codeUsr);
 
 }
