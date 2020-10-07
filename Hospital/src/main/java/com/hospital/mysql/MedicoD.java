@@ -1,6 +1,7 @@
 package com.hospital.mysql;
 
 import com.hospital.dao.MedicoDAO;
+import com.hospital.dto.MedicoCant;
 import com.hospital.dto.MedicoDto;
 import com.hospital.entities.Medico;
 import java.sql.Connection;
@@ -18,13 +19,22 @@ public class MedicoD implements MedicoDAO {
     private final String INSERT = "INSERT INTO Medico (inicio,estado,Persona_dpi,colegiado,horaEntrada,horaSalida) VALUES (?,?,?,?,?,?)";
     private final String UPDATE = "UPDATE Medico set inicio = ?, set estado = ?, set Persona_dpi = ? WHERE colegiado = ? ";
     private final String DELETE = "DELETE Medico WHERE colegiado = ? ";
-    private final String GETALL = "SELECT * FROM  Medico  ";
-    private final String GETONE = GETALL + "WHERE colegiado = ?";
+    private final String GET_ALL = "SELECT * FROM  Medico  ";
+    private final String GETONE = GET_ALL + "WHERE colegiado = ?";
     private final String GET_MEDICO_BY_CODIGO_USUARIO = "SELECT * FROM "
             + "Usuario u INNER JOIN Medico m ON m.Persona_dpi = u.Persona_dpi WHERE u.codigo = ?";
 
     private final String GET_ADMIN_BY_CODE_AND_PWD = "select * from Usuario u inner join Medico a on u.Persona_dpi = a.Persona_dpi where u.codigo = ? AND u.clave = ?";
     private final String GET_MEDICO_CON_ESPECIALIDAD = "select u.codigo,a.nombre,m.colegiado,a.correo,m.horaEntrada,m.horaSalida,e.nombre as especialidad from Medico m inner join Persona a on m.Persona_dpi = a.dpi inner join Usuario u on u.Persona_dpi=a.dpi inner join Especialidad e on e.Medico_colegiado = m.colegiado ";
+
+    private final String GET_DIEZ_MEDICOS = "select a.Medico_colegiado as colegiado, p.nombre,count(a.Medico_colegiado) as cantidad from Dia d  "
+            + "inner join Agenda  a on d.Agenda_codigo = a.codigo "
+            + "inner join Cita c on c.codigo = d.Cita_codigo "
+            + "inner join Informe i on c.codigo = i.Cita_codigo "
+            + "inner join Medico m on i.Medico_colegiado = m.colegiado "
+            + "inner join Persona p on p.dpi = m.Persona_dpi "
+            + "where d.fecha between ifnull(?, '1970-01-01') and ifnull(?,'3000-01-01') "
+            + "group by a.Medico_colegiado order by cantidad ";
 
     public MedicoD(Connection connection) {
         this.connection = connection;
@@ -76,12 +86,53 @@ public class MedicoD implements MedicoDAO {
     }
 
     @Override
+    public List<MedicoCant> getDiezMedicos(String fechaInicial, String fechaFinal, String order) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<MedicoCant> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_DIEZ_MEDICOS);
+            stat.setString(1, fechaInicial);
+            stat.setString(2, fechaFinal);
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(new MedicoCant(rs.getString("colegiado"),rs.getString("nombre"), rs.getString("cantidad")))
+                        ;
+            
+            }
+            
+            Manager manger = new Manager();
+            
+            for (MedicoCant medicoCant : lst) {
+            
+                //medicoCant.setMedico(UPDATE);
+                String dpi = manger.getMedicoDAO().obtener(Integer.parseInt(medicoCant.getCodigo())).getPersona_dpi();
+                
+                
+                medicoCant.setMedico(
+                manger.getPersonaDAO().obtener(dpi).getNombre());
+                
+                
+                System.out.println("nombre "+medicoCant.getMedico());
+                
+                
+            }
+            
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Medico> obtenerTodo() {
         PreparedStatement stat = null;
         ResultSet rs = null;
         List<Medico> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL);
+            stat = connection.prepareStatement(GET_ALL);
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));
@@ -224,7 +275,7 @@ public class MedicoD implements MedicoDAO {
                             //medicoDto.setEspecialidades(mDto.getEspecialidades() + ", " + medicoDto.getEspecialidades());
                             mDto.setEspecialidades(mDto.getEspecialidades() + ", " + medicoDto.getEspecialidades());
                         }
-                        System.out.println("Medico: "+medicoDto.getId()+" "+medicoDto.getEspecialidades());
+                        System.out.println("Medico: " + medicoDto.getId() + " " + medicoDto.getEspecialidades());
                     }
 
                 } else {
@@ -244,11 +295,6 @@ public class MedicoD implements MedicoDAO {
 
         try {
 
-//            Medico medico = new Medico(rs.getInt("colegiado"),
-//                    rs.getDate("inicio"), rs.getBoolean("estado"),
-//                    rs.getString("Persona_dpi"), rs.getTime("horaEntrada"),
-//                    rs.getTime("horaSalida"));
-//public MedicoDto(String codigo,                          String medico,               String correo,            String horaEntrada,     String horaSalida,   String especialidades,String colegiado
             return new MedicoDto(id, rs.getString("codigo"), rs.getString("nombre"), rs.getString("correo"), rs.getString("horaEntrada"), rs.getString("horaSalida"), rs.getString("especialidad"), rs.getString("colegiado"));
         } catch (SQLException ex) {
             Logger.getLogger(MedicoD.class.getName()).log(Level.SEVERE, null, ex);

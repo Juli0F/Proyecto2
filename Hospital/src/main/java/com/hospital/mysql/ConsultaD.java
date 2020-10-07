@@ -15,11 +15,12 @@ public class ConsultaD implements ConsultaDAO {
 
     private Connection connection;
     private final String INSERT = "INSERT INTO Consulta (tipo,costo,estado) VALUES (?,?,?)";
-    private final String UPDATE = "UPDATE Consulta set tipo = ?, set costo = ?, set estado = ? WHERE idConsulta = ? ";
+    private final String UPDATE = "UPDATE Consulta set tipo = ?,  costo = ?,  estado = ? WHERE idConsulta = ? ";
     private final String DELETE = "DELETE Consulta WHERE idConsulta = ? ";
-    private final String GETALL = "SELECT * FROM  Consulta  ";
-    private final String GETONE = GETALL + "WHERE idConsulta = ?";
+    private final String GET_ALL = "SELECT * FROM  Consulta  ";
+    private final String GETONE = GET_ALL + "WHERE idConsulta = ?";
     private final String GET_BY_TIPO = "SELECT * FROM Consulta WHERE tipo = ? ";
+    private final String GET_CONSULTA_BY_PARAMETER_LIKE = "SELECT * FROM Consulta c where c.costo like ? or tipo like ? and estado = '1'";
     
 
     public ConsultaD(Connection connection) {
@@ -71,7 +72,28 @@ public class ConsultaD implements ConsultaDAO {
         ResultSet rs = null;
         List<Consulta> lst = new ArrayList<>();
         try {
-            stat = connection.prepareStatement(GETALL + " WHERE estado = '1'");
+            stat = connection.prepareStatement(GET_ALL + " WHERE estado = '1'");
+            rs = stat.executeQuery();
+            while (rs.next()) {
+                lst.add(convertir(rs));
+            }
+            return lst;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<Consulta> getConsultaSearchLike(String parameter) {
+        PreparedStatement stat = null;
+        ResultSet rs = null;
+        List<Consulta> lst = new ArrayList<>();
+        try {
+            stat = connection.prepareStatement(GET_CONSULTA_BY_PARAMETER_LIKE);
+            stat.setString(1,"%"+ parameter+"%");
+            stat.setString(2,"%"+ parameter+"%");
             rs = stat.executeQuery();
             while (rs.next()) {
                 lst.add(convertir(rs));

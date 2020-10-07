@@ -1,0 +1,65 @@
+<%-- any content can be specified here e.g.: --%>
+
+<!-- Search form -->
+        
+        <div class="md-form mt-0">
+            <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+            <button>Buscar</button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Codigo</th>
+                    <th scope="col">Medico</th>
+                    <th scope="col">Colegiado</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Hora Entrada</th>
+                    <th scope="col">Hora Salida</th>
+
+                    <th scope="col">Especialidades</th>
+                    <th scope="col">Agendar Cita</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="item" items="${medicos}">
+
+                    <tr>
+                        <th scope="row" >${item.getId()}</th>
+                        <td>${item.getCodigo()}</td>
+                        <td>${item.getNombre()}</td>
+                        <td>${item.getColegiado()}</td>
+                        <td>${item.getCorreo()}</td>
+                        <td>${item.getHoraEntrada()}</td>
+                        <td>${item.getHoraSalida()}</td>
+                        <td>${item.getEspecialidades()}</td>
+
+                        <td>
+
+                            <a class="btn btn-primary" href="AgendaController?accion=Agendar-${item.getColegiado()}">Agendar Cita</a>
+
+
+                        </td>
+                    </tr>
+
+                </c:forEach>
+
+            </tbody>
+        </table>
+                            
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+

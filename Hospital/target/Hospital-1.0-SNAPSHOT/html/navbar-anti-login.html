@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="navbar">
+  <a onclick="document.getElementById('registro').style.display='block'" style="width:auto;"><i class="fa fa-fw fa-envelope"></i> Crear Cuenta</a>
+  <button type="button" onclick="document.getElementById('login').style.display='block'" style = "width:auto;" ><i class="fa fa-fw fa-user" ></i> Login</button>
+  
+  
+  
+  
+</div>
+
+<div id="login" class="modal-login">
+  
+  <form class="modal-content-login animate-login " action="LoginController" method="post">
+    <div class="imgcontainer-login">
+      <span onclick="document.getElementById('login').style.display='none'" class="close-login" title="Close Modal">&times;</span>
+      <img src="https://i.stack.imgur.com/cbpeV.png?s=40&g=1" alt="Avatar" class="avatar-login">
+    </div>
+
+    <div class="container-login">
+      <label for="uname"><b>Codigo</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" id="uname" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+        
+      <button type="submit">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+
+    <div class="container-login" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('login').style.display='none'" class="cancelbtn-login">Cancel</button>
+      <span class="psw-login">Forgot <a href="#">password?</a></span>
+    </div>
+  </form>
+</div>
+
+
+
+<div id="registro" class="modal">
+  <span onclick="document.getElementById('registro').style.display='none'" class="close" title="Close Modal">&times;</span>
+  <form class="modal-content" action="/action_page.php">
+    <div class="container">
+      <h1>Crear Cuenta Tipo Paciente</h1>
+      <p>Por favor llene el Siguiente Formulario para crear una Cuenta </p>
+      <hr>
+      <label for="email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Email" name="email" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+      
+      <label>
+        <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+      </label>
+
+      <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+
+      <div class="clearfix">
+        <button type="button" onclick="document.getElementById('registro').style.display='none'" class="cancelbtn">Cancel</button>
+        <button type="submit" class="signupbtn">Sign Up</button>
+      </div>
+    </div>
+  </form>
+</div>

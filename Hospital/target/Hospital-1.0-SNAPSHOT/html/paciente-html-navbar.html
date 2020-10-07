@@ -1,0 +1,40 @@
+
+
+
+<div class="fixed-top">
+    <div class="collapse" id="navbarToggleExternalContent">
+        <div class="bg-dark p-4">
+            <a href="PacienteController?accion=cita"><h5 class="text-white h4">Agendar Cita Medica</h5></a>
+            <span class="text-muted">En esta seccion podra reservar una cita con el medico que desee</span>
+
+            <a href="PacienteController?accion=citaLAB"><h5 class="text-white h4">Agendar Cita Examenes </h5></a>
+            <span class="text-muted">examenes de laboratorio</span>
+
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle text-white h4" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Reportes
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="PacienteController?accion=ultimos">Ultimos Examenes Realizados</a>
+                    <a class="dropdown-item" href="PacienteController?accion=porTipo">Examenes Por Tipo Y Fecha</a>
+                    <a class="dropdown-item" href="PacienteController?accion=consultas">Ultimas Consultas</a>
+                    <a class="dropdown-item" href="PacienteController?accion=porMedico">Consultas por medico</a>
+                </div>
+            </div>
+            <span class="text-muted">Le aparecera un Menu con los tipos de informe Disponible</span>
+
+
+
+            <a href="paciente.jsp"><h5 class="text-white h4">Home </h5></a>
+            <span class="text-muted">Informacion Personal</span>
+        </div>
+
+    </div>
+    <nav class="navbar navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <h3 class="bg-">${personaSession.getNombre()}  </h3>
+          <a href="PacienteController?accion=cerrar"><h5 class="text-white h4">Cerrar session</h5></a>
+    </nav>
+</div>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="Perfil.jsp">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Agenda
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="AgendaController?accion=verMedicos"> Medica </a>
+                    <a class="dropdown-item" onclick="document.getElementById('registro').style.display = 'block'" style="width:auto;">Laboratorio</a>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Citas Pendientes
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" onclick="document.getElementById('examen').style.display = 'block'" style="width:auto;"> Medica </a>
+                    <a class="dropdown-item" onclick="document.getElementById('registro').style.display = 'block'" style="width:auto;">Laboratorio</a>
+                </div>
+            </li>
+
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Informes/Reportes
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" onclick="document.getElementById('examen').style.display = 'block'" style="width:auto;"> Examenes </a>
+                    <a class="dropdown-item" onclick="document.getElementById('registro').style.display = 'block'" style="width:auto;"> Examenes Por Tipo</a>
+                    <a class="dropdown-item" onclick="document.getElementById('registro').style.display = 'block'" style="width:auto;"> Consultas </a>
+                    <a class="dropdown-item" onclick="document.getElementById('registro').style.display = 'block'" style="width:auto;"> Consultas Por Medico </a>
+                </div>
+            </li>
+
+
+
+        </ul>
+    </div>
+</nav>

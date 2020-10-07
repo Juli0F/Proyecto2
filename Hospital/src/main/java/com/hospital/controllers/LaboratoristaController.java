@@ -80,7 +80,7 @@ public class LaboratoristaController extends HttpServlet {
                     List<ResultadoPaciente> listado = manager.getExamenPacienteDAO().getResultadoPaciente(lab.getRegistro());
 
                     for (ResultadoPaciente resultadoPaciente : listado) {
-                        System.out.println(resultadoPaciente.getNombre()+ ", "+resultadoPaciente.getFecha() );
+                        System.out.println(resultadoPaciente.getNombre() + ", " + resultadoPaciente.getFecha());
                     }
                     request.setAttribute("listado", listado);
 
@@ -92,17 +92,26 @@ public class LaboratoristaController extends HttpServlet {
                 pagJsp = "lab-examenes-hoy.jsp";
                 break;
             case "realizados":
-                
+
                 realizadosHoyTodos(request);
                 pagJsp = "realizados.jsp";
                 break;
-                
+
             case "fechas":
-                
+
                 getListDatesWithWork(request);
                 pagJsp = "fechas-mas-trabajo.jsp";
                 break;
-                        
+            case "salir100":
+                
+                request.setAttribute("laboratorista", null);
+                request.getSession().setAttribute("personaSession", null);
+                request.getSession().setAttribute("labSession", null);
+                
+                pagJsp = "index.jsp";
+
+                break;
+
         }
 
         System.out.println("pagJsp = " + pagJsp);
@@ -124,54 +133,52 @@ public class LaboratoristaController extends HttpServlet {
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
         String pagJsp = "";
-        
+
         switch (accion) {
             case "realizados":
                 realizadosHoyActual(request);
                 pagJsp = "realizados.jsp";
-                
+
                 break;
             default:
                 throw new AssertionError();
         }
-        
+
         System.out.println("pagJsp = " + pagJsp);
         RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
         vista.forward(request, response);
-        
+
     }
 
-    
-    public void realizadosHoyActual(HttpServletRequest request ){
+    public void realizadosHoyActual(HttpServletRequest request) {
         Laboratorista actual = (Laboratorista) request.getSession().getAttribute("labSession");
         List<ResultadoPaciente> misResultados = manager.getResultadoDAO().resultadoDeHoy(actual.getRegistro());
-        
-        request.getSession().setAttribute("realizados", misResultados);       
-        
+
+        request.getSession().setAttribute("realizados", misResultados);
+
     }
-    public void realizadosHoyTodos(HttpServletRequest request ){
-        
+
+    public void realizadosHoyTodos(HttpServletRequest request) {
+
         List<ResultadoPaciente> misResultados = manager.getResultadoDAO().resultadoDeHoy(null);
-        
-        request.getSession().setAttribute("realizados", misResultados);       
-        
+
+        request.getSession().setAttribute("realizados", misResultados);
+
     }
-    
-    public void getCitasLabHoy(HttpServletRequest request){
-        
+
+    public void getCitasLabHoy(HttpServletRequest request) {
+
         Laboratorista actual = (Laboratorista) request.getSession().getAttribute("labSession");
-        List<ExamenHoy>  listado = manager.getExamenPacienteDAO().getExamenesParaHoy(actual.getRegistro());
-        
+        List<ExamenHoy> listado = manager.getExamenPacienteDAO().getExamenesParaHoy(actual.getRegistro());
+
         request.setAttribute("citasHoy", listado);
-        
+
     }
-    
-    public void getListDatesWithWork(HttpServletRequest request){
+
+    public void getListDatesWithWork(HttpServletRequest request) {
         List<FechaConMasTrabajo> lista = manager.getDiaDAO().getDateWithMostWork();
         request.setAttribute("fechas", lista);
     }
-            
-    
 
     private Manager manager;
 }

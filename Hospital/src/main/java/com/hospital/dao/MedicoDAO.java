@@ -1,5 +1,6 @@
 package com.hospital.dao;
 
+import com.hospital.dto.MedicoCant;
 import com.hospital.dto.MedicoDto;
 import com.hospital.entities.Medico;
 import java.util.List;
@@ -17,6 +18,8 @@ public interface MedicoDAO extends DAO<Medico,Integer> {
     
     //MEDICO_CON_ESPECIALIDAD
     public List<MedicoDto> getMedicoConEspecialida();
+    
+    public List<MedicoCant> getDiezMedicos(String fechaInicial, String fechaFinal, String order);
 
 
 }

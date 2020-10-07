@@ -271,8 +271,6 @@ public class CitaD implements CitaDAO {
         PreparedStatement stat = null;
         ResultSet rs = null;
         List<Intervalo> lst = new ArrayList<>();
-//        System.out.println("En CItaD -> "
-//                + "Fecha Inicial :" + fechaInicial.length()+ "Final "+fechaFinal.length());
         try {
             stat = connection.prepareStatement(GET_CITA_INTERVALO_DE_TIEMPO);
             stat.setString(1, fechaInicial);

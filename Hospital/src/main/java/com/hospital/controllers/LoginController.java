@@ -34,8 +34,7 @@ import java.util.logging.Logger;
 import javax.servlet.annotation.MultipartConfig;
 
 import javax.servlet.http.Part;
-import com.hospital.controllers.fileupload.FIleUpload;
-import com.hospital.loadxml.LoadSaxBuilder;
+import java.util.List;
 
 /**
  *
@@ -97,13 +96,13 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         manager = new Manager();
-{
+        String name = request.getParameter("uname");
+        String clave = request.getParameter("psw");
+        String pagJsp = "index.jsp";
 
-            String pagJsp = "index.jsp";
+        if (dbConDatos()) {
+
             System.out.println("Request: " + request.getParameter("uname"));
-
-            String name = request.getParameter("uname");
-            String clave = request.getParameter("psw");
 
             //verificar si la persona que entro es: Medico, Laboratorista, paciente o adminsitrador
             Usuario usuario = manager.getUsuarioDAO().getUsrByCodigoAndClave(name, clave);
@@ -111,57 +110,74 @@ public class LoginController extends HttpServlet {
             Medico medico = manager.getMedicoDAO().getMedicoByCodeANdPwd(name, clave);
             Laboratorista laboratorista = manager.getLaboratoristasDAO().getLaboratoristaByCodeANdPwd(name, clave);
             Administrador admin = manager.getAdministradorDAO().getAdminByCodeAndPsw(name, clave);
-            
+
             Persona persona = manager.getPersonaDAO().getPersonaByCodeANdPwd(name, clave);
 
             if (usuario != null) {
 
-                
-                System.out.println("Persona p"+ persona.getNombre());
+                System.out.println("Persona p" + persona.getNombre());
 
                 request.getSession().setAttribute("personaSession", persona);
-                
-                
+
                 if (paciente != null) {
 
                     request.setAttribute("paciente", paciente);
                     request.getSession().setAttribute("pacienteSession", paciente);
                     System.out.println("Login Paciente");
                     pagJsp = "paciente.jsp";
-                    
+
                 } else if (medico != null) {
-                    
+
                     request.getSession().setAttribute("medicoSession", medico);
                     request.setAttribute("medico", medico);
                     pagJsp = "Doctor.jsp";
-                    
+
                 } else if (laboratorista != null) {
-                    
+
                     request.setAttribute("laboratorista", laboratorista);
                     request.getSession().setAttribute("labSession", laboratorista);
                     pagJsp = "laboratorista-home.jsp";
 
                 } else if (admin != null) {
-                    
+
                     request.setAttribute("admin", admin);
                     System.out.println("Admin" + admin.getCodigo());
                     request.getSession().setAttribute("admin", admin);
-                    
+                    pagJsp = "Perfil.jsp";
                 }
 
-               
-
             } else {
-
-                System.out.println("Mostrar PopOver");
+                System.out.println("Advertencia");
             }
 
-            System.out.println("pagJsp = " + pagJsp);
-            RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
-            vista.forward(request, response);
+        } else {
+            System.out.println("Name: " + name);
+            System.out.println("Clave: " + clave);
+
+            if (name.equals("admin") && clave.equals("abc")) {
+                request.setAttribute("temp", "temp");
+                pagJsp = "load-file.jsp";
+                System.out.println(pagJsp);
+
+            }
         }
-    
+        System.out.println("pagJsp = " + pagJsp);
+        RequestDispatcher vista = request.getRequestDispatcher(pagJsp);
+        vista.forward(request, response);
+
     }
+
+    private boolean dbConDatos() {
+        List admin = manager.getAdministradorDAO().obtenerTodo();
+
+        System.out.println("Size lista " + admin.size());
+        boolean valor = admin.size() > 0;
+
+        System.out.println("Valor: " + valor);
+
+        return valor;
+    }
+
     // InputStream -> File
     private static void copyInputStreamToFile(InputStream inputStream, File file)
             throws IOException {
@@ -182,7 +198,7 @@ public class LoginController extends HttpServlet {
 
     }
 
-    public void fileWrite(File file,String str) {
+    public void fileWrite(File file, String str) {
         try {
 
             // Si el archivo no existe es creado
@@ -221,35 +237,25 @@ public class LoginController extends HttpServlet {
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-    
-    String subirArchivo(int codigo, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-    Part filePart = request.getPart("contenido-archivo"); // Obtiene el archivo
-    String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
-    
-        System.out.println(" ===== fileName"+fileName);
 
-    //InputStream fileContent = filePart.getInputStream(); //Lo transforma en InputStream
+    String subirArchivo(int codigo, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Part filePart = request.getPart("contenido-archivo"); // Obtiene el archivo
+        String fileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString(); // MSIE fix.
 
-    String path="/archivos/";
-    File uploads = new File(path); //Carpeta donde se guardan los archivos
-    uploads.mkdirs(); //Crea los directorios necesarios
-    File file = File.createTempFile("cod"+codigo+"-", "-"+fileName, uploads); //Evita que hayan dos archivos con el mismo nombre
+        System.out.println(" ===== fileName" + fileName);
 
-    try (InputStream input = filePart.getInputStream()){
-        Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        //InputStream fileContent = filePart.getInputStream(); //Lo transforma en InputStream
+        String path = "/archivos/";
+        File uploads = new File(path); //Carpeta donde se guardan los archivos
+        uploads.mkdirs(); //Crea los directorios necesarios
+        File file = File.createTempFile("cod" + codigo + "-", "-" + fileName, uploads); //Evita que hayan dos archivos con el mismo nombre
+
+        try (InputStream input = filePart.getInputStream()) {
+            Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        return file.getPath();
     }
 
-    return file.getPath();
-}
-    
     private Manager manager;
 }
